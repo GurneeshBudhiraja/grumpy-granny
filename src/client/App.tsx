@@ -13,7 +13,7 @@ export const App = () => {
          style={{ backgroundImage: 'url(/wall-background.png)' }}>
       
       {/* Computer Scene */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="">
         <div className="relative">
           {/* Computer Image */}
           <img 
