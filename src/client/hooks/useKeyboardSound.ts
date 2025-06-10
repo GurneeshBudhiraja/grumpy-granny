@@ -3,12 +3,15 @@ import { soundManager } from '../utils/soundManager';
 
 export const useKeyboardSound = () => {
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = async (event: KeyboardEvent) => {
       // Only play sound for actual typing keys, not modifier keys
       if (!event.ctrlKey && !event.altKey && !event.metaKey && 
           (event.key.length === 1 || 
            ['Backspace', 'Delete', 'Enter', 'Space', 'Tab'].includes(event.key))) {
-        soundManager.playKeyboardSound();
+        
+        // Initialize sounds on first interaction
+        await soundManager.initializeSounds();
+        await soundManager.playKeyboardSound();
       }
     };
 

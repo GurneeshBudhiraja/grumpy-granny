@@ -3,8 +3,10 @@ import { soundManager } from '../utils/soundManager';
 
 export const useClickSound = () => {
   useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      soundManager.playClickSound();
+    const handleClick = async (event: MouseEvent) => {
+      // Initialize sounds on first interaction
+      await soundManager.initializeSounds();
+      await soundManager.playClickSound();
     };
 
     // Add click listener to the document

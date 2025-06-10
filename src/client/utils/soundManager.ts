@@ -1,37 +1,65 @@
 class SoundManager {
   private clickSound: HTMLAudioElement;
   private keyboardSound: HTMLAudioElement;
+  private isInitialized: boolean = false;
 
   constructor() {
-    this.clickSound = new Audio('./public/mouse-click.mp3');
+    // Use correct paths without './public/' prefix
+    this.clickSound = new Audio('/mouse-click.mp3');
     this.clickSound.preload = 'auto';
-    this.clickSound.volume = 0.3;
+    this.clickSound.volume = 0.5;
 
-    this.keyboardSound = new Audio('./public/keyboard-click.mp3');
+    this.keyboardSound = new Audio('/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
-    this.keyboardSound.volume = 0.2;
+    this.keyboardSound.volume = 0.4;
   }
 
-  playClickSound() {
-    // Reset to beginning and play
-    this.clickSound.currentTime = 0;
-    this.clickSound.play().catch(error => {
-      console.log('Audio play failed:', error);
-    });
+  async playClickSound() {
+    try {
+      // Clone and play to avoid conflicts
+      const audio = this.clickSound.cloneNode() as HTMLAudioElement;
+      audio.volume = 0.5;
+      await audio.play();
+    } catch (error) {
+      console.log('Click audio play failed:', error);
+    }
   }
 
-  playKeyboardSound() {
-    // Reset to beginning and play
-    this.keyboardSound.currentTime = 0;
-    this.keyboardSound.play().catch(error => {
+  async playKeyboardSound() {
+    try {
+      // Clone and play to avoid conflicts
+      const audio = this.keyboardSound.cloneNode() as HTMLAudioElement;
+      audio.volume = 0.4;
+      await audio.play();
+    } catch (error) {
       console.log('Keyboard audio play failed:', error);
-    });
+    }
   }
 
-  // Method to preload all sounds (useful for user interaction)
-  preloadSounds() {
-    this.clickSound.load();
-    this.keyboardSound.load();
+  // Initialize sounds on first user interaction
+  async initializeSounds() {
+    if (this.isInitialized) return;
+    
+    try {
+      // Load the audio files
+      await Promise.all([
+        new Promise((resolve, reject) => {
+          this.clickSound.addEventListener('canplaythrough', resolve, { once: true });
+          this.clickSound.addEventListener('error', reject, { once: true });
+          this.clickSound.load();
+        }),
+        new Promise((resolve, reject) => {
+          this.keyboardSound.addEventListener('canplaythrough', resolve, { once: true });
+          this.keyboardSound.addEventListener('error', reject, { once: true });
+          this.keyboardSound.load();
+        })
+      ]);
+      
+      this.isInitialized = true;
+      console.log('Sounds initialized successfully');
+    } catch (error) {
+      console.log('Sound initialization failed:', error);
+    }
   }
 }
 
