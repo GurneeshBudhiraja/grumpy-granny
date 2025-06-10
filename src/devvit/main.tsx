@@ -1,22 +1,14 @@
 import { Devvit, Post } from '@devvit/public-api';
 
-// Side effect import to bundle the server. The /index is required for server splitting.
+// Side effect import to bundle the server
 import '../server/index';
 import { defineConfig } from '@devvit/server';
-import { postConfigNew } from '../server/core/post';
 
 defineConfig({
-  name: '[Bolt] Word Guesser',
+  name: '[Bolt] The Grumpy Granny',
   entry: 'index.html',
   height: 'tall',
   menu: { enable: false },
-  // TODO: Cannot use without ability to pass in more metadata
-  // menu: {
-  //   enable: true,
-  //   label: 'New Word Guesser Post',
-  //   postTitle: 'Word Guesser',
-  //   preview: <Preview />,
-  // },
 });
 
 export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Loading...' }) => {
@@ -40,10 +32,9 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Load
   );
 };
 
-// TODO: Remove this when defineConfig allows webhooks before post creation
+// Menu item for creating new posts
 Devvit.addMenuItem({
-  // Please update as you work on your idea!
-  label: '[Bolt Word Guesser]: New Post',
+  label: '[Bolt Grumpy Granny]: New Post',
   location: 'subreddit',
   forUserType: 'moderator',
   onPress: async (_event, context) => {
@@ -53,16 +44,12 @@ Devvit.addMenuItem({
     try {
       const subreddit = await reddit.getCurrentSubreddit();
       post = await reddit.submitPost({
-        // Title of the post. You'll want to update!
-        title: 'Word Guesser',
+        title: 'The Grumpy Granny - Password Guessing Game',
         subredditName: subreddit.name,
-        preview: <Preview />,
+        preview: <Preview text="Help crack Grandma's password! 👵🔐" />,
       });
-      await postConfigNew({
-        redis: context.redis,
-        postId: post.id,
-      });
-      ui.showToast({ text: 'Created post!' });
+      
+      ui.showToast({ text: 'Created Grumpy Granny game post!' });
       ui.navigateTo(post.url);
     } catch (error) {
       if (post) {

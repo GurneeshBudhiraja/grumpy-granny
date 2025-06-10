@@ -1,158 +1,162 @@
 import express from 'express';
 import { createServer, getContext, getServerPort } from '@devvit/server';
-import { CheckResponse, InitResponse, LetterState } from '../shared/types/game';
-import { postConfigGet, postConfigNew, postConfigMaybeGet } from './core/post';
-import { allWords } from './core/words';
+import { GameResponse } from '../shared/types/granny';
+import { 
+  getGameData, 
+  updateGameData, 
+  getCurrentHints, 
+  checkPassword, 
+  getGrannyReaction, 
+  getNextMood,
+  resetGame 
+} from './core/granny-game';
 import { getRedis } from '@devvit/redis';
 
 const app = express();
 
-// Middleware for JSON body parsing
+// Middleware
 app.use(express.json());
-// Middleware for URL-encoded body parsing
 app.use(express.urlencoded({ extended: true }));
-// Middleware for plain text body parsing
 app.use(express.text());
 
 const router = express.Router();
 
-router.get<{ postId: string }, InitResponse | { status: string; message: string }>(
-  '/api/init',
-  async (_req, res): Promise<void> => {
-    const { postId } = getContext();
+// Get current game state and hints
+router.get<{}, GameResponse>('/api/game/state', async (_req, res): Promise<void> => {
+  try {
+    const { postId, userId } = getContext();
     const redis = getRedis();
 
-    if (!postId) {
-      console.error('API Init Error: postId not found in devvit context');
+    if (!postId || !userId) {
       res.status(400).json({
         status: 'error',
-        message: 'postId is required but missing from context',
+        message: 'Missing postId or userId'
       });
       return;
     }
 
-    try {
-      let config = await postConfigMaybeGet({ redis, postId });
-      if (!config || !config.wordOfTheDay) {
-        console.log(`No valid config found for post ${postId}, creating new one.`);
-        await postConfigNew({ redis: getRedis(), postId });
-        config = await postConfigGet({ redis, postId });
-      }
+    const gameData = await getGameData(redis, postId, userId);
+    const hints = getCurrentHints(gameData.currentRound);
 
-      if (!config.wordOfTheDay) {
-        console.error(
-          `API Init Error: wordOfTheDay still not found for post ${postId} after attempting creation.`
-        );
-        throw new Error('Failed to initialize game configuration.');
-      }
-
-      res.json({
-        status: 'success',
-        postId: postId,
-      });
-    } catch (error) {
-      console.error(`API Init Error for post ${postId}:`, error);
-      const message =
-        error instanceof Error ? error.message : 'Unknown error during initialization';
-      res.status(500).json({ status: 'error', message });
-    }
+    res.json({
+      status: 'success',
+      gameData,
+      hints
+    });
+  } catch (error) {
+    console.error('Error getting game state:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to get game state'
+    });
   }
-);
+});
 
-router.post<{ postId: string }, CheckResponse, { guess: string }>(
-  '/api/check',
-  async (req, res): Promise<void> => {
+// Submit password guess
+router.post<{}, GameResponse, { guess: string }>('/api/game/guess', async (req, res): Promise<void> => {
+  try {
     const { guess } = req.body;
     const { postId, userId } = getContext();
     const redis = getRedis();
 
-    if (!postId) {
-      res.status(400).json({ status: 'error', message: 'postId is required' });
-      return;
-    }
-    if (!userId) {
-      res.status(400).json({ status: 'error', message: 'Must be logged in' });
-      return;
-    }
-    if (!guess) {
-      res.status(400).json({ status: 'error', message: 'Guess is required' });
-      return;
-    }
-
-    const config = await postConfigGet({ redis, postId });
-    const { wordOfTheDay } = config;
-
-    const normalizedGuess = guess.toLowerCase();
-
-    if (normalizedGuess.length !== 5) {
-      res.status(400).json({ status: 'error', message: 'Guess must be 5 letters long' });
-      return;
-    }
-
-    const wordExists = allWords.includes(normalizedGuess);
-
-    if (!wordExists) {
-      res.json({
-        status: 'success',
-        exists: false,
-        solved: false,
-        correct: Array(5).fill('initial') as [
-          LetterState,
-          LetterState,
-          LetterState,
-          LetterState,
-          LetterState,
-        ],
+    if (!postId || !userId) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Missing postId or userId'
       });
       return;
     }
 
-    const answerLetters = wordOfTheDay.split('');
-    const resultCorrect: LetterState[] = Array(5).fill('initial');
-    let solved = true;
-    const guessLetters = normalizedGuess.split('');
-
-    for (let i = 0; i < 5; i++) {
-      if (guessLetters[i] === answerLetters[i]) {
-        resultCorrect[i] = 'correct';
-        answerLetters[i] = '';
-      } else {
-        solved = false;
-      }
+    if (!guess || typeof guess !== 'string') {
+      res.status(400).json({
+        status: 'error',
+        message: 'Guess is required'
+      });
+      return;
     }
 
-    for (let i = 0; i < 5; i++) {
-      if (resultCorrect[i] === 'initial') {
-        const guessedLetter = guessLetters[i]!;
-        const presentIndex = answerLetters.indexOf(guessedLetter);
-        if (presentIndex !== -1) {
-          resultCorrect[i] = 'present';
-          answerLetters[presentIndex] = '';
-        }
-      }
+    const gameData = await getGameData(redis, postId, userId);
+    const isCorrect = checkPassword(guess.trim(), gameData.currentRound);
+
+    if (isCorrect) {
+      // Correct guess - advance to next round
+      gameData.currentRound += 1;
+      gameData.grannyMood = 'calm';
+      gameData.wrongAttempts = 0;
+      gameData.showCaptcha = false;
+      gameData.timeLeft = 30;
+      
+      await updateGameData(redis, postId, userId, gameData);
+      
+      res.json({
+        status: 'success',
+        correct: true,
+        gameData,
+        hints: getCurrentHints(gameData.currentRound),
+        message: "Well done, dear! You got it right!"
+      });
+    } else {
+      // Wrong guess - update mood and attempts
+      gameData.wrongAttempts += 1;
+      gameData.grannyMood = getNextMood(gameData.grannyMood);
+      gameData.showCaptcha = gameData.wrongAttempts >= 2;
+      
+      await updateGameData(redis, postId, userId, gameData);
+      
+      const reaction = getGrannyReaction(gameData.grannyMood);
+      
+      res.json({
+        status: 'success',
+        correct: false,
+        gameData,
+        hints: getCurrentHints(gameData.currentRound),
+        message: reaction
+      });
+    }
+  } catch (error) {
+    console.error('Error processing guess:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to process guess'
+    });
+  }
+});
+
+// Reset game
+router.post<{}, GameResponse>('/api/game/reset', async (_req, res): Promise<void> => {
+  try {
+    const { postId, userId } = getContext();
+    const redis = getRedis();
+
+    if (!postId || !userId) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Missing postId or userId'
+      });
+      return;
     }
 
-    for (let i = 0; i < 5; i++) {
-      if (resultCorrect[i] === 'initial') {
-        resultCorrect[i] = 'absent';
-      }
-    }
+    const gameData = await resetGame(redis, postId, userId);
+    const hints = getCurrentHints(gameData.currentRound);
 
     res.json({
       status: 'success',
-      exists: true,
-      solved,
-      correct: resultCorrect as [LetterState, LetterState, LetterState, LetterState, LetterState],
+      gameData,
+      hints,
+      message: 'Game reset successfully!'
+    });
+  } catch (error) {
+    console.error('Error resetting game:', error);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to reset game'
     });
   }
-);
+});
 
-// Use router middleware
 app.use(router);
 
-// Get port from environment variable with fallback
 const port = getServerPort();
-
 const server = createServer(app);
-server.on('error', (err) => console.error(`server error; ${err.stack}`));
-server.listen(port, () => console.log(`http://localhost:${port}`));
+server.on('error', (err) => console.error(`Server error: ${err.stack}`));
+server.listen(port, () => console.log(`Server running on http://localhost:${port}`));
