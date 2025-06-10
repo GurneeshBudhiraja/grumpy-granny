@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
+import { soundManager } from './utils/soundManager';
 
 export const App = () => {
   const [breathing, setBreathing] = useState(false);
@@ -12,10 +13,26 @@ export const App = () => {
   useKeyboardSound();
 
   useEffect(() => {
-    setTimeout(() => {
+    // Preload sounds on first user interaction
+    const handleFirstInteraction = () => {
+      soundManager.preloadSounds();
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+
+    const breathingTimer = setTimeout(() => {
       setBreathing(!breathing);
     }, 500);
-  });
+
+    return () => {
+      clearTimeout(breathingTimer);
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [breathing]);
 
   return (
     <div className=''>

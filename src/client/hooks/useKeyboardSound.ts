@@ -6,8 +6,8 @@ export const useKeyboardSound = () => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Only play sound for actual typing keys, not modifier keys
       if (!event.ctrlKey && !event.altKey && !event.metaKey && 
-          event.key.length === 1 || 
-          ['Backspace', 'Delete', 'Enter', 'Space', 'Tab'].includes(event.key)) {
+          (event.key.length === 1 || 
+           ['Backspace', 'Delete', 'Enter', 'Space', 'Tab'].includes(event.key))) {
         soundManager.playKeyboardSound();
       }
     };
