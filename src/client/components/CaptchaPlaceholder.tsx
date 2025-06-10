@@ -10,21 +10,23 @@ export const CaptchaPlaceholder: React.FC<CaptchaPlaceholderProps> = ({
   className = '' 
 }) => {
   return (
-    <div className={`bg-gray-100 border-2 border-dashed border-gray-300 
-                    rounded-lg p-6 text-center ${className}`}>
-      <div className="text-4xl mb-4">🤖</div>
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-        Granny-CAPTCHA
+    <div className={`dark-glass border-2 border-dashed border-red-600 
+                    rounded-lg p-6 text-center red-glow ${className}`}>
+      <div className="text-4xl mb-4 animate-creepy-float">👻</div>
+      <h3 className="text-lg font-semibold text-red-300 mb-2 creepy-text">
+        Granny's Security Check
       </h3>
-      <p className="text-gray-600 mb-4">
-        Prove you're not a robot by clicking the button below!
+      <p className="text-red-100 mb-4">
+        Prove you're not one of her victims... yet! 💀
       </p>
       <button
         onClick={onComplete}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 
-                   rounded-lg transition-colors duration-200"
+        className="bg-gradient-to-r from-red-700 to-red-800 hover:from-red-600 
+                   hover:to-red-700 text-white font-bold py-2 px-4 
+                   rounded-lg transition-all duration-200 transform hover:scale-105
+                   shadow-lg red-glow creepy-text"
       >
-        I'm Human! 🙋‍♀️
+        I'm Still Alive! 🧟‍♀️
       </button>
     </div>
   );

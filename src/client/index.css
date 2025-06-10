@@ -32,10 +32,63 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.4); }
-  50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.8); }
+  0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.8); }
 }
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-flicker {
+  animation: flicker 0.5s ease-in-out infinite;
+}
+
+@keyframes creepy-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-creepy-float {
+  animation: creepy-float 3s ease-in-out infinite;
+}
+
+@keyframes blood-drip {
+  0% { transform: translateY(-10px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(20px); opacity: 0; }
+}
+
+.animate-blood-drip {
+  animation: blood-drip 2s ease-in-out infinite;
+}
+
+/* Horror background patterns */
+.horror-bg {
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(120, 0, 0, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 0, 0, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(60, 0, 60, 0.4) 0%, transparent 50%);
+}
+
+/* Creepy text shadow */
+.creepy-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+/* Glowing red border */
+.red-glow {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5), inset 0 0 10px rgba(239, 68, 68, 0.1);
+}
+
+/* Dark glass effect */
+.dark-glass {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

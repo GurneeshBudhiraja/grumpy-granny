@@ -4,55 +4,55 @@ import { HintPair, GameData, GrannyMood } from '../../shared/types/granny';
 
 const HINT_PAIRS: HintPair[] = [
   {
-    hint1: "Must start with 'ap'",
+    hint1: "Must start with 'dead'",
     hint2: "Include at least one number",
-    password: "apple123"
+    password: "dead666"
   },
   {
-    hint1: "Contains the word 'cat'",
-    hint2: "Exactly 8 characters long",
-    password: "mycat456"
+    hint1: "Contains the word 'blood'",
+    hint2: "Exactly 9 characters long",
+    password: "bloodbath"
   },
   {
-    hint1: "Starts with a capital letter",
+    hint1: "Starts with 'SCREAM'",
     hint2: "Ends with an exclamation mark",
-    password: "Hello123!"
+    password: "SCREAM!"
   },
   {
-    hint1: "Contains 'sun' somewhere",
+    hint1: "Contains 'ghost' somewhere",
     hint2: "Has both letters and numbers",
-    password: "sunshine7"
+    password: "ghost13"
   },
   {
-    hint1: "Must include 'home'",
+    hint1: "Must include 'nightmare'",
     hint2: "Contains at least one uppercase letter",
-    password: "Home2024"
+    password: "Nightmare"
   },
   {
-    hint1: "Starts with 'gr'",
-    hint2: "Contains exactly 6 characters",
-    password: "granny"
+    hint1: "Starts with 'evil'",
+    hint2: "Contains exactly 8 characters",
+    password: "evilgran"
   },
   {
-    hint1: "Contains the word 'tea'",
+    hint1: "Contains the word 'death'",
     hint2: "Includes a special character",
-    password: "teatime@"
+    password: "death@me"
   },
   {
-    hint1: "Must start with 'old'",
+    hint1: "Must start with 'ESCAPE'",
     hint2: "Contains mixed case letters",
-    password: "OldWise1"
+    password: "ESCAPEme"
   }
 ];
 
 const GRANNY_REACTIONS = {
-  calm: "Now dear, that's not quite right. Try again!",
-  annoyed: "Hmph! Pay attention to the hints, sweetie.",
-  grumpy: "Oh for goodness sake! Are you even trying?",
-  furious: "THAT'S IT! One more wrong guess and you're in trouble!"
+  calm: "I can hear you breathing... where are you hiding? 👁️",
+  annoyed: "I know someone's in my house! Come out, come out! 😡",
+  grumpy: "YOU CAN'T HIDE FROM ME FOREVER! I'LL FIND YOU! 👹",
+  furious: "THAT'S IT! I'M COMING FOR YOU! NOWHERE TO RUN NOW! 💀"
 };
 
-const getGameKey = (postId: string, userId: string) => `granny_game:${postId}:${userId}`;
+const getGameKey = (postId: string, userId: string) => `escape_granny:${postId}:${userId}`;
 
 export const getGameData = async (
   redis: Context['redis'] | RedisClient,

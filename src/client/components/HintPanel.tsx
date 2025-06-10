@@ -13,20 +13,20 @@ export const HintPanel: React.FC<HintPanelProps> = ({
 }) => {
   return (
     <div className={`space-y-3 ${className}`}>
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg shadow-sm">
+      <div className="dark-glass border-l-4 border-red-600 p-4 rounded-r-lg shadow-lg red-glow">
         <div className="flex items-center">
-          <div className="text-blue-600 mr-2">💡</div>
-          <p className="text-blue-800 font-medium">
-            <span className="font-semibold">Hint 1:</span> {hint1}
+          <div className="text-red-400 mr-2 animate-pulse">🔍</div>
+          <p className="text-red-100 font-medium creepy-text">
+            <span className="font-semibold text-red-300">Clue 1:</span> {hint1}
           </p>
         </div>
       </div>
       
-      <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r-lg shadow-sm">
+      <div className="dark-glass border-l-4 border-purple-600 p-4 rounded-r-lg shadow-lg">
         <div className="flex items-center">
-          <div className="text-purple-600 mr-2">🔍</div>
-          <p className="text-purple-800 font-medium">
-            <span className="font-semibold">Hint 2:</span> {hint2}
+          <div className="text-purple-400 mr-2 animate-pulse">🗝️</div>
+          <p className="text-purple-100 font-medium creepy-text">
+            <span className="font-semibold text-purple-300">Clue 2:</span> {hint2}
           </p>
         </div>
       </div>

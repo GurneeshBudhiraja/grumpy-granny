@@ -5,7 +5,7 @@ import '../server/index';
 import { defineConfig } from '@devvit/server';
 
 defineConfig({
-  name: '[Bolt] The Grumpy Granny',
+  name: '[Bolt] Escape the Granny',
   entry: 'index.html',
   height: 'tall',
   menu: { enable: false },
@@ -34,7 +34,7 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Load
 
 // Menu item for creating new posts
 Devvit.addMenuItem({
-  label: '[Bolt Grumpy Granny]: New Post',
+  label: '[Bolt Escape the Granny]: New Post',
   location: 'subreddit',
   forUserType: 'moderator',
   onPress: async (_event, context) => {
@@ -44,12 +44,12 @@ Devvit.addMenuItem({
     try {
       const subreddit = await reddit.getCurrentSubreddit();
       post = await reddit.submitPost({
-        title: 'The Grumpy Granny - Password Guessing Game',
+        title: 'Escape the Granny - Horror Password Game',
         subredditName: subreddit.name,
-        preview: <Preview text="Help crack Grandma's password! 👵🔐" />,
+        preview: <Preview text="Can you escape Granny's house? 👵💀" />,
       });
       
-      ui.showToast({ text: 'Created Grumpy Granny game post!' });
+      ui.showToast({ text: 'Created Escape the Granny game post!' });
       ui.navigateTo(post.url);
     } catch (error) {
       if (post) {
