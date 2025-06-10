@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
+import { useKeyboardSound } from './hooks/useKeyboardSound';
 
 export const App = () => {
   const [breathing, setBreathing] = useState(false);
   
   // Add global click sound effect
   useClickSound();
+  
+  // Add global keyboard sound effect
+  useKeyboardSound();
 
   useEffect(() => {
     setTimeout(() => {
