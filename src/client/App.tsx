@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useClickSound } from './hooks/useClickSound';
 
 export const App = () => {
-  const [breating, setBreathing] = useState(false);
+  const [breathing, setBreathing] = useState(false);
+  
+  // Add global click sound effect
+  useClickSound();
+
   useEffect(() => {
     setTimeout(() => {
-      setBreathing(!breating);
+      setBreathing(!breathing);
     }, 500);
   });
+
   return (
     <div className=''>
       Hello
-      {breating ? (
+      {breathing ? (
         <img src="./granny-idle.png" className="w-64 h-64 object-contain contrast-115 brightness-90 sepia-10 grayscale-15 drop-shadow" />
       ) : (
         <img src="./granny-blink.png" className="w-64 h-64 object-contain contrast-115 brightness-90 sepia-10 grayscale-15 drop-shadow" />
