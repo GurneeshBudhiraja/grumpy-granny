@@ -39,6 +39,15 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border text-window-bg bg-desktop-bg font-windows;
+    cursor: url('./public/cursor-image.cur'), auto;
+  }
+  
+  body {
+    cursor: url('./public/cursor-image.cur'), auto;
+  }
+  
+  #root {
+    cursor: url('./public/cursor-image.cur'), auto;
   }
 }
 
@@ -60,4 +69,76 @@
 
   --font-windows: 'windows98';
   --font-pixel: 'pixel';
+}
+
+/* Horror theme additions */
+@layer utilities {
+  .dark-glass {
+    @apply bg-black/30 backdrop-blur-sm border border-red-900/50;
+  }
+  
+  .red-glow {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  
+  .creepy-text {
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  }
+  
+  .animate-creepy-float {
+    animation: creepy-float 3s ease-in-out infinite;
+  }
+  
+  .animate-shake {
+    animation: shake 0.5s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 1s ease-in-out infinite;
+  }
+  
+  .animate-flicker {
+    animation: flicker 2s ease-in-out infinite;
+  }
+  
+  .animate-blood-drip {
+    animation: blood-drip 2s ease-in-out infinite;
+  }
+  
+  .animate-bounce-in {
+    animation: bounce-in 0.5s ease-out;
+  }
+}
+
+@keyframes creepy-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.8); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes blood-drip {
+  0% { transform: translateY(0px); opacity: 1; }
+  100% { transform: translateY(20px); opacity: 0; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
 }
