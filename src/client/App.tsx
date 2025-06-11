@@ -10,7 +10,7 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState<string>('start');
+  const [gameStatus, setGameStatus] = useState<"start" | "rules" | "play">('start');
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
