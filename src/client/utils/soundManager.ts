@@ -12,11 +12,11 @@ class SoundManager implements SoundManagerInterface {
     // Use correct paths without './public/' prefix
     this.clickSound = new Audio('/mouse-click.mp3');
     this.clickSound.preload = 'auto';
-    this.clickSound.volume = 0.5;
+    this.clickSound.volume = 1;
 
     this.keyboardSound = new Audio('/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
-    this.keyboardSound.volume = 0.4;
+    this.keyboardSound.volume = 0.75;
 
     this.noSignalSound = new Audio('/no-signal-sound.mp3');
     this.noSignalSound.preload = 'auto';
