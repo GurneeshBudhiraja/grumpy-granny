@@ -24,7 +24,7 @@ class SoundManager implements SoundManagerInterface {
 
     this.backgroundMusic = new Audio('/game-theme-song.mp3');
     this.backgroundMusic.preload = 'auto';
-    this.backgroundMusic.volume = 0.01; // Reduced from 0.15 to 0.08
+    this.backgroundMusic.volume = 0; // Reduced from 0.15 to 0.08
     this.backgroundMusic.loop = true; // Loop the background music
   }
 
