@@ -16,40 +16,19 @@ export const App = () => {
   useKeyboardSound();
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('start');
-  const [showNoSignal, setShowNoSignal] = useState(true);
 
   useEffect(() => {
-    // Play no signal sequence on app start
-    const playNoSignalSequence = async () => {
-      // Play no signal sound
-      await soundManager.playNoSignalSound();
-      
-      // After 500ms, hide no signal and start background music
-      setTimeout(async () => {
-        setShowNoSignal(false);
-        await soundManager.playBackgroundMusic();
-      }, 500);
+    // Play background music when app loads
+    const playBackgroundMusic = async () => {
+      await soundManager.playBackgroundMusic();
     };
 
-    playNoSignalSequence();
+    playBackgroundMusic();
   }, []);
 
   const handleCursorChange = (cursorType: 'windows' | 'granny') => {
     cursorManager.setCursorType(cursorType);
   };
-
-  // Show no signal screen
-  if (showNoSignal) {
-    return (
-      <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
-        <img 
-          src="/no-signal.gif" 
-          alt="No Signal" 
-          className="w-full h-full object-cover"
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
