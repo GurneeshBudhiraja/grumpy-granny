@@ -18,7 +18,7 @@ export const App = () => {
 
       {/* Computer Monitor - Bottom Center, Always Responsive */}
       <div
-        className="absolute -bottom-[180px] left-1/2 transform -translate-x-1/2 w-full max-w-4xl h-auto aspect-[4/3] bg-contain bg-no-repeat bg-center z-20"
+        className="absolute -bottom-[118px] left-1/2 transform -translate-x-1/2 w-full max-w-4xl h-auto aspect-[4/3] bg-contain bg-no-repeat bg-center z-20"
         style={{
           backgroundImage: "url('/computer-monitor.png')",
         }}
