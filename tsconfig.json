@@ -1,5 +1,5 @@
 {
   // Only build references.
   "files": [],
-  "references": [{ "path": "./src/devvit" }, { "path": "./src/client" }, { "path": "./src/shared" }]
+  "references": [{ "path": "./src/devvit" }, { "path": "./src/client" }]
 }
