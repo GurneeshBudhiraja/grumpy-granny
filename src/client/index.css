@@ -39,7 +39,7 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows;
-    cursor: url('./public/cursor-image.cur'), auto;
+    cursor: url('/cursor-image.cur'), auto;
   }
   
   body {
