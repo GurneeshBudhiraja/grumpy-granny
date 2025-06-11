@@ -39,51 +39,7 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows select-none;
-    cursor: url('/granny-face.png') 16 16, auto;
-  }
-
-  /* Specific cursor states for interactive elements */
-  button, 
-  [role="button"], 
-  .cursor-pointer {
-    cursor: url('/granny-pointer.png') 16 16, pointer !important;
-  }
-
-  /* Hover states for buttons */
-  button:hover, 
-  [role="button"]:hover, 
-  .cursor-pointer:hover {
-    cursor: url('/granny-pointer.png') 16 16, pointer !important;
-  }
-
-  /* Text input cursor */
-  input[type="text"], 
-  input[type="password"], 
-  textarea,
-  .cursor-text {
-    cursor: url('/granny-face.png') 16 16, text;
-  }
-
-  /* Loading cursor */
-  .cursor-wait {
-    cursor: url('/granny-face.png') 16 16, wait;
-  }
-
-  /* Disabled elements */
-  button:disabled,
-  [disabled],
-  .cursor-not-allowed {
-    cursor: url('/granny-face.png') 16 16, not-allowed;
-  }
-
-  /* Default cursor override */
-  .cursor-default {
-    cursor: url('/granny-face.png') 16 16, default;
-  }
-
-  /* Auto cursor */
-  .cursor-auto {
-    cursor: url('/granny-face.png') 16 16, auto;
+    cursor: url('/pointer-cursor.cur') auto;
   }
 }
 
