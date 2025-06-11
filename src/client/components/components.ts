@@ -1,5 +1,3 @@
 import WindowsButton from "./WindowsButton";
 
-
-
-export { WindowsButton }
+export { WindowsButton };

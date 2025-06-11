@@ -1,4 +1,6 @@
-class SoundManager {
+import { SoundManagerInterface } from '../../shared/types';
+
+class SoundManager implements SoundManagerInterface {
   private clickSound: HTMLAudioElement;
   private keyboardSound: HTMLAudioElement;
   private isInitialized: boolean = false;
@@ -14,7 +16,7 @@ class SoundManager {
     this.keyboardSound.volume = 0.4;
   }
 
-  async playClickSound() {
+  async playClickSound(): Promise<void> {
     try {
       // Clone and play to avoid conflicts
       const audio = this.clickSound.cloneNode() as HTMLAudioElement;
@@ -25,7 +27,7 @@ class SoundManager {
     }
   }
 
-  async playKeyboardSound() {
+  async playKeyboardSound(): Promise<void> {
     try {
       // Clone and play to avoid conflicts
       const audio = this.keyboardSound.cloneNode() as HTMLAudioElement;
@@ -37,19 +39,19 @@ class SoundManager {
   }
 
   // Initialize sounds on first user interaction
-  async initializeSounds() {
+  async initializeSounds(): Promise<void> {
     if (this.isInitialized) return;
     
     try {
       // Load the audio files
       await Promise.all([
-        new Promise((resolve, reject) => {
-          this.clickSound.addEventListener('canplaythrough', resolve, { once: true });
+        new Promise<void>((resolve, reject) => {
+          this.clickSound.addEventListener('canplaythrough', () => resolve(), { once: true });
           this.clickSound.addEventListener('error', reject, { once: true });
           this.clickSound.load();
         }),
-        new Promise((resolve, reject) => {
-          this.keyboardSound.addEventListener('canplaythrough', resolve, { once: true });
+        new Promise<void>((resolve, reject) => {
+          this.keyboardSound.addEventListener('canplaythrough', () => resolve(), { once: true });
           this.keyboardSound.addEventListener('error', reject, { once: true });
           this.keyboardSound.load();
         })

@@ -1,5 +1,10 @@
 {
-  // Only build references.
-  "files": ["./client/types.d.ts"],
-  "references": []
+  "extends": "../../tools/tsconfig-base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "outDir": "../../dist/shared",
+    "tsBuildInfoFile": "../../dist/shared/tsconfig.tsbuildinfo"
+  },
+  "include": ["**/*"],
+  "exclude": ["**/*.test.ts"]
 }

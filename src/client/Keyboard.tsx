@@ -1,10 +1,5 @@
 import React from 'react';
-import { LetterState } from '../shared/types/game';
-
-interface KeyboardProps {
-  letterStates: Record<string, LetterState>;
-  onKey: (key: string) => void;
-}
+import { KeyboardProps } from '../shared/types';
 
 const rows = [
   'qwertyuiop'.split(''),

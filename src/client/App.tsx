@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
-import StartPage from './pages/StartPage';
+import { StartPage } from './pages/page';
 
 export const App = () => {
   // Add global click sound effect
@@ -10,12 +10,12 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState('start');
+  const [gameStatus, setGameStatus] = useState<string>('start');
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
       <div
-        className={`inset-0 absolute bg-zinc-600 z-50 transition-all ease-linear duration-150 ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
+        className={`inset-0 absolute bg-zinc-600 transition-all ease-linear duration-150 ${gameStatus === 'start' ? 'opacity-20 z-40' : 'opacity-0 z-0'}`}
       />
       {/* Wall Background Container */}
       <div className="relative">
@@ -66,13 +66,13 @@ export const App = () => {
 
             {/* Granny Half Portrait - Positioned at the very top edge of monitor */}
             {gameStatus === 'start' && (
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+              <div className="absolute -top-8 sm:-top-10 md:-top-12 lg:-top-14 left-1/2 transform -translate-x-1/2 z-30">
                 <img
                   src="/granny-half-potrait.png"
                   alt="Grumpy Granny"
-                  className="w-[15rem] h-auto object-contain"
+                  className="w-[8rem] sm:w-[10rem] md:w-[12rem] lg:w-[15rem] h-auto object-contain"
                   style={{
-                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
+                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))',
                   }}
                 />
               </div>
