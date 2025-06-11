@@ -49,7 +49,7 @@
     cursor: none !important;
   }
 
-  /* Show normal Windows cursors ONLY inside the screen area */
+  /* Show normal Windows cursor as DEFAULT inside the screen area */
   .bg-desktop-bg\/90,
   .bg-desktop-bg\/90 *,
   .bg-desktop-bg\/90 *::before,
@@ -57,13 +57,27 @@
     cursor: url('/pointer-cursor.cur'), auto !important;
   }
 
-  /* Show pointer cursor for clickable elements inside screen */
+  /* Show granny pointer cursor ONLY for clickable elements inside screen */
   .bg-desktop-bg\/90 button,
   .bg-desktop-bg\/90 a,
   .bg-desktop-bg\/90 [role="button"],
   .bg-desktop-bg\/90 .cursor-pointer,
   .bg-desktop-bg\/90 input[type="button"],
-  .bg-desktop-bg\/90 input[type="submit"] {
+  .bg-desktop-bg\/90 input[type="submit"],
+  .bg-desktop-bg\/90 input[type="reset"],
+  .bg-desktop-bg\/90 [onclick] {
+    cursor: url('/granny-pointer.cur'), pointer !important;
+  }
+
+  /* Ensure clickable elements override the default */
+  .bg-desktop-bg\/90 button:hover,
+  .bg-desktop-bg\/90 a:hover,
+  .bg-desktop-bg\/90 [role="button"]:hover,
+  .bg-desktop-bg\/90 .cursor-pointer:hover,
+  .bg-desktop-bg\/90 input[type="button"]:hover,
+  .bg-desktop-bg\/90 input[type="submit"]:hover,
+  .bg-desktop-bg\/90 input[type="reset"]:hover,
+  .bg-desktop-bg\/90 [onclick]:hover {
     cursor: url('/granny-pointer.cur'), pointer !important;
   }
 }
