@@ -12,15 +12,15 @@ const cursorOptions: CursorOption[] = [
   {
     id: 'windows',
     name: 'Windows',
-    icon: '/cursor-image.cur',
-    description: 'Classic Windows cursors'
+    icon: '/cursor-image.png',
+    description: 'Classic Windows cursors',
   },
   {
     id: 'granny',
     name: 'Granny',
     icon: '/granny-face.png',
-    description: 'Grumpy Granny cursors'
-  }
+    description: 'Grumpy Granny cursors',
+  },
 ];
 
 interface CursorMenuProps {
@@ -37,10 +37,10 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
     setIsExpanded(false);
   };
 
-  const selectedOption = cursorOptions.find(option => option.id === selectedCursor);
+  const selectedOption = cursorOptions.find((option) => option.id === selectedCursor);
 
   return (
-    <div className="fixed bottom-6 right-6 z-[10000]">
+    <div className="fixed bottom-6 right-6 ">
       <motion.div
         className="relative"
         onHoverStart={() => setIsExpanded(true)}
@@ -48,16 +48,17 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
       >
         {/* Main Menu Container */}
         <motion.div
-          className="bg-gray-800/90 backdrop-blur-sm rounded-full border border-gray-600/50 shadow-2xl overflow-hidden"
+          className="bg-window-bg/90 backdrop-blur-sm rounded-full border border-button-shadow shadow-2xl overflow-hidden"
+          style={{ backgroundColor: 'var(--window-bg, #C0C0C0)' }}
           animate={{
             width: isExpanded ? '280px' : '60px',
-            height: '60px'
+            height: '60px',
           }}
           transition={{
             type: 'spring',
             stiffness: 300,
             damping: 30,
-            duration: 0.3
+            duration: 0.3,
           }}
         >
           <div className="flex items-center h-full">
@@ -65,24 +66,24 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
             <div className="flex-shrink-0 w-[60px] h-[60px] flex items-center justify-center">
               <div className="relative w-8 h-8">
                 {selectedOption?.id === 'windows' ? (
-                  <div 
+                  <div
                     className="w-full h-full bg-white rounded-sm"
                     style={{
                       backgroundImage: `url(${selectedOption.icon})`,
                       backgroundSize: 'contain',
                       backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center'
+                      backgroundPosition: 'center',
                     }}
                   />
                 ) : (
                   <img
                     src={selectedOption?.icon}
                     alt={selectedOption?.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain filter hue-rotate-15 animate-pulse"
                   />
                 )}
                 {/* Selection Ring */}
-                <div className="absolute -inset-1 border-2 border-blue-400 rounded-full opacity-80" />
+                <div className="absolute -inset-1 border-2 border-amber-300 rounded-full opacity-80" />
               </div>
             </div>
 
@@ -101,8 +102,8 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
                       key={option.id}
                       className={`relative flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-200 ${
                         selectedCursor === option.id
-                          ? 'bg-blue-500/30 border border-blue-400/50'
-                          : 'bg-gray-700/50 hover:bg-gray-600/50 border border-transparent'
+                          ? 'bg-button-face/30 border border-button-highlighting'
+                          : 'bg-button-face/50 hover:bg-button-highlight/50 border-transparent'
                       }`}
                       onClick={() => handleCursorSelect(option.id)}
                       whileHover={{ scale: 1.05 }}
@@ -111,28 +112,23 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
                       {/* Option Icon */}
                       <div className="w-6 h-6 flex items-center justify-center">
                         {option.id === 'windows' ? (
-                          <div 
+                          <div
                             className="w-full h-full bg-white rounded-sm"
                             style={{
                               backgroundImage: `url(${option.icon})`,
                               backgroundSize: 'contain',
                               backgroundRepeat: 'no-repeat',
-                              backgroundPosition: 'center'
+                              backgroundPosition: 'center',
                             }}
                           />
                         ) : (
                           <img
                             src={option.icon}
                             alt={option.name}
-                            className="w-full h-full object-contain"
+                            className="w-full h-full object-contain filter hue-rotate-15 animate-pulse"
                           />
                         )}
                       </div>
-
-                      {/* Option Label */}
-                      <span className="text-white text-sm font-medium">
-                        {option.name}
-                      </span>
 
                       {/* Selected Indicator */}
                       {selectedCursor === option.id && (
@@ -154,7 +150,8 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
         <AnimatePresence>
           {isExpanded && (
             <motion.div
-              className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900/95 backdrop-blur-sm text-white text-xs rounded-lg border border-gray-600/50 whitespace-nowrap"
+              className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-window-bg/95 backdrop-blur-sm text-text-color text-xs rounded-lg border border-button-shadow whitespace-nowrap"
+              style={{ backgroundColor: 'var(--window-bg, #C0C0C0)', color: 'var(--text-color, #000)' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
