@@ -25,7 +25,7 @@ export const App = () => {
       >
         {/* Monitor Screen Overlay - Positioned inside the monitor frame with reduced opacity */}
         <div
-          className="absolute inset-0 bg-contain bg-no-repeat bg-center opacity-40 overflow-trim"
+          className="absolute inset-0 bg-contain bg-no-repeat bg-center opacity-40 overflow-clip"
           style={{
             backgroundImage: "url('/monitor-screen.png')",
           }}
