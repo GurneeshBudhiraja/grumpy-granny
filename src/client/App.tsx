@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
 import { StartPage } from './pages/page';
+import { GrannySprite } from './components/components';
 import { GameStatus } from '../shared/types';
 
 export const App = () => {
@@ -16,7 +17,7 @@ export const App = () => {
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
       <div
-        className={`inset-0 bg-zinc-500 absolute z-50 pointer-events-none transition-all duration-200 ease-linear ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
+        className={`inset-0 bg-zinc-500 absolute z-40 pointer-events-none transition-all duration-200 ease-linear ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
       />
       {/* Wall Background Container */}
       <div className="relative">
@@ -57,23 +58,16 @@ export const App = () => {
                 {/* CRT Screen with deep curve */}
                 <div className="w-full h-full bg-desktop-bg/90 rounded-lg shadow-inner border-2 border-gray-900 relative overflow-hidden pointer-events-auto">
                   {/* CRT Screen curvature and reflection effects */}
+                  <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg pointer-events-none"></div>
+                  <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg pointer-events-none"></div>
+                  <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg pointer-events-none"></div>
                   <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
                 </div>
               </div>
             </div>
 
-            {gameStatus === 'start' && (
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-                <img
-                  src="/granny-half-potrait.png"
-                  alt="Grumpy Granny"
-                  className="w-[15rem] h-auto object-contain"
-                  style={{
-                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
-                  }}
-                />
-              </div>
-            )}
+            {/* Granny Half Portrait - Animated Component */}
+            <GrannySprite gameStatus={gameStatus} />
 
             {/* Control buttons and vents */}
             <div className="absolute bottom-1 right-1 flex space-x-2">

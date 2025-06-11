@@ -1,3 +1,4 @@
 import WindowsButton from "./WindowsButton";
+import GrannySprite from "./GrannySprite";
 
-export { WindowsButton };
+export { WindowsButton, GrannySprite };

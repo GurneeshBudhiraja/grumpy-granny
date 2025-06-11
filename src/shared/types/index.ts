@@ -35,3 +35,35 @@ export interface KeyboardProps {
   letterStates: Record<string, LetterState>;
   onKey: (key: string) => void;
 }
+
+// Animation types
+export interface GrannySpriteProps {
+  gameStatus: GameStatus;
+  className?: string;
+}
+
+// Animation variants for Framer Motion
+export interface AnimationVariants {
+  hidden: {
+    y: number;
+    opacity: number;
+  };
+  visible: {
+    y: number;
+    opacity: number;
+    transition: {
+      type: string;
+      duration: number;
+      ease: string;
+    };
+  };
+  exit: {
+    y: number;
+    opacity: number;
+    transition: {
+      type: string;
+      duration: number;
+      ease: string;
+    };
+  };
+}
