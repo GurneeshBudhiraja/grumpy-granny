@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface CursorOption {
   id: 'windows' | 'granny';
   name: string;
   icon: string;
-  description: string;
 }
 
 const cursorOptions: CursorOption[] = [
@@ -13,13 +12,11 @@ const cursorOptions: CursorOption[] = [
     id: 'windows',
     name: 'Windows',
     icon: '/cursor-image.png',
-    description: 'Classic Windows cursors',
   },
   {
     id: 'granny',
     name: 'Granny',
     icon: '/granny-face.png',
-    description: 'Grumpy Granny cursors',
   },
 ];
 
@@ -37,10 +34,8 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
     setIsExpanded(false);
   };
 
-  const selectedOption = cursorOptions.find((option) => option.id === selectedCursor);
-
   return (
-    <div className="fixed bottom-6 right-6 ">
+    <div className="fixed bottom-6 right-6">
       <motion.div
         className="relative"
         onHoverStart={() => setIsExpanded(true)}
@@ -48,117 +43,78 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
       >
         {/* Main Menu Container */}
         <motion.div
-          className="bg-window-bg/90 backdrop-blur-sm rounded-full border border-button-shadow shadow-2xl overflow-hidden"
-          style={{ backgroundColor: 'var(--window-bg, #C0C0C0)' }}
+          className="bg-amber-100/90 backdrop-blur-sm rounded-full border-2 border-amber-300 shadow-lg overflow-hidden"
           animate={{
-            width: isExpanded ? '280px' : '60px',
-            height: '60px',
+            width: isExpanded ? '140px' : '50px',
+            height: '50px',
           }}
           transition={{
             type: 'spring',
-            stiffness: 300,
-            damping: 30,
-            duration: 0.3,
+            stiffness: 400,
+            damping: 25,
+            duration: 0.2,
           }}
         >
-          <div className="flex items-center h-full">
-            {/* Selected Cursor Indicator (Always Visible) */}
-            <div className="flex-shrink-0 w-[60px] h-[60px] flex items-center justify-center">
-              <div className="relative w-8 h-8">
-                {selectedOption?.id === 'windows' ? (
-                  <div
-                    className="w-full h-full bg-white rounded-sm"
-                    style={{
-                      backgroundImage: `url(${selectedOption.icon})`,
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={selectedOption?.icon}
-                    alt={selectedOption?.name}
-                    className="w-full h-full object-contain filter hue-rotate-15 animate-pulse"
-                  />
-                )}
-                {/* Selection Ring */}
-                <div className="absolute -inset-1 border-2 border-amber-300 rounded-full opacity-80" />
-              </div>
-            </div>
-
-            {/* Expanded Options */}
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  className="flex items-center space-x-3 px-4 pr-6"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ delay: 0.1, duration: 0.2 }}
+          <div className="flex items-center h-full p-1">
+            {/* Cursor Options */}
+            <div className="flex items-center space-x-1">
+              {cursorOptions.map((option, index) => (
+                <motion.button
+                  key={option.id}
+                  className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${
+                    selectedCursor === option.id
+                      ? 'border-2 border-blue-500 bg-blue-100'
+                      : 'border-2 border-transparent hover:bg-amber-200'
+                  }`}
+                  onClick={() => handleCursorSelect(option.id)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  initial={index === 0 ? { opacity: 1 } : { opacity: 0, x: -20 }}
+                  animate={
+                    index === 0 || isExpanded
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: -20 }
+                  }
+                  transition={{ delay: index * 0.1 }}
                 >
-                  {cursorOptions.map((option) => (
-                    <motion.button
-                      key={option.id}
-                      className={`relative flex items-center space-x-2 px-3 py-2 rounded-full transition-all duration-200 ${
-                        selectedCursor === option.id
-                          ? 'bg-button-face/30 border border-button-highlighting'
-                          : 'bg-button-face/50 hover:bg-button-highlight/50 border-transparent'
-                      }`}
-                      onClick={() => handleCursorSelect(option.id)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {/* Option Icon */}
-                      <div className="w-6 h-6 flex items-center justify-center">
-                        {option.id === 'windows' ? (
-                          <div
-                            className="w-full h-full bg-white rounded-sm"
-                            style={{
-                              backgroundImage: `url(${option.icon})`,
-                              backgroundSize: 'contain',
-                              backgroundRepeat: 'no-repeat',
-                              backgroundPosition: 'center',
-                            }}
-                          />
-                        ) : (
-                          <img
-                            src={option.icon}
-                            alt={option.name}
-                            className="w-full h-full object-contain filter hue-rotate-15 animate-pulse"
-                          />
-                        )}
-                      </div>
-
-                      {/* Selected Indicator */}
-                      {selectedCursor === option.id && (
-                        <motion.div
-                          className="w-2 h-2 bg-blue-400 rounded-full"
-                          layoutId="selected-indicator"
-                          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                        />
-                      )}
-                    </motion.button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {/* Option Icon */}
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    {option.id === 'windows' ? (
+                      <div
+                        className="w-full h-full bg-white rounded-sm border border-gray-300"
+                        style={{
+                          backgroundImage: `url(${option.icon})`,
+                          backgroundSize: 'contain',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'center',
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={option.icon}
+                        alt={option.name}
+                        className="w-full h-full object-contain rounded-full"
+                      />
+                    )}
+                  </div>
+                </motion.button>
+              ))}
+            </div>
           </div>
         </motion.div>
 
-        {/* Tooltip */}
+        {/* Wacky Tooltip */}
         <AnimatePresence>
           {isExpanded && (
             <motion.div
-              className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-window-bg/95 backdrop-blur-sm text-text-color text-xs rounded-lg border border-button-shadow whitespace-nowrap"
-              style={{ backgroundColor: 'var(--window-bg, #C0C0C0)', color: 'var(--text-color, #000)' }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ delay: 0.2 }}
+              className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-yellow-200 text-black text-xs rounded-lg border-2 border-yellow-400 whitespace-nowrap font-bold"
+              initial={{ opacity: 0, y: 10, rotate: -5 }}
+              animate={{ opacity: 1, y: 0, rotate: 2 }}
+              exit={{ opacity: 0, y: 10, rotate: -5 }}
+              transition={{ delay: 0.1 }}
             >
-              Choose your cursor style
-              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900/95" />
+              Pick your cursor! 🖱️
+              <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-yellow-400" />
             </motion.div>
           )}
         </AnimatePresence>

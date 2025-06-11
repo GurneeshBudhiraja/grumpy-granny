@@ -46,8 +46,8 @@ class CursorManager {
       position: fixed;
       top: 0;
       left: 0;
-      width: 60px;
-      height: 60px;
+      width: 32px;
+      height: 32px;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
@@ -144,10 +144,11 @@ class CursorManager {
   private updateCursorVisibility() {
     if (!this.cursorElement) return;
 
-    // Show custom cursor only when visible and NOT inside screen (or when using granny cursors)
-    if (this.state.isVisible && (!this.state.isInsideScreen || this.state.cursorType === 'granny')) {
-      this.cursorElement.style.opacity = this.state.cursorType === 'granny' ? '1' : '0';
+    if (this.state.cursorType === 'granny') {
+      // Always show granny cursor everywhere
+      this.cursorElement.style.opacity = this.state.isVisible ? '1' : '0';
     } else {
+      // Hide custom cursor when using Windows cursors
       this.cursorElement.style.opacity = '0';
     }
   }
@@ -175,6 +176,15 @@ class CursorManager {
         (el as HTMLElement).style.setProperty('cursor', 'none', 'important');
       });
     }
+
+    // Set global cursor for outside screen area
+    if (this.state.cursorType === 'granny') {
+      document.body.style.setProperty('cursor', 'none', 'important');
+      document.documentElement.style.setProperty('cursor', 'none', 'important');
+    } else {
+      document.body.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
+      document.documentElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
+    }
   }
 
   private updateCursorImage() {
@@ -186,7 +196,7 @@ class CursorManager {
   }
 
   private checkClickableElement(element: Element, isLeaving = false) {
-    if (!element || this.state.cursorType === 'windows') return;
+    if (!element) return;
 
     const isClickable = this.isElementClickable(element);
 
