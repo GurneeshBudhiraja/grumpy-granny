@@ -43,7 +43,7 @@
   }
   
   body {
-    cursor: url('./public/cursor-image.cur'), auto;
+    cursor: url('/cursor-image.cur'), auto;
   }
   
   #root {
