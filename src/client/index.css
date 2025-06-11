@@ -46,20 +46,21 @@
   button, 
   [role="button"], 
   .cursor-pointer {
-    cursor: url('/cursor-image.cur'), pointer;
+    cursor: url('/pointer-cursor.cur'), pointer !important;
   }
 
   /* Hover states for buttons */
   button:hover, 
   [role="button"]:hover, 
   .cursor-pointer:hover {
-    cursor: url('/cursor-image.cur'), pointer;
+    cursor: url('/pointer-cursor.cur'), pointer !important;
   }
 
   /* Text input cursor */
   input[type="text"], 
   input[type="password"], 
-  textarea {
+  textarea,
+  .cursor-text {
     cursor: url('/cursor-image.cur'), text;
   }
 
@@ -70,8 +71,19 @@
 
   /* Disabled elements */
   button:disabled,
-  [disabled] {
+  [disabled],
+  .cursor-not-allowed {
     cursor: url('/cursor-image.cur'), not-allowed;
+  }
+
+  /* Default cursor override */
+  .cursor-default {
+    cursor: url('/cursor-image.cur'), default;
+  }
+
+  /* Auto cursor */
+  .cursor-auto {
+    cursor: url('/cursor-image.cur'), auto;
   }
 }
 
