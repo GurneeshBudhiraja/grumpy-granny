@@ -38,18 +38,6 @@ export const App = () => {
           </div>
         </div>
 
-        {/* Granny Half Portrait - Positioned at top of screen, smaller and forward */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
-          <img 
-            src="/granny-half-potrait.png" 
-            alt="Grumpy Granny"
-            className="w-[200px] h-auto md:w-[250px] lg:w-[300px] object-contain"
-            style={{
-              filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
-            }}
-          />
-        </div>
-
         {/* Vintage CRT Monitor - Much Wider and Taller */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
           {/* Monitor Housing - Vintage beige/cream color */}
@@ -60,21 +48,32 @@ export const App = () => {
             {/* Monitor Bezel - Thick vintage style */}
             <div className="absolute top-0 left-0 bottom-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-inner border-2 border-gray-700 h-full w-full">
               {/* Inner bezel */}
-              <div className="w-full h-full p-2 bg-black  rounded-lg">
+              <div className="w-full h-full p-2 bg-black rounded-lg">
                 {/* CRT Screen with deep curve */}
                 <div className="w-full h-full bg-desktop-bg/90 rounded-lg shadow-inner border-2 border-gray-900 relative overflow-hidden">
                   {/* CRT Screen curvature and reflection effects */}
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
-                  {/* components here */}
+                  
+                  {/* Granny Half Portrait - Inside the monitor screen, responsive */}
+                  <div className="absolute inset-0 flex items-start justify-center pt-2 sm:pt-4 md:pt-6">
+                    <img 
+                      src="/granny-half-potrait.png" 
+                      alt="Grumpy Granny"
+                      className="w-[120px] h-auto sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] object-contain z-10"
+                      style={{
+                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Control buttons and vents */}
-            <div className="absolute bottom-1 right-1  flex space-x-2">
-              <div className="w-2 h-2  bg-button-highlight rounded-full" />
+            <div className="absolute bottom-1 right-1 flex space-x-2">
+              <div className="w-2 h-2 bg-button-highlight rounded-full" />
             </div>
 
             {/* Monitor stand - more robust for larger monitor */}
