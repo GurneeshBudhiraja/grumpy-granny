@@ -27,6 +27,8 @@ export const App = () => {
             className="w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl h-auto object-contain drop-shadow-2xl"
             style={{ maxHeight: '80vh' }}
           />
+        </div>
+      </div>
 
       {/* Atmospheric Room Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none"></div>
