@@ -21,7 +21,7 @@ class CursorManager {
 
   private init() {
     if (this.isInitialized) return;
-    
+
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.setupCursor());
@@ -38,8 +38,8 @@ class CursorManager {
       position: fixed;
       top: 0;
       left: 0;
-      width: 32px;
-      height: 32px;
+      width: 60px;
+      height: 60px;
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
@@ -119,7 +119,7 @@ class CursorManager {
     if (!element) return;
 
     const isClickable = this.isElementClickable(element);
-    
+
     if (isLeaving) {
       this.setPointerState(false);
     } else if (isClickable) {
@@ -167,9 +167,9 @@ class CursorManager {
 
   private setPointerState(isPointer: boolean) {
     if (this.state.isPointer === isPointer) return;
-    
+
     this.state.isPointer = isPointer;
-    
+
     if (this.cursorImage) {
       this.cursorImage.src = isPointer ? '/granny-pointer.png' : '/granny-face.png';
     }
