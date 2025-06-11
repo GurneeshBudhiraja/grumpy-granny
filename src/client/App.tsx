@@ -9,49 +9,37 @@ export const App = () => {
   useKeyboardSound();
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+    <div className="min-h-screen w-full relative overflow-hidden bg-gradient-conic from-gray-800 via-gray-900 to-black">
       
-      {/* Wall Background - Full Screen */}
+      {/* Wall Background - Full Viewport Coverage */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/wall-background.png)' }}
       />
       
-      {/* Computer Monitor - Bottom Center */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4 pb-4">
-        <div className="relative w-full">
-          {/* Computer Image - Responsive */}
+      {/* Computer Monitor - Bottom Center, Always Responsive */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-6xl px-2 sm:px-4 pb-2 sm:pb-4">
+        <div className="relative w-full flex justify-center">
+          {/* Computer Monitor Image - Responsive */}
           <img 
-            src="/computer.png" 
+            src="/computer-monitor.png" 
             alt="Vintage Computer Monitor"
-            className="w-full h-auto object-contain drop-shadow-2xl max-h-[50vh] sm:max-h-[60vh] md:max-h-[70vh]"
+            className="w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl h-auto object-contain drop-shadow-2xl"
+            style={{ maxHeight: '80vh' }}
           />
           
-          {/* Monitor Screen Glow Effect */}
-          <div className="absolute top-[12%] left-1/2 transform -translate-x-1/2 w-[42%] h-[32%] bg-blue-400/30 blur-lg rounded-sm animate-pulse"></div>
-          
-          {/* Screen Content Area - This is where game content will go */}
-          <div className="absolute top-[12%] left-1/2 transform -translate-x-1/2 w-[42%] h-[32%] bg-black/80 rounded-sm border border-gray-600/50">
-            {/* Placeholder for screen content */}
-            <div className="w-full h-full flex items-center justify-center">
-              <div className="text-green-400 text-xs sm:text-sm font-mono animate-pulse">
-                SYSTEM READY_
-              </div>
-            </div>
+          {/* Monitor Screen Area - Empty for now */}
+          <div className="absolute top-[15%] left-1/2 transform -translate-x-1/2 w-[45%] h-[35%] bg-black/90 rounded-sm border border-gray-700/30">
+            {/* Screen content will go here */}
           </div>
           
-          {/* Subtle Computer Hum Animation */}
-          <div className="absolute inset-0 animate-pulse opacity-20">
-            <div className="w-full h-full bg-gradient-to-t from-transparent via-blue-900/10 to-transparent"></div>
-          </div>
+          {/* Subtle Monitor Glow */}
+          <div className="absolute top-[15%] left-1/2 transform -translate-x-1/2 w-[45%] h-[35%] bg-blue-900/20 blur-sm rounded-sm"></div>
         </div>
       </div>
 
-      {/* Atmospheric Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20 pointer-events-none"></div>
-      
-      {/* Subtle Room Lighting */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/30 pointer-events-none"></div>
+      {/* Atmospheric Room Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 pointer-events-none"></div>
     </div>
   );
 };
