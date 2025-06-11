@@ -1,7 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { GrannySpriteProps, AnimationVariants } from '../../shared/types';
+import { motion, AnimatePresence } from 'motion/react';
+import { GrannySpriteProps } from '../../shared/types';
 
-const grannyVariants: AnimationVariants = {
+const grannyVariants = {
   hidden: {
     y: 100, // Start from below (behind the monitor)
     opacity: 0,
