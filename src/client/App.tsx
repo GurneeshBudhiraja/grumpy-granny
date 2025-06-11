@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
+import StartPage from './pages/StartPage';
 
 export const App = () => {
   // Add global click sound effect
@@ -13,6 +14,9 @@ export const App = () => {
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
+      <div
+        className={`inset-0 absolute bg-zinc-600 z-50 transition-all ease-linear duration-150 ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
+      />
       {/* Wall Background Container */}
       <div className="relative">
         {/* Wall Background - Full Viewport Coverage */}
@@ -55,21 +59,24 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
+                  <StartPage gameStatus={gameStatus} setGameStatus={setGameStatus} />
                 </div>
               </div>
             </div>
 
             {/* Granny Half Portrait - Positioned at the very top edge of monitor */}
-            <div className="absolute -top-8 sm:-top-10 md:-top-12 lg:-top-14 left-1/2 transform -translate-x-1/2 z-20">
-              <img 
-                src="/granny-half-potrait.png" 
-                alt="Grumpy Granny"
-                className="w-[120px] h-auto sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] object-contain"
-                style={{
-                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
-                }}
-              />
-            </div>
+            {gameStatus === 'start' && (
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                <img
+                  src="/granny-half-potrait.png"
+                  alt="Grumpy Granny"
+                  className="w-[15rem] h-auto object-contain"
+                  style={{
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
+                  }}
+                />
+              </div>
+            )}
 
             {/* Control buttons and vents */}
             <div className="absolute bottom-1 right-1 flex space-x-2">
