@@ -37,6 +37,19 @@ export const App = () => {
             <div className="absolute -bottom-10 right-8 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
           </div>
         </div>
+
+        {/* Granny Half Portrait - Positioned above/behind the monitor */}
+        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-5">
+          <img 
+            src="/granny-half-potrait.png" 
+            alt="Grumpy Granny"
+            className="w-[400px] h-auto md:w-[500px] lg:w-[600px] xl:w-[700px] object-contain"
+            style={{
+              filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
+            }}
+          />
+        </div>
+
         {/* Vintage CRT Monitor - Much Wider and Taller */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
           {/* Monitor Housing - Vintage beige/cream color */}
@@ -54,7 +67,13 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
-                  {/* components here */}
+                  
+                  {/* Game content area - where the actual game will be displayed */}
+                  <div className="absolute inset-4 bg-black rounded-lg flex items-center justify-center">
+                    <div className="text-green-400 font-pixel text-2xl animate-pulse">
+                      Grumpy Granny
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
