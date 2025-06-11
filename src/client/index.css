@@ -39,7 +39,39 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows select-none;
-    /* cursor: url('/cursor-image.cur'), auto; */
+    cursor: url('/cursor-image.cur'), auto;
+  }
+
+  /* Specific cursor states for interactive elements */
+  button, 
+  [role="button"], 
+  .cursor-pointer {
+    cursor: url('/cursor-image.cur'), pointer;
+  }
+
+  /* Hover states for buttons */
+  button:hover, 
+  [role="button"]:hover, 
+  .cursor-pointer:hover {
+    cursor: url('/cursor-image.cur'), pointer;
+  }
+
+  /* Text input cursor */
+  input[type="text"], 
+  input[type="password"], 
+  textarea {
+    cursor: url('/cursor-image.cur'), text;
+  }
+
+  /* Loading cursor */
+  .cursor-wait {
+    cursor: url('/cursor-image.cur'), wait;
+  }
+
+  /* Disabled elements */
+  button:disabled,
+  [disabled] {
+    cursor: url('/cursor-image.cur'), not-allowed;
   }
 }
 

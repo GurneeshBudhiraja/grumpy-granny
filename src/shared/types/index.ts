@@ -67,3 +67,11 @@ export interface AnimationVariants {
     };
   };
 }
+
+// Cursor types
+export type CursorType = 'default' | 'pointer' | 'text' | 'wait' | 'not-allowed';
+
+export interface CursorState {
+  type: CursorType;
+  isVisible: boolean;
+}
