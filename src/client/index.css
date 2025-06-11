@@ -54,7 +54,7 @@
   .bg-desktop-bg\/90 *,
   .bg-desktop-bg\/90 *::before,
   .bg-desktop-bg\/90 *::after {
-    cursor: url('/pointer-cursor.cur'), auto !important;
+    cursor: url('/cursor-image.cur'), auto !important;
   }
 
   /* Show granny pointer cursor ONLY for clickable elements inside screen */
