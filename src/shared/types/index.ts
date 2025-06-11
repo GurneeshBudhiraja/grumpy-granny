@@ -1,10 +1,9 @@
-export interface GameStatus {
-  status: 'start' | 'playing' | 'paused' | 'ended' | '';
-}
+export type GameStatus =
+  'start' | 'playing' | 'paused' | 'ended' | '';
 
 export interface StartPageProps {
-  gameStatus?: string;
-  setGameStatus: React.Dispatch<React.SetStateAction<string>>;
+  gameStatus?: GameStatus;
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
 }
 
 export interface WindowsButtonProps {
