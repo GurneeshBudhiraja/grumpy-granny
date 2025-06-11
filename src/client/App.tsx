@@ -28,14 +28,7 @@ export const App = () => {
             style={{ maxHeight: '80vh' }}
           />
           
-          {/* Monitor Screen Area - Empty for now */}
-          <div className="absolute top-[15%] left-1/2 transform -translate-x-1/2 w-[45%] h-[35%] bg-black/90 rounded-sm border border-gray-700/30">
-            {/* Screen content will go here */}
-          </div>
-          
-          {/* Subtle Monitor Glow */}
-          <div className="absolute top-[15%] left-1/2 transform -translate-x-1/2 w-[45%] h-[35%] bg-blue-900/20 blur-sm rounded-sm"></div>
-        </div>
+        
       </div>
 
       {/* Atmospheric Room Overlay */}
