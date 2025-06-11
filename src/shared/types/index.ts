@@ -21,8 +21,6 @@ export interface AppState {
 export interface SoundManagerInterface {
   playClickSound(): Promise<void>;
   playKeyboardSound(): Promise<void>;
-  playBackgroundMusic(): Promise<void>;
-  stopBackgroundMusic(): void;
   initializeSounds(): Promise<void>;
 }
 

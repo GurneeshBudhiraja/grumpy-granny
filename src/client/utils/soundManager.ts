@@ -3,7 +3,6 @@ import { SoundManagerInterface } from '../../shared/types';
 class SoundManager implements SoundManagerInterface {
   private clickSound: HTMLAudioElement;
   private keyboardSound: HTMLAudioElement;
-  private backgroundMusic: HTMLAudioElement;
   private isInitialized: boolean = false;
 
   constructor() {
@@ -15,11 +14,6 @@ class SoundManager implements SoundManagerInterface {
     this.keyboardSound = new Audio('/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
     this.keyboardSound.volume = 0.4;
-
-    this.backgroundMusic = new Audio('/game-theme-song.mp3');
-    this.backgroundMusic.preload = 'auto';
-    this.backgroundMusic.volume = 0.05; // Very low volume
-    this.backgroundMusic.loop = true; // Loop the background music
   }
 
   async playClickSound(): Promise<void> {
@@ -44,29 +38,6 @@ class SoundManager implements SoundManagerInterface {
     }
   }
 
-  async playBackgroundMusic(): Promise<void> {
-    try {
-      // Initialize sounds first
-      await this.initializeSounds();
-      
-      // Reset and play background music
-      this.backgroundMusic.currentTime = 0;
-      this.backgroundMusic.volume = 0.05; // Very low volume
-      await this.backgroundMusic.play();
-    } catch (error) {
-      console.log('Background music play failed:', error);
-    }
-  }
-
-  stopBackgroundMusic(): void {
-    try {
-      this.backgroundMusic.pause();
-      this.backgroundMusic.currentTime = 0;
-    } catch (error) {
-      console.log('Background music stop failed:', error);
-    }
-  }
-
   // Initialize sounds on first user interaction
   async initializeSounds(): Promise<void> {
     if (this.isInitialized) return;
@@ -83,11 +54,6 @@ class SoundManager implements SoundManagerInterface {
           this.keyboardSound.addEventListener('canplaythrough', () => resolve(), { once: true });
           this.keyboardSound.addEventListener('error', reject, { once: true });
           this.keyboardSound.load();
-        }),
-        new Promise<void>((resolve, reject) => {
-          this.backgroundMusic.addEventListener('canplaythrough', () => resolve(), { once: true });
-          this.backgroundMusic.addEventListener('error', reject, { once: true });
-          this.backgroundMusic.load();
         })
       ]);
       
