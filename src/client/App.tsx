@@ -9,28 +9,17 @@ export const App = () => {
   useKeyboardSound();
 
   return (
-    <div className="min-h-screen w-full relative overflow-hidden">
+    <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
+      {/* overlay filter */}
+      <div
+        className="absolute inset-0 z-50 opacity-20"
+        style={{ backgroundImage: 'url(/overlay-filter.png)' }}
+      />
       {/* Wall Background - Full Viewport Coverage */}
       <div
-        className="absolute inset-0 bg-conic bg-center bg-no-repeat"
+        className="bg-conic bg-center bg-no-repeat aspect-[5/3] min-h-[90%] max-w-4xl"
         style={{ backgroundImage: 'url(/wall-background.png)' }}
-      />
-
-      {/* Computer Monitor - Bottom Center, Always Responsive */}
-      <div
-        className="absolute -bottom-[108px] left-1/2 transform -translate-x-1/2 w-full max-w-4xl h-auto aspect-[4/3] bg-contain bg-no-repeat bg-center z-20"
-        style={{
-          backgroundImage: "url('/computer-monitor.png')",
-        }}
-      >
-        {/* Monitor Screen Overlay - Positioned inside the monitor frame with reduced opacity */}
-        <div
-          className="absolute inset-0 bg-contain bg-no-repeat bg-center opacity-40 overflow-clip"
-          style={{
-            backgroundImage: "url('/monitor-screen.png')",
-          }}
-        />
-      </div>
+      ></div>
     </div>
   );
 };
