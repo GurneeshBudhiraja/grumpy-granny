@@ -39,14 +39,32 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows select-none;
-    cursor: none !important; /* Hide all default cursors */
+    cursor: none !important; /* Hide all default cursors globally */
   }
   
-  /* Ensure all elements have no cursor */
+  /* Ensure all elements have no cursor by default */
   *,
   *::before,
   *::after {
     cursor: none !important;
+  }
+
+  /* Show normal Windows cursors ONLY inside the screen area */
+  .bg-desktop-bg\/90,
+  .bg-desktop-bg\/90 *,
+  .bg-desktop-bg\/90 *::before,
+  .bg-desktop-bg\/90 *::after {
+    cursor: url('/pointer-cursor.cur'), auto !important;
+  }
+
+  /* Show pointer cursor for clickable elements inside screen */
+  .bg-desktop-bg\/90 button,
+  .bg-desktop-bg\/90 a,
+  .bg-desktop-bg\/90 [role="button"],
+  .bg-desktop-bg\/90 .cursor-pointer,
+  .bg-desktop-bg\/90 input[type="button"],
+  .bg-desktop-bg\/90 input[type="submit"] {
+    cursor: url('/granny-pointer.cur'), pointer !important;
   }
 }
 

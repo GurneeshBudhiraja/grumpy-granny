@@ -6,14 +6,16 @@ interface CursorPosition {
 interface CursorState {
   isPointer: boolean;
   isVisible: boolean;
+  isInsideScreen: boolean;
 }
 
 class CursorManager {
   private cursorElement: HTMLElement | null = null;
   private cursorImage: HTMLImageElement | null = null;
   private position: CursorPosition = { x: 0, y: 0 };
-  private state: CursorState = { isPointer: false, isVisible: true };
+  private state: CursorState = { isPointer: false, isVisible: true, isInsideScreen: false };
   private isInitialized = false;
+  private screenElement: HTMLElement | null = null;
 
   constructor() {
     this.init();
@@ -59,13 +61,30 @@ class CursorManager {
     this.cursorElement.appendChild(this.cursorImage);
     document.body.appendChild(this.cursorElement);
 
-    // Hide default cursor
-    document.body.style.cursor = 'none';
-    document.documentElement.style.cursor = 'none';
-
     // Add event listeners
     this.addEventListeners();
     this.isInitialized = true;
+
+    // Find screen element after a short delay to ensure it's rendered
+    setTimeout(() => {
+      this.findScreenElement();
+    }, 100);
+  }
+
+  private findScreenElement() {
+    // Look for the CRT screen area - it's the div with the desktop background
+    this.screenElement = document.querySelector('.bg-desktop-bg\\/90') as HTMLElement;
+    
+    if (this.screenElement) {
+      // Add specific event listeners for screen area
+      this.screenElement.addEventListener('mouseenter', () => {
+        this.setInsideScreen(true);
+      });
+
+      this.screenElement.addEventListener('mouseleave', () => {
+        this.setInsideScreen(false);
+      });
+    }
   }
 
   private addEventListeners() {
@@ -74,7 +93,7 @@ class CursorManager {
       this.updatePosition(e.clientX, e.clientY);
     });
 
-    // Track mouse enter/leave
+    // Track mouse enter/leave document
     document.addEventListener('mouseenter', () => {
       this.showCursor();
     });
@@ -103,14 +122,26 @@ class CursorManager {
 
   private showCursor() {
     this.state.isVisible = true;
-    if (this.cursorElement) {
-      this.cursorElement.style.opacity = '1';
-    }
+    this.updateCursorVisibility();
   }
 
   private hideCursor() {
     this.state.isVisible = false;
-    if (this.cursorElement) {
+    this.updateCursorVisibility();
+  }
+
+  private setInsideScreen(isInside: boolean) {
+    this.state.isInsideScreen = isInside;
+    this.updateCursorVisibility();
+  }
+
+  private updateCursorVisibility() {
+    if (!this.cursorElement) return;
+
+    // Show custom cursor only when visible and NOT inside screen
+    if (this.state.isVisible && !this.state.isInsideScreen) {
+      this.cursorElement.style.opacity = '1';
+    } else {
       this.cursorElement.style.opacity = '0';
     }
   }
