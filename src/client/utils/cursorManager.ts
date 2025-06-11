@@ -145,8 +145,12 @@ class CursorManager {
     if (!this.cursorElement) return;
 
     if (this.state.cursorType === 'granny') {
-      // Always show granny cursor everywhere
-      this.cursorElement.style.opacity = this.state.isVisible ? '1' : '0';
+      // For granny mode, show custom cursor everywhere but hide when hovering clickable elements
+      if (this.state.isVisible && !this.state.isPointer) {
+        this.cursorElement.style.opacity = '1';
+      } else {
+        this.cursorElement.style.opacity = '0';
+      }
     } else {
       // Hide custom cursor when using Windows cursors
       this.cursorElement.style.opacity = '0';
@@ -179,8 +183,15 @@ class CursorManager {
 
     // Set global cursor for outside screen area
     if (this.state.cursorType === 'granny') {
+      // For granny mode, hide default cursor and let custom cursor handle it
       document.body.style.setProperty('cursor', 'none', 'important');
       document.documentElement.style.setProperty('cursor', 'none', 'important');
+      
+      // Set pointer cursor for clickable elements outside screen
+      const globalClickableElements = document.querySelectorAll('button:not(.bg-desktop-bg\\/90 *), a:not(.bg-desktop-bg\\/90 *), [role="button"]:not(.bg-desktop-bg\\/90 *), .cursor-pointer:not(.bg-desktop-bg\\/90 *)');
+      globalClickableElements.forEach(el => {
+        (el as HTMLElement).style.setProperty('cursor', 'url("/pointer-cursor.cur"), pointer', 'important');
+      });
     } else {
       document.body.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
       document.documentElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
@@ -191,7 +202,10 @@ class CursorManager {
     if (!this.cursorImage) return;
 
     if (this.state.cursorType === 'granny') {
-      this.cursorImage.src = this.state.isPointer ? '/granny-pointer.png' : '/granny-face.png';
+      // Always show granny face (not the pointer) - keeping pointer code for future use
+      this.cursorImage.src = '/granny-face.png';
+      // Future granny pointer code (commented out for now):
+      // this.cursorImage.src = this.state.isPointer ? '/granny-pointer.png' : '/granny-face.png';
     }
   }
 
@@ -250,6 +264,7 @@ class CursorManager {
 
     this.state.isPointer = isPointer;
     this.updateCursorImage();
+    this.updateCursorVisibility();
   }
 
   // Public methods
