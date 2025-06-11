@@ -16,15 +16,29 @@ export const App = () => {
   useKeyboardSound();
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('start');
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   useEffect(() => {
-    // Play background music when app loads
-    const playBackgroundMusic = async () => {
-      await soundManager.playBackgroundMusic();
+    // Set up user interaction listener to start background music
+    const handleFirstInteraction = async () => {
+      if (!hasUserInteracted) {
+        setHasUserInteracted(true);
+        await soundManager.playBackgroundMusic();
+      }
     };
 
-    playBackgroundMusic();
-  }, []);
+    // Listen for any user interaction
+    const events = ['click', 'keydown', 'touchstart', 'mousedown'];
+    events.forEach(event => {
+      document.addEventListener(event, handleFirstInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleFirstInteraction);
+      });
+    };
+  }, [hasUserInteracted]);
 
   const handleCursorChange = (cursorType: 'windows' | 'granny') => {
     cursorManager.setCursorType(cursorType);
