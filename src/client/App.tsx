@@ -38,12 +38,12 @@ export const App = () => {
           </div>
         </div>
 
-        {/* Granny Half Portrait - Positioned above/behind the monitor */}
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-5">
+        {/* Granny Half Portrait - Positioned at top of screen, smaller and forward */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
           <img 
             src="/granny-half-potrait.png" 
             alt="Grumpy Granny"
-            className="w-[400px] h-auto md:w-[500px] lg:w-[600px] xl:w-[700px] object-contain"
+            className="w-[200px] h-auto md:w-[250px] lg:w-[300px] object-contain"
             style={{
               filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))',
             }}
@@ -67,13 +67,7 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
-                  
-                  {/* Game content area - where the actual game will be displayed */}
-                  <div className="absolute inset-4 bg-black rounded-lg flex items-center justify-center">
-                    <div className="text-green-400 font-pixel text-2xl animate-pulse">
-                      Grumpy Granny
-                    </div>
-                  </div>
+                  {/* components here */}
                 </div>
               </div>
             </div>
