@@ -15,7 +15,7 @@ export const App = () => {
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
       <div
-        className={`inset-0 absolute bg-zinc-600 transition-all ease-linear duration-150 ${gameStatus === 'start' ? 'opacity-20 z-40' : 'opacity-0 z-0'}`}
+        className={`inset-0 bg-zinc-500 absolute z-50 pointer-events-none transition-all duration-200 ease-linear ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
       />
       {/* Wall Background Container */}
       <div className="relative">
@@ -50,29 +50,25 @@ export const App = () => {
             <div className="absolute inset-0 bg-[#EDE3CD] rounded-2xl opacity-80"></div>
 
             {/* Monitor Bezel - Thick vintage style */}
-            <div className="absolute top-0 left-0 bottom-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-inner border-2 border-gray-700 h-full w-full">
+            <div className="absolute top-0 left-0 bottom-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-inner border-2 border-gray-700 h-full w-full pointer-events-none">
               {/* Inner bezel */}
               <div className="w-full h-full p-2 bg-black rounded-lg">
                 {/* CRT Screen with deep curve */}
-                <div className="w-full h-full bg-desktop-bg/90 rounded-lg shadow-inner border-2 border-gray-900 relative overflow-hidden">
+                <div className="w-full h-full bg-desktop-bg/90 rounded-lg shadow-inner border-2 border-gray-900 relative overflow-hidden pointer-events-auto">
                   {/* CRT Screen curvature and reflection effects */}
-                  <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
-                  <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
-                  <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
-                  <StartPage gameStatus={gameStatus} setGameStatus={setGameStatus} />
+                  <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
                 </div>
               </div>
             </div>
 
-            {/* Granny Half Portrait - Positioned at the very top edge of monitor */}
             {gameStatus === 'start' && (
-              <div className="absolute -top-8 sm:-top-10 md:-top-12 lg:-top-14 left-1/2 transform -translate-x-1/2 z-30">
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
                 <img
                   src="/granny-half-potrait.png"
                   alt="Grumpy Granny"
-                  className="w-[8rem] sm:w-[10rem] md:w-[12rem] lg:w-[15rem] h-auto object-contain"
+                  className="w-[15rem] h-auto object-contain"
                   style={{
-                    filter: 'drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))',
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
                   }}
                 />
               </div>

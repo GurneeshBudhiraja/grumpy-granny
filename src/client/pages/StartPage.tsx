@@ -1,4 +1,3 @@
-import React from 'react';
 import { StartPageProps } from '../../shared/types';
 import { WindowsButton } from '../components/components';
 
@@ -15,10 +14,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 relative z-10">
       <div className="text-white mb-4">Current Status: {gameStatus}</div>
-      <WindowsButton
-        className="z-50 cursor-pointer"
-        onClick={handleButtonClick}
-      >
+      <WindowsButton className="z-50 cursor-pointer" onClick={handleButtonClick}>
         Toggle Game Status
       </WindowsButton>
     </div>
