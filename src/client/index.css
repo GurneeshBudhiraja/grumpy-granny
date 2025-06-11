@@ -57,7 +57,7 @@
     cursor: url('/cursor-image.cur'), auto !important;
   }
 
-  /* Show granny pointer cursor ONLY for clickable elements inside screen */
+  /* Show normal Windows pointer cursor ONLY for clickable elements inside screen */
   .bg-desktop-bg\/90 button,
   .bg-desktop-bg\/90 a,
   .bg-desktop-bg\/90 [role="button"],
@@ -66,7 +66,7 @@
   .bg-desktop-bg\/90 input[type="submit"],
   .bg-desktop-bg\/90 input[type="reset"],
   .bg-desktop-bg\/90 [onclick] {
-    cursor: url('/granny-pointer.cur'), pointer !important;
+    cursor: url('/.cur'), pointer !important;
   }
 
   /* Ensure clickable elements override the default */
