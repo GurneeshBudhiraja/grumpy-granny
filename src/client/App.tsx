@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
 import { StartPage } from './pages/page';
-import { GrannySprite } from './components/components';
+import { GrannySprite, CursorMenu } from './components/components';
 import { GameStatus } from '../shared/types';
+import { cursorManager } from './utils/cursorManager';
 import './utils/cursorManager'; // Initialize cursor manager
 
 export const App = () => {
@@ -14,6 +15,10 @@ export const App = () => {
   useKeyboardSound();
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('start');
+
+  const handleCursorChange = (cursorType: 'windows' | 'granny') => {
+    cursorManager.setCursorType(cursorType);
+  };
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
@@ -81,6 +86,9 @@ export const App = () => {
           </div>
         </div>
       </div>
+
+      {/* Cursor Selection Menu */}
+      <CursorMenu onCursorChange={handleCursorChange} />
     </div>
   );
 };

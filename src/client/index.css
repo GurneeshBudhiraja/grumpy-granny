@@ -49,36 +49,12 @@
     cursor: none !important;
   }
 
-  /* Show normal Windows cursor as DEFAULT inside the screen area */
+  /* Default cursor behavior inside screen - will be controlled by cursor manager */
   .bg-desktop-bg\/90,
   .bg-desktop-bg\/90 *,
   .bg-desktop-bg\/90 *::before,
   .bg-desktop-bg\/90 *::after {
-    cursor: url('/cursor-image.cur'), auto !important;
-  }
-
-  /* Show normal Windows pointer cursor ONLY for clickable elements inside screen */
-  .bg-desktop-bg\/90 button,
-  .bg-desktop-bg\/90 a,
-  .bg-desktop-bg\/90 [role="button"],
-  .bg-desktop-bg\/90 .cursor-pointer,
-  .bg-desktop-bg\/90 input[type="button"],
-  .bg-desktop-bg\/90 input[type="submit"],
-  .bg-desktop-bg\/90 input[type="reset"],
-  .bg-desktop-bg\/90 [onclick] {
-    cursor: url('/pointer-cursor.cur'), pointer !important;
-  }
-
-  /* Ensure clickable elements override the default */
-  .bg-desktop-bg\/90 button:hover,
-  .bg-desktop-bg\/90 a:hover,
-  .bg-desktop-bg\/90 [role="button"]:hover,
-  .bg-desktop-bg\/90 .cursor-pointer:hover,
-  .bg-desktop-bg\/90 input[type="button"]:hover,
-  .bg-desktop-bg\/90 input[type="submit"]:hover,
-  .bg-desktop-bg\/90 input[type="reset"]:hover,
-  .bg-desktop-bg\/90 [onclick]:hover {
-    cursor: url('/granny-pointer.cur'), pointer !important;
+    cursor: none !important;
   }
 }
 

@@ -7,13 +7,19 @@ interface CursorState {
   isPointer: boolean;
   isVisible: boolean;
   isInsideScreen: boolean;
+  cursorType: 'windows' | 'granny';
 }
 
 class CursorManager {
   private cursorElement: HTMLElement | null = null;
   private cursorImage: HTMLImageElement | null = null;
   private position: CursorPosition = { x: 0, y: 0 };
-  private state: CursorState = { isPointer: false, isVisible: true, isInsideScreen: false };
+  private state: CursorState = { 
+    isPointer: false, 
+    isVisible: true, 
+    isInsideScreen: false,
+    cursorType: 'granny'
+  };
   private isInitialized = false;
   private screenElement: HTMLElement | null = null;
 
@@ -55,8 +61,7 @@ class CursorManager {
       height: 100%;
       object-fit: contain;
     `;
-    this.cursorImage.src = '/granny-face.png';
-    this.cursorImage.alt = 'Custom Cursor';
+    this.updateCursorImage();
 
     this.cursorElement.appendChild(this.cursorImage);
     document.body.appendChild(this.cursorElement);
@@ -133,21 +138,55 @@ class CursorManager {
   private setInsideScreen(isInside: boolean) {
     this.state.isInsideScreen = isInside;
     this.updateCursorVisibility();
+    this.updateScreenCursors();
   }
 
   private updateCursorVisibility() {
     if (!this.cursorElement) return;
 
-    // Show custom cursor only when visible and NOT inside screen
-    if (this.state.isVisible && !this.state.isInsideScreen) {
-      this.cursorElement.style.opacity = '1';
+    // Show custom cursor only when visible and NOT inside screen (or when using granny cursors)
+    if (this.state.isVisible && (!this.state.isInsideScreen || this.state.cursorType === 'granny')) {
+      this.cursorElement.style.opacity = this.state.cursorType === 'granny' ? '1' : '0';
     } else {
       this.cursorElement.style.opacity = '0';
     }
   }
 
+  private updateScreenCursors() {
+    const screenElement = document.querySelector('.bg-desktop-bg\\/90') as HTMLElement;
+    if (!screenElement) return;
+
+    if (this.state.cursorType === 'windows') {
+      // Use Windows cursors inside screen
+      screenElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
+      
+      // Update clickable elements to use Windows pointer cursor
+      const clickableElements = screenElement.querySelectorAll('button, a, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"], input[type="reset"], [onclick]');
+      clickableElements.forEach(el => {
+        (el as HTMLElement).style.setProperty('cursor', 'url("/pointer-cursor.cur"), pointer', 'important');
+      });
+    } else {
+      // Use granny cursors (handled by custom cursor element)
+      screenElement.style.setProperty('cursor', 'none', 'important');
+      
+      // Hide default cursors for clickable elements
+      const clickableElements = screenElement.querySelectorAll('button, a, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"], input[type="reset"], [onclick]');
+      clickableElements.forEach(el => {
+        (el as HTMLElement).style.setProperty('cursor', 'none', 'important');
+      });
+    }
+  }
+
+  private updateCursorImage() {
+    if (!this.cursorImage) return;
+
+    if (this.state.cursorType === 'granny') {
+      this.cursorImage.src = this.state.isPointer ? '/granny-pointer.png' : '/granny-face.png';
+    }
+  }
+
   private checkClickableElement(element: Element, isLeaving = false) {
-    if (!element) return;
+    if (!element || this.state.cursorType === 'windows') return;
 
     const isClickable = this.isElementClickable(element);
 
@@ -200,13 +239,17 @@ class CursorManager {
     if (this.state.isPointer === isPointer) return;
 
     this.state.isPointer = isPointer;
-
-    if (this.cursorImage) {
-      this.cursorImage.src = isPointer ? '/granny-pointer.png' : '/granny-face.png';
-    }
+    this.updateCursorImage();
   }
 
   // Public methods
+  public setCursorType(cursorType: 'windows' | 'granny') {
+    this.state.cursorType = cursorType;
+    this.updateCursorImage();
+    this.updateCursorVisibility();
+    this.updateScreenCursors();
+  }
+
   public destroy() {
     if (this.cursorElement) {
       this.cursorElement.remove();
