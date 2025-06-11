@@ -35,7 +35,7 @@ export const App = () => {
           }}
         >
           
-            </div>
+
             
             {/* Main Content Area - Ready for game content */}
             <div className="absolute inset-4 bottom-12 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight rounded-none">
