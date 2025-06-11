@@ -28,48 +28,13 @@ export const App = () => {
           className="absolute inset-0 bg-contain bg-no-repeat bg-center opacity-80 z-30"
           style={{
             backgroundImage: "url('/monitor-screen.png')",
-            // Adjust positioning to fit inside the monitor frame
             top: '15%',
             left: '15%',
             right: '15%',
             bottom: '25%',
           }}
         >
-          {/* Windows 98 OS Content Container */}
-          <div className="w-full h-full bg-desktop-bg relative overflow-hidden">
-            {/* Desktop Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-br from-desktop-bg to-teal-600"></div>
-            
-            {/* Taskbar */}
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-button-face border-t-2 border-button-highlight border-l-2 border-r-2 border-r-button-shadow border-b-2 border-b-button-shadow flex items-center px-2 z-50">
-              {/* Start Button */}
-              <button className="h-6 px-3 bg-button-face border-2 border-button-highlight border-t-button-highlight border-l-button-highlight border-r-button-shadow border-b-button-shadow text-button-text text-xs font-windows flex items-center gap-1">
-                <div className="w-3 h-3 bg-red-500 rounded-sm"></div>
-                Start
-              </button>
-              
-              {/* Taskbar Items Area */}
-              <div className="flex-1 mx-2"></div>
-              
-              {/* System Tray */}
-              <div className="text-button-text text-xs font-windows">
-                12:00 PM
-              </div>
-            </div>
-            
-            {/* Desktop Icons Area */}
-            <div className="absolute top-4 left-4 space-y-4">
-              {/* My Computer Icon */}
-              <div className="flex flex-col items-center w-16 text-center cursor-pointer">
-                <div className="w-8 h-8 bg-blue-500 border border-gray-400 mb-1"></div>
-                <span className="text-xs text-white font-windows leading-tight">My Computer</span>
-              </div>
-              
-              {/* Recycle Bin Icon */}
-              <div className="flex flex-col items-center w-16 text-center cursor-pointer">
-                <div className="w-8 h-8 bg-gray-600 border border-gray-400 mb-1"></div>
-                <span className="text-xs text-white font-windows leading-tight">Recycle Bin</span>
-              </div>
+          
             </div>
             
             {/* Main Content Area - Ready for game content */}
