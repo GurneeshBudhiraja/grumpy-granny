@@ -12,7 +12,7 @@ export const App = () => {
     <div className="min-h-screen w-full relative overflow-hidden">
       {/* Wall Background - Full Viewport Coverage */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-conic bg-center bg-no-repeat"
         style={{ backgroundImage: 'url(/wall-background.png)' }}
       />
 
