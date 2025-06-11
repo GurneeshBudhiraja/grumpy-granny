@@ -6,6 +6,7 @@ class SoundManager implements SoundManagerInterface {
   private noSignalSound: HTMLAudioElement;
   private backgroundMusic: HTMLAudioElement;
   private isInitialized: boolean = false;
+  private currentNoSignalAudio: HTMLAudioElement | null = null;
 
   constructor() {
     // Use correct paths without './public/' prefix
@@ -19,11 +20,11 @@ class SoundManager implements SoundManagerInterface {
 
     this.noSignalSound = new Audio('/no-signal-sound.mp3');
     this.noSignalSound.preload = 'auto';
-    this.noSignalSound.volume = 0.7;
+    this.noSignalSound.volume = 0.5; // Reduced from 0.7
 
     this.backgroundMusic = new Audio('/game-theme-song.mp3');
     this.backgroundMusic.preload = 'auto';
-    this.backgroundMusic.volume = 0.15; // Very low volume
+    this.backgroundMusic.volume = 0.08; // Reduced from 0.15 to 0.08
     this.backgroundMusic.loop = true; // Loop the background music
   }
 
@@ -54,9 +55,26 @@ class SoundManager implements SoundManagerInterface {
       // Initialize sounds first
       await this.initializeSounds();
       
-      const audio = this.noSignalSound.cloneNode() as HTMLAudioElement;
-      audio.volume = 0.7;
-      await audio.play();
+      // Stop any currently playing no signal sound
+      if (this.currentNoSignalAudio) {
+        this.currentNoSignalAudio.pause();
+        this.currentNoSignalAudio.currentTime = 0;
+      }
+      
+      // Create new audio instance and track it
+      this.currentNoSignalAudio = this.noSignalSound.cloneNode() as HTMLAudioElement;
+      this.currentNoSignalAudio.volume = 0.5;
+      await this.currentNoSignalAudio.play();
+      
+      // Stop the sound after exactly 500ms
+      setTimeout(() => {
+        if (this.currentNoSignalAudio) {
+          this.currentNoSignalAudio.pause();
+          this.currentNoSignalAudio.currentTime = 0;
+          this.currentNoSignalAudio = null;
+        }
+      }, 500);
+      
     } catch (error) {
       console.log('No signal audio play failed:', error);
     }
@@ -67,7 +85,9 @@ class SoundManager implements SoundManagerInterface {
       // Initialize sounds first
       await this.initializeSounds();
       
-      this.backgroundMusic.volume = 0.15;
+      // Reset and play background music
+      this.backgroundMusic.currentTime = 0;
+      this.backgroundMusic.volume = 0.08; // Very low volume
       await this.backgroundMusic.play();
     } catch (error) {
       console.log('Background music play failed:', error);
