@@ -55,20 +55,20 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg"></div>
-                  
-                  {/* Granny Half Portrait - Inside the monitor screen, responsive */}
-                  <div className="absolute inset-0 flex items-start justify-center pt-2 sm:pt-4 md:pt-6">
-                    <img 
-                      src="/granny-half-potrait.png" 
-                      alt="Grumpy Granny"
-                      className="w-[120px] h-auto sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] object-contain z-10"
-                      style={{
-                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
-                      }}
-                    />
-                  </div>
                 </div>
               </div>
+            </div>
+
+            {/* Granny Half Portrait - Positioned at the very top edge of monitor */}
+            <div className="absolute -top-8 sm:-top-10 md:-top-12 lg:-top-14 left-1/2 transform -translate-x-1/2 z-20">
+              <img 
+                src="/granny-half-potrait.png" 
+                alt="Grumpy Granny"
+                className="w-[120px] h-auto sm:w-[140px] md:w-[160px] lg:w-[180px] xl:w-[200px] object-contain"
+                style={{
+                  filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))',
+                }}
+              />
             </div>
 
             {/* Control buttons and vents */}
