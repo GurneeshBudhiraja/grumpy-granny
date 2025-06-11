@@ -39,23 +39,12 @@
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows select-none;
-    cursor: none !important;
+    cursor: url('/cursor-image.cur'), auto;
   }
+}
 
-  /* Ensure all elements have no cursor by default */
-  *,
-  *::before,
-  *::after {
-    cursor: none !important;
-  }
-
-  /* Default cursor behavior inside screen - will be controlled by cursor manager */
-  .bg-desktop-bg\/90,
-  .bg-desktop-bg\/90 *,
-  .bg-desktop-bg\/90 *::before,
-  .bg-desktop-bg\/90 *::after {
-    cursor: none !important;
-  }
+.cursor-pointer {
+  cursor: url('/pointer-cursor.cur'), auto;
 }
 
 @theme {

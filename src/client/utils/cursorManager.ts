@@ -14,9 +14,9 @@ class CursorManager {
   private cursorElement: HTMLElement | null = null;
   private cursorImage: HTMLImageElement | null = null;
   private position: CursorPosition = { x: 0, y: 0 };
-  private state: CursorState = { 
-    isPointer: false, 
-    isVisible: true, 
+  private state: CursorState = {
+    isPointer: false,
+    isVisible: true,
     isInsideScreen: false,
     cursorType: 'granny'
   };
@@ -39,47 +39,12 @@ class CursorManager {
   }
 
   private setupCursor() {
-    // Create cursor container
-    this.cursorElement = document.createElement('div');
-    this.cursorElement.id = 'custom-cursor';
-    this.cursorElement.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 32px;
-      height: 32px;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: none;
-    `;
-
-    // Create cursor image
-    this.cursorImage = document.createElement('img');
-    this.cursorImage.style.cssText = `
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    `;
-    this.updateCursorImage();
-
-    this.cursorElement.appendChild(this.cursorImage);
-    document.body.appendChild(this.cursorElement);
-
-    // Add event listeners
-    this.addEventListeners();
-    this.isInitialized = true;
-
-    // Find screen element after a short delay to ensure it's rendered
-    setTimeout(() => {
-      this.findScreenElement();
-    }, 100);
   }
 
   private findScreenElement() {
     // Look for the CRT screen area - it's the div with the desktop background
     this.screenElement = document.querySelector('.bg-desktop-bg\\/90') as HTMLElement;
-    
+
     if (this.screenElement) {
       // Add specific event listeners for screen area
       this.screenElement.addEventListener('mouseenter', () => {
@@ -164,7 +129,7 @@ class CursorManager {
     if (this.state.cursorType === 'windows') {
       // Use Windows cursors inside screen
       screenElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
-      
+
       // Update clickable elements to use Windows pointer cursor
       const clickableElements = screenElement.querySelectorAll('button, a, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"], input[type="reset"], [onclick]');
       clickableElements.forEach(el => {
@@ -173,7 +138,7 @@ class CursorManager {
     } else {
       // Use granny cursors (handled by custom cursor element)
       screenElement.style.setProperty('cursor', 'none', 'important');
-      
+
       // Hide default cursors for clickable elements
       const clickableElements = screenElement.querySelectorAll('button, a, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"], input[type="reset"], [onclick]');
       clickableElements.forEach(el => {
@@ -186,7 +151,7 @@ class CursorManager {
       // For granny mode, hide default cursor and let custom cursor handle it
       document.body.style.setProperty('cursor', 'none', 'important');
       document.documentElement.style.setProperty('cursor', 'none', 'important');
-      
+
       // Set pointer cursor for clickable elements outside screen
       const globalClickableElements = document.querySelectorAll('button:not(.bg-desktop-bg\\/90 *), a:not(.bg-desktop-bg\\/90 *), [role="button"]:not(.bg-desktop-bg\\/90 *), .cursor-pointer:not(.bg-desktop-bg\\/90 *)');
       globalClickableElements.forEach(el => {
