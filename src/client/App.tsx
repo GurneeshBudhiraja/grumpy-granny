@@ -23,33 +23,13 @@ export const App = () => {
           backgroundImage: "url('/computer-monitor.png')",
         }}
       >
-        {/* Monitor Screen Overlay - Positioned inside the monitor frame */}
-        
-          
-
-            
-            {/* Main Content Area - Ready for game content */}
-            <div className="absolute inset-4 bottom-12 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight rounded-none">
-              {/* Window Title Bar */}
-              <div className="h-6 bg-titlebar-active-bg flex items-center justify-between px-2">
-                <span className="text-titlebar-active-text text-xs font-windows">Grumpy Granny Game</span>
-                <div className="flex gap-1">
-                  <button className="w-4 h-4 bg-button-face border border-button-shadow text-xs">_</button>
-                  <button className="w-4 h-4 bg-button-face border border-button-shadow text-xs">□</button>
-                  <button className="w-4 h-4 bg-button-face border border-button-shadow text-xs">×</button>
-                </div>
-              </div>
-              
-              {/* Window Content Area */}
-              <div className="p-4 h-full bg-window-bg">
-                <div className="text-center text-button-text font-windows">
-                  <h1 className="text-lg mb-4">Welcome to Grumpy Granny</h1>
-                  <p className="text-sm">Game content will go here...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Monitor Screen Overlay - Positioned inside the monitor frame with reduced opacity */}
+        <div
+          className="absolute inset-0 bg-contain bg-no-repeat bg-center opacity-80"
+          style={{
+            backgroundImage: "url('/monitor-screen.png')",
+          }}
+        />
       </div>
     </div>
   );
