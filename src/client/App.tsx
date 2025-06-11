@@ -4,6 +4,7 @@ import { useKeyboardSound } from './hooks/useKeyboardSound';
 import { StartPage } from './pages/page';
 import { GrannySprite } from './components/components';
 import { GameStatus } from '../shared/types';
+import './utils/cursorManager'; // Initialize cursor manager
 
 export const App = () => {
   // Add global click sound effect
