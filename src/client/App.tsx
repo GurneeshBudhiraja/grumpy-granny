@@ -47,7 +47,7 @@ export const App = () => {
             <div className="absolute -bottom-10 right-8 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
           </div>
         </div>
-
+        
         {/* Vintage CRT Monitor - Much Wider and Taller */}
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
           {/* Monitor Housing - Vintage beige/cream color */}
@@ -65,14 +65,22 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg pointer-events-none"></div>
-                  
+
                   {/* Page Content with AnimatePresence for smooth transitions */}
                   <AnimatePresence mode="wait">
                     {gameStatus === 'start' && (
-                      <StartPage key="start" setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                      <StartPage
+                        key="start"
+                        setGameStatus={setGameStatus}
+                        gameStatus={gameStatus}
+                      />
                     )}
                     {gameStatus === 'rules' && (
-                      <RulesPage key="rules" setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                      <RulesPage
+                        key="rules"
+                        setGameStatus={setGameStatus}
+                        gameStatus={gameStatus}
+                      />
                     )}
                   </AnimatePresence>
                 </div>

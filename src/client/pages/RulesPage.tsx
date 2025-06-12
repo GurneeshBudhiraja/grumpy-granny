@@ -1,29 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
-const RULES_TEXT = `<span class="text-green-400 font-bold text-lg">GRUMPY GRANNY PASSWORD CHALLENGE</span>
-<span class="text-green-400">=====================================</span>
-
-<span class="text-yellow-400 font-bold">OBJECTIVE:</span>
-<span class="text-white">Guess Granny's secret password before she gets too angry!</span>
-
-<span class="text-yellow-400 font-bold">RULES:</span>
-<span class="text-white">1. You have <span class="text-red-400 font-bold">6 attempts</span> to guess the password</span>
-<span class="text-white">2. Each guess must be exactly <span class="text-blue-400 font-bold">5 letters</span> long</span>
-<span class="text-white">3. After each guess, you'll get clues:</span>
-   <span class="text-green-400">- <span class="bg-green-600 text-black px-1 rounded">GREEN</span>: Letter is correct and in right position</span>
-   <span class="text-yellow-400">- <span class="bg-yellow-500 text-black px-1 rounded">YELLOW</span>: Letter is in password but wrong position</span>  
-   <span class="text-gray-400">- <span class="bg-gray-600 text-white px-1 rounded">GRAY</span>: Letter is not in the password at all</span>
-
-<span class="text-white">4. Type your guess and press <span class="text-cyan-400 font-bold">ENTER</span> to submit</span>
-<span class="text-white">5. Use <span class="text-cyan-400 font-bold">BACKSPACE</span> to delete letters</span>
-<span class="text-white">6. Granny gets <span class="text-red-400 font-bold">angrier</span> with each wrong guess!</span>
-
-<span class="text-red-400 font-bold blink">⚠️ WARNING: Don't make Granny too angry or she'll kick you out! ⚠️</span>
-
-<span class="text-green-400 font-bold">GOOD LUCK, DEARIE! 👵</span>
-
-<span class="text-cyan-400">Type '<span class="text-white font-bold">START</span>' to begin the challenge...</span>`;
+const RULES_TEXT = `GRUMPY GRANNY PASSWORD CHALLENGE`;
 
 interface RulesPageProps {
   gameStatus?: string;
@@ -56,7 +34,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   // Cursor blinking effect
   useEffect(() => {
     const cursorTimer = setInterval(() => {
-      setShowCursor(prev => !prev);
+      setShowCursor((prev) => !prev);
     }, 0);
     return () => clearInterval(cursorTimer);
   }, []);
@@ -92,7 +70,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   };
 
   return (
-    <motion.div 
+    <motion.div
       className="w-full h-full bg-black text-green-400 font-windows overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -101,7 +79,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
     >
       {/* Terminal Header */}
       <div className="bg-gray-800 text-white px-4 py-2 text-sm border-b border-gray-600 flex items-center">
-        <span className="text-green-400 mr-2">●</span> 
+        <span className="text-green-400 mr-2">●</span>
         <span className="text-white">GRANNY TERMINAL v1.0 - READY</span>
         <div className="ml-auto flex space-x-1">
           <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -110,22 +88,26 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
       </div>
 
       {/* Terminal Content */}
-      <div 
+      <div
         ref={terminalRef}
         className="h-full p-4 overflow-y-auto terminal-scrollbar-hidden"
         style={{ height: 'calc(100% - 40px)' }}
       >
         {/* Typed Rules Text with HTML rendering */}
-        <div 
+        <div
           className="whitespace-pre-wrap text-sm leading-relaxed mb-4"
-          dangerouslySetInnerHTML={{ 
-            __html: displayedText + (!isTypingComplete && showCursor ? '<span class="bg-green-400 text-black">█</span>' : '')
+          dangerouslySetInnerHTML={{
+            __html:
+              displayedText +
+              (!isTypingComplete && showCursor
+                ? '<span class="bg-green-400 text-black">█</span>'
+                : ''),
           }}
         />
 
         {/* Interactive Input Section */}
         {isTypingComplete && (
-          <motion.div 
+          <motion.div
             className="flex items-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -143,28 +125,28 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
               maxLength={20}
               style={{ caretColor: '#00ff00' }}
             />
-            {showCursor && (
-              <span className="bg-green-400 text-black ml-1">█</span>
-            )}
+            {showCursor && <span className="bg-green-400 text-black ml-1">█</span>}
           </motion.div>
         )}
 
         {/* Command feedback */}
         {showError && userInput && userInput !== 'START' && (
-          <motion.div 
+          <motion.div
             className="text-red-400 text-sm mt-2 flex items-center"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -10 }}
           >
             <span className="mr-2">❌</span>
-            <span>Unknown command: <span className="font-bold">{userInput}</span></span>
+            <span>
+              Unknown command: <span className="font-bold">{userInput}</span>
+            </span>
           </motion.div>
         )}
 
         {/* Help text */}
         {isTypingComplete && !userInput && (
-          <motion.div 
+          <motion.div
             className="text-gray-500 text-xs mt-4 italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -40,7 +40,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
             duration: 1.2,
             delay: 0.3,
             // Quick exit transition
-            exit: { duration: 0.4, delay: 0 }
+            exit: { duration: 0.4, delay: 0 },
           }}
         >
           GRUMPY
@@ -63,7 +63,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
             duration: 1.2,
             delay: 0.6,
             // Quick exit transition
-            exit: { duration: 0.4, delay: 0 }
+            exit: { duration: 0.4, delay: 0 },
           }}
         >
           GRANNY
@@ -76,11 +76,10 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{
-          delay: 1.5,
-          duration: 0.8,
+          delay: 1,
+          duration: 0.2,
           ease: 'easeOut',
-          // Quick exit transition
-          exit: { duration: 0.4, delay: 0, ease: 'easeIn' }
+          exit: { duration: 0.2, delay: 0, ease: 'linear' },
         }}
       >
         <button
