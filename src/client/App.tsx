@@ -48,12 +48,20 @@ export const App = () => {
           </div>
         </div>
 
-        {/* Vintage CRT Monitor - Much Wider and Taller */}
+        {/* Vintage CRT Monitor - Positioned based on game status */}
         <div
-          className={`absolute transform bottom-20 ${gameStatus === 'start' ? 'left-1/2 -translate-x-1/2 z-10' : 'z-10 right-0 sm:right-10 md:right-0 lg:right-1/2'}`}
+          className={`absolute transform bottom-20 transition-all duration-500 ${
+            gameStatus === 'start' 
+              ? 'left-1/2 -translate-x-1/2 z-10' 
+              : 'right-4 sm:right-8 md:right-12 lg:right-16 xl:right-20 z-10'
+          }`}
         >
           {/* Monitor Housing - Vintage beige/cream color */}
-          <div className="w-[500px] h-[300px] md:w-[500px] md:h-[400px] bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative">
+          <div className={`bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative ${
+            gameStatus === 'start' 
+              ? 'w-[500px] h-[300px] md:w-[500px] md:h-[400px]' 
+              : 'w-[320px] h-[240px] sm:w-[380px] sm:h-[280px] md:w-[420px] md:h-[320px] lg:w-[460px] lg:h-[360px] xl:w-[500px] xl:h-[400px]'
+          }`}>
             {/* Vintage monitor texture */}
             <div className="absolute inset-0 bg-[#EDE3CD] rounded-2xl opacity-80"></div>
 
@@ -89,17 +97,25 @@ export const App = () => {
               </div>
             </div>
 
-            {/* Granny Half Portrait - Animated Component */}
-            <GrannySprite gameStatus={gameStatus} />
+            {/* Granny Half Portrait - Only visible on start page */}
+            {gameStatus === 'start' && <GrannySprite gameStatus={gameStatus} />}
 
             {/* Control buttons and vents */}
             <div className="absolute bottom-1 right-1 flex space-x-2">
               <div className="w-2 h-2 bg-button-highlight rounded-full" />
             </div>
 
-            {/* Monitor stand - more robust for larger monitor */}
-            <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-24 h-12 bg-gradient-to-b from-amber-100 to-amber-200 rounded-b-xl shadow-lg border-2 border-amber-300"></div>
-            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-amber-200 rounded-full shadow-lg border border-amber-300"></div>
+            {/* Monitor stand - responsive sizing */}
+            <div className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-b from-amber-100 to-amber-200 rounded-b-xl shadow-lg border-2 border-amber-300 ${
+              gameStatus === 'start' 
+                ? 'w-24 h-12' 
+                : 'w-16 h-8 sm:w-18 sm:h-9 md:w-20 md:h-10 lg:w-22 lg:h-11 xl:w-24 xl:h-12'
+            }`}></div>
+            <div className={`absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-amber-200 rounded-full shadow-lg border border-amber-300 ${
+              gameStatus === 'start' 
+                ? 'w-32 h-4' 
+                : 'w-20 h-3 sm:w-22 sm:h-3 md:w-24 md:h-3 lg:w-28 lg:h-4 xl:w-32 xl:h-4'
+            }`}></div>
           </div>
         </div>
 
