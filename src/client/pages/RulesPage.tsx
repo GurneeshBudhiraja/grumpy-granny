@@ -1,25 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
-const RULES_HTML = `<span class="text-green-400 font-bold text-lg">GRUMPY GRANNY PASSWORD CHALLENGE</span>
-<span class="text-green-600">===========================================</span>
-
-<span class="text-yellow-400 font-bold">OBJECTIVE:</span>
-Guess Granny's secret password before she gets too angry!
-
-<span class="text-yellow-400 font-bold">RULES:</span>
-<span class="text-white">1.</span> You have <span class="bg-green-600 text-black px-1 rounded font-bold">6 attempts</span> to guess the password
-<span class="text-white">2.</span> Each guess must be <span class="bg-blue-600 text-white px-1 rounded font-bold">exactly 5 letters</span>
-<span class="text-white">3.</span> After each guess, you'll get hints:
-   <span class="bg-green-600 text-black px-1 rounded">GREEN</span> = Correct letter in correct position
-   <span class="bg-yellow-600 text-black px-1 rounded">YELLOW</span> = Correct letter in wrong position  
-   <span class="bg-gray-600 text-white px-1 rounded">GRAY</span> = Letter not in password
-
-<span class="text-red-400 font-bold blink">⚠️ WARNING: Granny gets angrier with each wrong guess! ⚠️</span>
-
-<span class="text-cyan-400">👵 Granny is watching you from behind the screen...</span>
-
-<span class="text-gray-400 text-sm">Type "START" to begin the challenge!</span>`;
+const RULES_HTML = `<span class="text-green-400 font-bold text-lg">GRUMPY GRANNY PASSWORD CHALLENGE</span>`;
 
 interface RulesPageProps {
   gameStatus?: string;
