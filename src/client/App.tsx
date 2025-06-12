@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
 import { StartPage, RulesPage } from './pages/page';
-import { GrannySprite, CursorMenu } from './components/components';
+import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
 import { GameStatus } from '../shared/types';
 import { cursorManager } from './utils/cursorManager';
 import { AnimatePresence } from 'motion/react';
@@ -46,6 +46,9 @@ export const App = () => {
             <div className="absolute -bottom-10 right-1/4 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
             <div className="absolute -bottom-10 right-8 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
           </div>
+
+          {/* Granny Behind Screen - Only visible on rules page */}
+          <GrannyBehindScreen gameStatus={gameStatus} />
         </div>
         
         {/* Vintage CRT Monitor - Much Wider and Taller */}

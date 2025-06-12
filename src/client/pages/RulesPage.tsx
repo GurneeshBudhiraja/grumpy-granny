@@ -1,7 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 
-const RULES_TEXT = `GRUMPY GRANNY PASSWORD CHALLENGE`;
+const RULES_HTML = `<span class="text-green-400 font-bold text-lg">GRUMPY GRANNY PASSWORD CHALLENGE</span>
+<span class="text-green-600">===========================================</span>
+
+<span class="text-yellow-400 font-bold">OBJECTIVE:</span>
+Guess Granny's secret password before she gets too angry!
+
+<span class="text-yellow-400 font-bold">RULES:</span>
+<span class="text-white">1.</span> You have <span class="bg-green-600 text-black px-1 rounded font-bold">6 attempts</span> to guess the password
+<span class="text-white">2.</span> Each guess must be <span class="bg-blue-600 text-white px-1 rounded font-bold">exactly 5 letters</span>
+<span class="text-white">3.</span> After each guess, you'll get hints:
+   <span class="bg-green-600 text-black px-1 rounded">GREEN</span> = Correct letter in correct position
+   <span class="bg-yellow-600 text-black px-1 rounded">YELLOW</span> = Correct letter in wrong position  
+   <span class="bg-gray-600 text-white px-1 rounded">GRAY</span> = Letter not in password
+
+<span class="text-red-400 font-bold blink">⚠️ WARNING: Granny gets angrier with each wrong guess! ⚠️</span>
+
+<span class="text-cyan-400">👵 Granny is watching you from behind the screen...</span>
+
+<span class="text-gray-400 text-sm">Type "START" to begin the challenge!</span>`;
 
 interface RulesPageProps {
   gameStatus?: string;
@@ -20,11 +38,11 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
 
   // Typing animation effect
   useEffect(() => {
-    if (currentIndex < RULES_TEXT.length) {
+    if (currentIndex < RULES_HTML.length) {
       const timer = setTimeout(() => {
-        setDisplayedText(RULES_TEXT.slice(0, currentIndex + 1));
+        setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 25); // Slightly faster typing speed
+      }, 15); // Faster typing speed for better UX
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
@@ -35,7 +53,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   useEffect(() => {
     const cursorTimer = setInterval(() => {
       setShowCursor((prev) => !prev);
-    }, 0);
+    }, 500);
     return () => clearInterval(cursorTimer);
   }, []);
 
@@ -82,8 +100,9 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
         <span className="text-green-400 mr-2">●</span>
         <span className="text-white">GRANNY TERMINAL v1.0 - READY</span>
         <div className="ml-auto flex space-x-1">
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
           <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
         </div>
       </div>
 
