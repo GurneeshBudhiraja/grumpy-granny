@@ -57,7 +57,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   useEffect(() => {
     const cursorTimer = setInterval(() => {
       setShowCursor(prev => !prev);
-    }, 500);
+    }, 0);
     return () => clearInterval(cursorTimer);
   }, []);
 
