@@ -31,7 +31,7 @@ export const App = () => {
           style={{ backgroundImage: 'url(/wall-background.png)' }}
         >
           {/* Table at bottom of wall - wider to support larger monitor */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/6 h-20 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-lg shadow-2xl">
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/6 h-20 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-lg shadow-2xl z-10">
             {/* Table surface with wood grain effect */}
             <div className="w-full h-full bg-gradient-to-r from-amber-800 via-amber-700 to-amber-800 rounded-t-lg border-t-2 border-amber-600">
               {/* Table edge highlight */}
@@ -46,15 +46,14 @@ export const App = () => {
             <div className="absolute -bottom-10 right-1/4 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
             <div className="absolute -bottom-10 right-8 w-4 h-10 bg-amber-900 rounded-b shadow-lg"></div>
           </div>
-
-          {/* Granny Behind Screen - Only visible on rules page */}
-          <GrannyBehindScreen gameStatus={gameStatus} />
         </div>
-        
+
         {/* Vintage CRT Monitor - Much Wider and Taller */}
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
+        <div
+          className={`absolute transform bottom-20 ${gameStatus === 'start' ? 'left-1/2 -translate-x-1/2 z-10' : 'z-10 right-0 sm:right-10 md:right-0 lg:right-1/2'}`}
+        >
           {/* Monitor Housing - Vintage beige/cream color */}
-          <div className="w-[500px] h-[300px] md:w-[600px] md:h-[400px] bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative">
+          <div className="w-[500px] h-[300px] md:w-[500px] md:h-[400px] bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative">
             {/* Vintage monitor texture */}
             <div className="absolute inset-0 bg-[#EDE3CD] rounded-2xl opacity-80"></div>
 
@@ -103,6 +102,9 @@ export const App = () => {
             <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-32 h-4 bg-amber-200 rounded-full shadow-lg border border-amber-300"></div>
           </div>
         </div>
+
+        {/* Granny Behind Screen - Only visible on rules page */}
+        <GrannyBehindScreen gameStatus={gameStatus} />
       </div>
 
       {/* Cursor Selection Menu */}
