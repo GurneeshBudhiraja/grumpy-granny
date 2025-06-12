@@ -66,6 +66,7 @@
 
 .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #00cc00;
+  display: hidden;
 }
 
 /* Terminal input focus styling */
