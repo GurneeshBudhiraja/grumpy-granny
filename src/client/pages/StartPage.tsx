@@ -3,7 +3,7 @@ import { StartPageProps } from '../../shared/types';
 
 function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
   const handleButtonClick = () => {
-    console.log('Start button clicked - no action yet');
+    setGameStatus('rules');
   };
 
   return (
@@ -23,7 +23,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
 
       {/* Main Title Animation Container */}
       <div className="relative flex flex-col items-center justify-center w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 mx-auto mt-3 md:mt-0">
-        {/* "GRUMPY" - Coming from left */}
+        {/* "GRUMPY" - Coming from left, exits to left */}
         <motion.div
           className="text-6xl sm:text-8xl md:text-9xl font-pixel drop-shadow-lg mb-2 sm:mb-4 text-highlight-bg"
           style={{
@@ -32,6 +32,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
           }}
           initial={{ x: -300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -300, opacity: 0 }}
           transition={{
             type: 'spring',
             stiffness: 100,
@@ -43,7 +44,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
           GRUMPY
         </motion.div>
 
-        {/* "GRANNY" - Coming from right */}
+        {/* "GRANNY" - Coming from right, exits to right */}
         <motion.div
           style={{
             filter: 'brightness(1.2)',
@@ -52,6 +53,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
           className="text-highlight-bg drop-shadow-lg text-6xl sm:text-8xl md:text-9xl font-pixel w-full text-center -mt-8 md:-mt-10 px-4"
           initial={{ x: 300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 300, opacity: 0 }}
           transition={{
             type: 'spring',
             stiffness: 100,
@@ -64,10 +66,11 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
         </motion.div>
       </div>
 
-      {/* Vintage Game Button */}
+      {/* Vintage Game Button - exits downward */}
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
         transition={{
           delay: 1.5,
           duration: 0.8,
@@ -85,9 +88,8 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
               filter: 'brightness(1.2)',
             }}
           >
-            {/* Inner button face */}
             {/* Button text */}
-            <span className="text-4xl text-text-color font-pixel font-bold cursor-pointer tracking-wide  group-active:drop-shadow-none">
+            <span className="text-4xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               START GAME
             </span>
           </div>

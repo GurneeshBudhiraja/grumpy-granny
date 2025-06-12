@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useClickSound } from './hooks/useClickSound';
 import { useKeyboardSound } from './hooks/useKeyboardSound';
-import { StartPage } from './pages/page';
+import { StartPage, RulesPage } from './pages/page';
 import { GrannySprite, CursorMenu } from './components/components';
 import { GameStatus } from '../shared/types';
 import { cursorManager } from './utils/cursorManager';
+import { AnimatePresence } from 'motion/react';
 import './utils/cursorManager'; // Initialize cursor manager
 
 export const App = () => {
@@ -64,12 +65,16 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg pointer-events-none"></div>
-                  {gameStatus === 'start' && (
-                    <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
-                  )}
-                  {gameStatus === 'playing' && (
-                    <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
-                  )}
+                  
+                  {/* Page Content with AnimatePresence for smooth transitions */}
+                  <AnimatePresence mode="wait">
+                    {gameStatus === 'start' && (
+                      <StartPage key="start" setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                    )}
+                    {gameStatus === 'rules' && (
+                      <RulesPage key="rules" setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
