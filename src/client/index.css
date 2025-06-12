@@ -47,33 +47,45 @@
   cursor: url('/pointer-cursor.cur'), auto;
 }
 
-/* Terminal scrollbar styling */
-.terminal-scrollbar::-webkit-scrollbar {
-  width: 1px;
-  display: hidden;
+/* Terminal scrollbar styling - COMPLETELY HIDDEN */
+.terminal-scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
-.terminal-scrollbar::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  display: hidden;
+.terminal-scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* WebKit */
+  width: 0;
+  height: 0;
 }
 
-.terminal-scrollbar::-webkit-scrollbar-thumb {
-  background: #00ff00;
-  border-radius: 4px;
-  display: hidden;
+.terminal-scrollbar-hidden::-webkit-scrollbar-track {
+  display: none;
 }
 
-.terminal-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #00cc00;
-  display: hidden;
+.terminal-scrollbar-hidden::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+.terminal-scrollbar-hidden::-webkit-scrollbar-corner {
+  display: none;
 }
 
 /* Terminal input focus styling */
-.terminal-scrollbar input:focus {
+.terminal-scrollbar-hidden input:focus {
   outline: none;
   box-shadow: none;
-  display: hidden;
+  caret-color: #00ff00;
+}
+
+/* Blinking animation for warning text */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.blink {
+  animation: blink 1s infinite;
 }
 
 @theme {

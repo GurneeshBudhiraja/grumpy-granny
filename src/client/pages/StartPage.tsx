@@ -23,7 +23,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
 
       {/* Main Title Animation Container */}
       <div className="relative flex flex-col items-center justify-center w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 mx-auto mt-3 md:mt-0">
-        {/* "GRUMPY" - Coming from left, exits to left */}
+        {/* "GRUMPY" - Coming from left, exits to left QUICKLY */}
         <motion.div
           className="text-6xl sm:text-8xl md:text-9xl font-pixel drop-shadow-lg mb-2 sm:mb-4 text-highlight-bg"
           style={{
@@ -39,12 +39,14 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
             damping: 15,
             duration: 1.2,
             delay: 0.3,
+            // Quick exit transition
+            exit: { duration: 0.4, delay: 0 }
           }}
         >
           GRUMPY
         </motion.div>
 
-        {/* "GRANNY" - Coming from right, exits to right */}
+        {/* "GRANNY" - Coming from right, exits to right QUICKLY */}
         <motion.div
           style={{
             filter: 'brightness(1.2)',
@@ -60,13 +62,15 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
             damping: 15,
             duration: 1.2,
             delay: 0.6,
+            // Quick exit transition
+            exit: { duration: 0.4, delay: 0 }
           }}
         >
           GRANNY
         </motion.div>
       </div>
 
-      {/* Vintage Game Button - exits downward */}
+      {/* Vintage Game Button - exits downward QUICKLY */}
       <motion.div
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -75,6 +79,8 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
           delay: 1.5,
           duration: 0.8,
           ease: 'easeOut',
+          // Quick exit transition
+          exit: { duration: 0.4, delay: 0, ease: 'easeIn' }
         }}
       >
         <button
