@@ -22,9 +22,6 @@ export const App = () => {
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
-      <div
-        className={`inset-0 bg-zinc-500 absolute z-40 pointer-events-none transition-all duration-200 ease-linear ${gameStatus === 'start' ? 'opacity-20' : 'opacity-0'}`}
-      />
       {/* Wall Background Container */}
       <div className="relative">
         {/* Wall Background - Full Viewport Coverage */}
@@ -67,7 +64,12 @@ export const App = () => {
                   <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black opacity-30 rounded-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent opacity-5 rounded-t-lg pointer-events-none"></div>
                   <div className="absolute top-0 left-0 w-1/4 h-full bg-gradient-to-r from-white to-transparent opacity-3 rounded-l-lg pointer-events-none"></div>
-                  <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                  {gameStatus === 'start' && (
+                    <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                  )}
+                  {gameStatus === 'playing' && (
+                    <StartPage setGameStatus={setGameStatus} gameStatus={gameStatus} />
+                  )}
                 </div>
               </div>
             </div>
