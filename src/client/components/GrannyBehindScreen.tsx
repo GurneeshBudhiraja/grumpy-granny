@@ -32,23 +32,46 @@ function GrannyBehindScreen({ gameStatus }: GrannyBehindScreenProps) {
           delay: 0.2, // Slight delay after rules page appears
         }}
       >
-        {/* Granny Behind Screen Container - Positioned on the left side */}
-        <div className="absolute bottom-0 left-8 sm:left-16 md:left-20 lg:left-24 xl:left-32">
-          {/* Granny Image - Positioned behind and slightly above the monitor */}
+        {/* Granny Behind Screen Container - Positioned to maintain minimal gap */}
+        <div className={`absolute bottom-0 ${
+          // Responsive positioning - much closer to monitor
+          'left-[8%] ' +
+          'sm:left-[12%] ' +
+          'md:left-[16%] ' +
+          'lg:left-[18%] ' +
+          'xl:left-[20%] ' +
+          '2xl:left-[22%]'
+        }`}>
+          {/* Granny Image - Responsive sizing that scales with monitor */}
           <div className="relative">
-            {/* Main Granny Image - Responsive sizing */}
             <motion.img
               src={isBlinking ? '/granny-blink.png' : '/granny-idle.png'}
               alt="Granny watching from behind"
-              className="object-contain w-64 sm:w-72 md:w-80 lg:w-88 xl:w-96"
+              className={`object-contain ${
+                // Responsive Granny sizing - scales proportionally with monitor
+                'w-[240px] ' +
+                'sm:w-[280px] ' +
+                'md:w-[320px] ' +
+                'lg:w-[360px] ' +
+                'xl:w-[400px] ' +
+                '2xl:w-[440px]'
+              }`}
               style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
             />
           </div>
         </div>
         
-        {/* Floor shadow for Granny - Positioned under her */}
+        {/* Floor shadow for Granny - Positioned proportionally under her */}
         <div
-          className="absolute bottom-0 left-20 sm:left-28 md:left-32 lg:left-36 xl:left-44 w-16 h-6 sm:w-20 sm:h-7 md:w-24 md:h-8 lg:w-28 lg:h-9 xl:w-32 xl:h-10 bg-black opacity-10 rounded-full blur-sm"
+          className={`absolute bottom-0 bg-black opacity-10 rounded-full blur-sm ${
+            // Responsive shadow positioning and sizing
+            'left-[12%] w-16 h-6 ' +
+            'sm:left-[16%] sm:w-20 sm:h-7 ' +
+            'md:left-[20%] md:w-24 md:h-8 ' +
+            'lg:left-[22%] lg:w-28 lg:h-9 ' +
+            'xl:left-[24%] xl:w-32 xl:h-10 ' +
+            '2xl:left-[26%] 2xl:w-36 2xl:h-11'
+          }`}
           style={{
             transform: 'translateY(10px)',
           }}
