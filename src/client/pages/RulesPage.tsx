@@ -101,7 +101,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
             __html:
               displayedText +
               (!isTypingComplete && showCursor
-                ? '<span class="bg-green-400 text-black">█</span>'
+                ? '<span class="bg-blue-400 text-white">█</span>'
                 : ''),
           }}
         />
