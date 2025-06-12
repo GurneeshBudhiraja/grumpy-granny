@@ -49,7 +49,7 @@
 
 /* Terminal scrollbar styling */
 .terminal-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  display: hidden;
 }
 
 .terminal-scrollbar::-webkit-scrollbar-track {
