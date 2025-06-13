@@ -75,3 +75,10 @@ export interface CursorState {
   type: CursorType;
   isVisible: boolean;
 }
+
+export type GrannyStatusState = "blinking"
+
+export interface GrannyStatus {
+  state: GrannyStatusState;
+  words: string;
+}

@@ -50,7 +50,7 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
         <motion.div
           style={{
             filter: 'brightness(1.2)',
-            WebkitTextStroke: '2px var(--highlight-bg)',
+            WebkitTextStroke: '2px var(--text-color)',
           }}
           className="text-highlight-bg drop-shadow-lg text-6xl sm:text-8xl md:text-9xl font-pixel w-full text-center -mt-8 md:-mt-10 px-4"
           initial={{ x: 300, opacity: 0 }}

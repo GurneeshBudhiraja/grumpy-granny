@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { GrannyStatus } from '../../shared/types';
 
-interface GrannyBehindScreenProps {
-  gameStatus: string;
-}
+type GrannyBehindScreenProps = GrannyStatus;
 
-function GrannyBehindScreen({ gameStatus }: GrannyBehindScreenProps) {
+function GrannyBehindScreen({ state, words }: GrannyBehindScreenProps) {
   const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
-    if (gameStatus !== 'rules') return;
-    const blinkInterval = setInterval(() => {
-      setIsBlinking((prev) => !prev);
-    }, 500);
+    if (state === 'blinking') {
+      const blinkInterval = setInterval(() => {
+        setIsBlinking((prev) => !prev);
+      }, 500);
+      return () => clearInterval(blinkInterval);
+    }
+  }, [state]);
 
-    return () => clearInterval(blinkInterval);
-  }, [gameStatus]);
-
-  if (gameStatus !== 'rules') return null;
+  // TODO: change this later on
+  if (state !== 'blinking') return null;
 
   return (
     <AnimatePresence>
@@ -33,15 +33,16 @@ function GrannyBehindScreen({ gameStatus }: GrannyBehindScreenProps) {
         }}
       >
         {/* Granny Behind Screen Container - Positioned to maintain minimal gap */}
-        <div className={`absolute bottom-0 ${
-          // Responsive positioning - much closer to monitor
-          'left-[8%] ' +
-          'sm:left-[12%] ' +
-          'md:left-[16%] ' +
-          'lg:left-[18%] ' +
-          'xl:left-[20%] ' +
-          '2xl:left-[22%]'
-        }`}>
+        <div
+          className={`absolute bottom-0 ${
+            // Responsive positioning - much closer to monitor
+            'left-1/2 -translate-x-1/2   ' +
+            'sm:left-[24%] sm:top-5  ' +
+            'md:left-[28%] md:top-3 ' +
+            'lg:left-1/5 lg:-top-10 ' +
+            'xl:left-1/4 xl:top-0 '
+          }`}
+        >
           {/* Granny Image - Responsive sizing that scales with monitor */}
           <div className="relative">
             <motion.img
@@ -49,18 +50,17 @@ function GrannyBehindScreen({ gameStatus }: GrannyBehindScreenProps) {
               alt="Granny watching from behind"
               className={`object-contain ${
                 // Responsive Granny sizing - scales proportionally with monitor
-                'w-[240px] ' +
-                'sm:w-[280px] ' +
-                'md:w-[320px] ' +
-                'lg:w-[360px] ' +
-                'xl:w-[400px] ' +
-                '2xl:w-[440px]'
+                'w-[390px] mb-11 ' +
+                'sm:w-[350px] sm:mb-0   ' +
+                'md:w-[390px] ' +
+                'lg:w-[450px] ' +
+                'xl:w-[460px] '
               }`}
               style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
             />
           </div>
         </div>
-        
+
         {/* Floor shadow for Granny - Positioned proportionally under her */}
         <div
           className={`absolute bottom-0 bg-black opacity-10 rounded-full blur-sm ${

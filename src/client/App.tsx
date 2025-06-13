@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useClickSound } from './hooks/useClickSound';
-import { useKeyboardSound } from './hooks/useKeyboardSound';
+import { useClickSound, useKeyboardSound } from './hooks/hooks';
 import { StartPage, RulesPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
-import { GameStatus } from '../shared/types';
+import { GameStatus, GrannyStatus } from '../shared/types';
 import { cursorManager } from './utils/cursorManager';
 import { AnimatePresence } from 'motion/react';
 import './utils/cursorManager'; // Initialize cursor manager
@@ -16,7 +15,10 @@ export const App = () => {
   useKeyboardSound();
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('start');
-
+  const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
+    state: 'blinking',
+    words: '',
+  });
   const handleCursorChange = (cursorType: 'windows' | 'granny') => {
     cursorManager.setCursorType(cursorType);
   };
@@ -51,28 +53,28 @@ export const App = () => {
         {/* Vintage CRT Monitor - Responsive positioning and sizing */}
         <div
           className={`absolute transform bottom-20 transition-all duration-500 ${
-            gameStatus === 'start' 
-              ? 'left-1/2 -translate-x-1/2 z-10' 
+            gameStatus === 'start'
+              ? 'left-1/2 -translate-x-1/2 z-10'
               : `z-10 ${
                   // Responsive positioning for rules page - much closer to center
-                  'left-[45%] sm:left-[50%] md:left-[52%] lg:left-[54%] xl:left-[56%] 2xl:left-[58%]'
+                  'left-1/2 -translate-x-1/2 sm:left-1/2 sm:-translate-x-20 md:left-1/2 md:-translate-x-24 lg:left-1/2 lg:-translate-x-32 xl:left-[56%]'
                 }`
           }`}
         >
           {/* Monitor Housing - Responsive sizing */}
-          <div className={`bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative ${
-            gameStatus === 'start' 
-              ? 'w-[500px] h-[300px] md:w-[500px] md:h-[400px]' 
-              : `${
-                  // Responsive monitor sizing for rules page - scales with screen size
-                  'w-[280px] h-[210px] ' +
-                  'sm:w-[320px] sm:h-[240px] ' +
-                  'md:w-[380px] md:h-[285px] ' +
-                  'lg:w-[420px] lg:h-[315px] ' +
-                  'xl:w-[460px] xl:h-[345px] ' +
-                  '2xl:w-[500px] 2xl:h-[375px]'
-                }`
-          }`}>
+          <div
+            className={`bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative ${
+              gameStatus === 'start'
+                ? 'w-[500px] h-[300px] md:w-[500px] md:h-[400px]'
+                : `${
+                    'w-[90vw] h-[280px] ' +
+                    'sm:w-[60vw] sm:h-[50vh] ' +
+                    'md:w-[62vw] md:h-[50vh] ' +
+                    'lg:w-[50vw] lg:h-[52vh] ' +
+                    'xl:w-[37vw] xl:h-[345px] '
+                  }`
+            }`}
+          >
             {/* Vintage monitor texture */}
             <div className="absolute inset-0 bg-[#EDE3CD] rounded-2xl opacity-80"></div>
 
@@ -117,35 +119,41 @@ export const App = () => {
             </div>
 
             {/* Monitor stand - responsive sizing */}
-            <div className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-b from-amber-100 to-amber-200 rounded-b-xl shadow-lg border-2 border-amber-300 ${
-              gameStatus === 'start' 
-                ? 'w-24 h-12' 
-                : `${
-                    'w-14 h-7 ' +
-                    'sm:w-16 sm:h-8 ' +
-                    'md:w-18 md:h-9 ' +
-                    'lg:w-20 lg:h-10 ' +
-                    'xl:w-22 xl:h-11 ' +
-                    '2xl:w-24 2xl:h-12'
-                  }`
-            }`}></div>
-            <div className={`absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-amber-200 rounded-full shadow-lg border border-amber-300 ${
-              gameStatus === 'start' 
-                ? 'w-32 h-4' 
-                : `${
-                    'w-18 h-3 ' +
-                    'sm:w-20 sm:h-3 ' +
-                    'md:w-22 md:h-3 ' +
-                    'lg:w-24 lg:h-3 ' +
-                    'xl:w-28 xl:h-4 ' +
-                    '2xl:w-32 2xl:h-4'
-                  }`
-            }`}></div>
+            <div
+              className={`absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-b from-amber-100 to-amber-200 rounded-b-xl shadow-lg border-2 border-amber-300 ${
+                gameStatus === 'start'
+                  ? 'w-24 h-12'
+                  : `${
+                      'w-14 h-7 ' +
+                      'sm:w-16 sm:h-8 ' +
+                      'md:w-18 md:h-9 ' +
+                      'lg:w-20 lg:h-10 ' +
+                      'xl:w-22 xl:h-11 ' +
+                      '2xl:w-24 2xl:h-12'
+                    }`
+              }`}
+            ></div>
+            <div
+              className={`absolute -bottom-16 left-1/2 transform -translate-x-1/2 bg-amber-200 rounded-full shadow-lg border border-amber-300 ${
+                gameStatus === 'start'
+                  ? 'w-32 h-4'
+                  : `${
+                      'w-18 h-3 ' +
+                      'sm:w-20 sm:h-3 ' +
+                      'md:w-22 md:h-3 ' +
+                      'lg:w-24 lg:h-3 ' +
+                      'xl:w-28 xl:h-4 ' +
+                      '2xl:w-32 2xl:h-4'
+                    }`
+              }`}
+            ></div>
           </div>
         </div>
 
         {/* Granny Behind Screen - Only visible on rules page */}
-        <GrannyBehindScreen gameStatus={gameStatus} />
+        {gameStatus !== 'start' && (
+          <GrannyBehindScreen state={grannyStatus.state} words={grannyStatus.words} />
+        )}
       </div>
 
       {/* Cursor Selection Menu */}

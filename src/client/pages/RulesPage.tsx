@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import { GameStatus } from '../../shared/types';
+import { CaptchaChallenge } from '../components/components';
 
-const RULES_HTML = `<span class="text-green-400 font-bold text-lg">GRUMPY GRANNY PASSWORD CHALLENGE</span>`;
+const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herself out (again), and only your brain cells can save her! Use the sneaky hints to guess her password, but beware: every wrong answer means Granny will unleash her full arsenal of grumpy love. No mercy, no turning back—just pure, unfiltered brainrot. 
+
+<span class="font-windows text-yellow-300 font-extrabold">WARNING: Hit the back button if you dare, but be prepared for Granny's scream to echo through your soul!</span> 
+
+Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
 interface RulesPageProps {
-  gameStatus?: string;
-  setGameStatus: React.Dispatch<React.SetStateAction<string>>;
+  gameStatus?: GameStatus;
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
 }
 
 function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
@@ -78,13 +84,34 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
       transition={{ duration: 0.3 }}
     >
       {/* Terminal Header */}
-      <div className="bg-gray-800 text-white px-4 py-2 text-sm border-b border-gray-600 flex items-center">
-        <span className="text-green-400 mr-2">●</span>
-        <span className="text-white">GRANNY TERMINAL v1.0 - READY</span>
-        <div className="ml-auto flex space-x-1">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+      <div
+        className="flex items-center justify-between px-2 py-1"
+        style={{
+          backgroundColor: 'var(--titlebar-active-bg)',
+          color: 'var(--titlebar-active-text)',
+          fontFamily: 'Tahoma, sans-serif',
+          fontSize: '12px',
+          lineHeight: '14px',
+          borderBottom: '2px solid var(--window-border)',
+        }}
+      >
+        {/* Back button */}
+        <button
+          className="w-4 h-4 flex items-center justify-center mr-2"
+          onClick={() => setGameStatus('start')}
+          style={{
+            backgroundColor: 'var(--button-face)',
+            border: '1px solid var(--button-shadow)',
+            padding: 0,
+          }}
+        >
+          ←
+        </button>
+        {/* Title */}
+        <span className="flex-1 text-center select-none">GRANNY COMMAND CENTER</span>
+        {/* Window controls */}
+        <div className="flex space-x-1">
+          <img src="/granny-face-laughing.png" className="w-10 h-10" />
         </div>
       </div>
 
@@ -107,55 +134,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
         />
 
         {/* Interactive Input Section */}
-        {isTypingComplete && (
-          <motion.div
-            className="flex items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <span className="text-green-400 mr-2 font-bold">{'>'}</span>
-            <input
-              ref={inputRef}
-              type="text"
-              value={userInput}
-              onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
-              className="bg-transparent border-none outline-none text-green-400 font-windows text-sm flex-1 caret-green-400"
-              placeholder="Type your command..."
-              maxLength={20}
-              style={{ caretColor: '#00ff00' }}
-            />
-            {showCursor && <span className="bg-green-400 text-black ml-1">█</span>}
-          </motion.div>
-        )}
-
-        {/* Command feedback */}
-        {showError && userInput && userInput !== 'START' && (
-          <motion.div
-            className="text-red-400 text-sm mt-2 flex items-center"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-          >
-            <span className="mr-2">❌</span>
-            <span>
-              Unknown command: <span className="font-bold">{userInput}</span>
-            </span>
-          </motion.div>
-        )}
-
-        {/* Help text */}
-        {isTypingComplete && !userInput && (
-          <motion.div
-            className="text-gray-500 text-xs mt-4 italic"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-          >
-            💡 Hint: Type "START" and press Enter to continue...
-          </motion.div>
-        )}
+        {isTypingComplete && <CaptchaChallenge onVerified={() => setGameStatus('playing')} />}
       </div>
 
       {/* Vintage scanlines effect */}
