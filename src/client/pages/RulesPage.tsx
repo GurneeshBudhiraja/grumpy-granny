@@ -8,12 +8,7 @@ const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herse
 
 <span class="font-windows text-yellow-300 font-extrabold">WARNING: Hit the back button if you dare, but be prepared for Granny's scream to echo through your soul!</span> 
 
-Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>
-
-<div class="mt-6 mb-4">
-  <div class="text-green-400 font-windows text-sm mb-2">🔒 SECURITY VERIFICATION REQUIRED</div>
-  <div class="text-yellow-300 font-windows text-xs">Complete the verification below to proceed...</div>
-</div>`;
+Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
 interface RulesPageProps {
   gameStatus?: GameStatus;
@@ -25,7 +20,8 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
   const [isTypingComplete, setIsTypingComplete] = useState(false);
-  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [showCaptchaButton, setShowCaptchaButton] = useState(false);
+  const [showCaptchaOverlay, setShowCaptchaOverlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
 
@@ -47,8 +43,8 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
-      // Show captcha prompt after typing is complete
-      setTimeout(() => setShowCaptcha(true), 1000);
+      // Show captcha button after typing is complete
+      setTimeout(() => setShowCaptchaButton(true), 1000);
     }
   }, [currentIndex]);
 
@@ -65,18 +61,24 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [displayedText]);
+  }, [displayedText, showCaptchaButton]);
 
-  const handleCaptchaClick = () => {
+  const handleCaptchaButtonClick = () => {
     setIsLoading(true);
     // Simulate loading time
     setTimeout(() => {
       setIsLoading(false);
+      setShowCaptchaOverlay(true);
     }, 2000);
   };
 
   const handleCaptchaVerified = () => {
+    setShowCaptchaOverlay(false);
     setGameStatus('playing');
+  };
+
+  const handleCaptchaClose = () => {
+    setShowCaptchaOverlay(false);
   };
 
   return (
@@ -137,37 +139,43 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
           }}
         />
 
-        {/* Captcha Section */}
-        {showCaptcha && (
-          <div className="mt-6 relative z-10">
-            {!isLoading && !isTypingComplete ? (
-              <div 
-                className="inline-block bg-gray-800 border border-green-400 px-4 py-2 cursor-pointer hover:bg-gray-700 transition-colors"
-                onClick={handleCaptchaClick}
-              >
-                <span className="text-green-400 font-windows text-sm">
-                  ☐ I'm not a robot
-                </span>
+        {/* Simple Captcha Button at Bottom */}
+        {showCaptchaButton && (
+          <div className="mt-8 flex justify-center">
+            <div 
+              className="bg-white border-2 border-gray-300 p-4 rounded cursor-pointer hover:bg-gray-50 transition-colors flex items-center space-x-3 shadow-lg"
+              onClick={handleCaptchaButtonClick}
+              style={{ minWidth: '280px' }}
+            >
+              <div className="w-6 h-6 border-2 border-gray-400 bg-white flex items-center justify-center">
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <span className="text-gray-600">☐</span>
+                )}
               </div>
-            ) : isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-green-400 font-windows text-sm">Verifying...</span>
+              <span className="text-gray-800 font-sans text-sm">
+                {isLoading ? 'Verifying...' : "I'm not a robot"}
+              </span>
+              <div className="ml-auto">
+                <div className="text-xs text-gray-500">reCAPTCHA</div>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin opacity-75"></div>
+                </div>
               </div>
-            ) : (
-              <CaptchaChallenge onVerified={handleCaptchaVerified} />
-            )}
+            </div>
           </div>
         )}
       </div>
 
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-30">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <div className="text-green-400 font-windows text-lg">LOADING...</div>
-            <div className="text-green-300 font-windows text-sm mt-2">Initializing security protocols...</div>
+      {/* Captcha Overlay - Appears on top like real captcha */}
+      {showCaptchaOverlay && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative">
+            <CaptchaChallenge 
+              onVerified={handleCaptchaVerified}
+              onClose={handleCaptchaClose}
+            />
           </div>
         </div>
       )}
