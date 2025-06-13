@@ -30,119 +30,144 @@ interface CaptchaChallengeProps {
 interface CaptchaImage {
   src: string;
   isGranny: boolean;
-  rotation: number;
-  blur: number;
-  pixelate: number;
+  id: string;
 }
 
 const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose }) => {
   const [selected, setSelected] = useState<number[]>([]);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [captchaImages, setCaptchaImages] = useState<CaptchaImage[]>([]);
+  const [grannyIndices, setGrannyIndices] = useState<number[]>([]);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   // Generate randomized captcha grid
-  useEffect(() => {
-    const generateCaptchaGrid = () => {
-      // Randomly decide how many granny images to show (2-4)
-      const grannyCount = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
-      
-      // Select random granny images
-      const shuffledGrannyImages = [...grannyCaptchaImages].sort(() => Math.random() - 0.5);
-      const selectedGrannyImages = shuffledGrannyImages.slice(0, grannyCount);
-      
-      // Calculate how many normal images we need (total 9 - granny count)
-      const normalCount = 9 - grannyCount;
-      
-      // Select random normal images
-      const shuffledNormalImages = [...normalCaptchaImages].sort(() => Math.random() - 0.5);
-      const selectedNormalImages = shuffledNormalImages.slice(0, normalCount);
-      
-      // Create image objects with random effects
-      const grannyImageObjects: CaptchaImage[] = selectedGrannyImages.map(src => ({
-        src,
-        isGranny: true,
-        rotation: Math.floor(Math.random() * 21) - 10, // -10 to +10 degrees
-        blur: Math.random() * 1.5 + 0.5, // 0.5 to 2px blur
-        pixelate: Math.random() * 2 + 1, // 1 to 3px pixelation
-      }));
-      
-      const normalImageObjects: CaptchaImage[] = selectedNormalImages.map(src => ({
-        src,
-        isGranny: false,
-        rotation: Math.floor(Math.random() * 21) - 10, // -10 to +10 degrees
-        blur: Math.random() * 1.5 + 0.5, // 0.5 to 2px blur
-        pixelate: Math.random() * 2 + 1, // 1 to 3px pixelation
-      }));
-      
-      // Combine and shuffle all images
-      const allImages = [...grannyImageObjects, ...normalImageObjects];
-      const shuffledImages = allImages.sort(() => Math.random() - 0.5);
-      
-      setCaptchaImages(shuffledImages);
-    };
+  const generateCaptchaGrid = () => {
+    // Randomly decide how many granny images to show (2-4)
+    const grannyCount = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+    
+    // Select random granny images
+    const shuffledGrannyImages = [...grannyCaptchaImages].sort(() => Math.random() - 0.5);
+    const selectedGrannyImages = shuffledGrannyImages.slice(0, grannyCount);
+    
+    // Calculate how many normal images we need (total 9 - granny count)
+    const normalCount = 9 - grannyCount;
+    
+    // Select random normal images
+    const shuffledNormalImages = [...normalCaptchaImages].sort(() => Math.random() - 0.5);
+    const selectedNormalImages = shuffledNormalImages.slice(0, normalCount);
+    
+    // Create image objects
+    const grannyImageObjects: CaptchaImage[] = selectedGrannyImages.map((src, index) => ({
+      src,
+      isGranny: true,
+      id: `granny-${index}-${Date.now()}`,
+    }));
+    
+    const normalImageObjects: CaptchaImage[] = selectedNormalImages.map((src, index) => ({
+      src,
+      isGranny: false,
+      id: `normal-${index}-${Date.now()}`,
+    }));
+    
+    // Combine and shuffle all images
+    const allImages = [...grannyImageObjects, ...normalImageObjects];
+    const shuffledImages = allImages.sort(() => Math.random() - 0.5);
+    
+    // Track which indices contain granny images
+    const newGrannyIndices: number[] = [];
+    shuffledImages.forEach((image, index) => {
+      if (image.isGranny) {
+        newGrannyIndices.push(index);
+      }
+    });
+    
+    setCaptchaImages(shuffledImages);
+    setGrannyIndices(newGrannyIndices);
+  };
 
+  useEffect(() => {
     generateCaptchaGrid();
   }, []);
 
   const toggle = (i: number) => {
     setSelected((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
     setShowError(false);
+    setErrorMessage('');
+  };
+
+  const validateSelection = (): { isValid: boolean; message: string } => {
+    // Check if user selected at least one image
+    if (selected.length === 0) {
+      return { isValid: false, message: 'Please select at least one image' };
+    }
+
+    // Check if user selected all granny images
+    const selectedGrannyIndices = selected.filter(index => grannyIndices.includes(index));
+    const missedGrannyIndices = grannyIndices.filter(index => !selected.includes(index));
+    
+    if (missedGrannyIndices.length > 0) {
+      return { isValid: false, message: 'Please select all images with Granny' };
+    }
+
+    // Check if user selected any non-granny images
+    const selectedNonGrannyIndices = selected.filter(index => !grannyIndices.includes(index));
+    
+    if (selectedNonGrannyIndices.length > 0) {
+      return { isValid: false, message: 'Please only select images with Granny' };
+    }
+
+    // Check if user selected exactly all granny images and no others
+    if (selectedGrannyIndices.length === grannyIndices.length && selectedNonGrannyIndices.length === 0) {
+      return { isValid: true, message: 'Success!' };
+    }
+
+    return { isValid: false, message: 'Please try again' };
+  };
+
+  const regenerateCaptcha = () => {
+    setIsRegenerating(true);
+    setSelected([]);
+    setShowError(false);
+    setErrorMessage('');
+    
+    // Slide out animation, then regenerate
+    setTimeout(() => {
+      generateCaptchaGrid();
+      setIsRegenerating(false);
+    }, 300);
   };
 
   const handleVerify = () => {
-    if (selected.length === 0) {
+    const validation = validateSelection();
+    
+    if (!validation.isValid) {
       setShowError(true);
+      setErrorMessage(validation.message);
+      setIsVerifying(true);
+      
+      // Show error for 1.5 seconds, then regenerate
+      setTimeout(() => {
+        setIsVerifying(false);
+        regenerateCaptcha();
+      }, 1500);
+      
       return;
     }
 
+    // Success case
     setIsVerifying(true);
-
-    // Simulate verification process
     setTimeout(() => {
       setIsVerifying(false);
       onVerified();
     }, 2000);
   };
 
-  const getImageStyle = (image: CaptchaImage) => {
-    return {
-      transform: `rotate(${image.rotation}deg)`,
-      filter: `blur(${image.blur}px)`,
-      imageRendering: 'pixelated' as const,
-      // Add pixelation effect using CSS
-      ...(image.pixelate > 1.5 && {
-        filter: `blur(${image.blur}px) contrast(1.1) saturate(0.9)`,
-      }),
-    };
-  };
-
-  const getOverlayStyle = (image: CaptchaImage) => {
-    return {
-      background: `
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent ${image.pixelate}px,
-          rgba(0,0,0,0.1) ${image.pixelate}px,
-          rgba(0,0,0,0.1) ${image.pixelate * 2}px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          transparent,
-          transparent ${image.pixelate}px,
-          rgba(0,0,0,0.1) ${image.pixelate}px,
-          rgba(0,0,0,0.1) ${image.pixelate * 2}px
-        )
-      `,
-      mixBlendMode: 'multiply' as const,
-    };
-  };
-
   return (
     <AnimatePresence>
       <motion.div
-        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-scroll w-full max-w-sm sm:max-w-xs mx-auto h-72 mt-10 lg:my-0"
+        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-hidden w-full max-w-sm sm:max-w-xs mx-auto h-72 mt-10 lg:my-0"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: -20 }}
@@ -165,10 +190,20 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
 
         {/* Image Grid */}
         <div className="p-3">
-          <div className="grid grid-cols-3 mb-5">
+          <motion.div 
+            className="grid grid-cols-3 mb-5"
+            animate={{ 
+              x: isRegenerating ? 300 : 0,
+              opacity: isRegenerating ? 0 : 1 
+            }}
+            transition={{ 
+              duration: 0.3,
+              ease: "easeInOut"
+            }}
+          >
             {captchaImages.map((image, i) => (
               <motion.div
-                key={i}
+                key={image.id}
                 className={`relative border-2 cursor-pointer transition-all duration-200 overflow-hidden ${
                   selected.includes(i)
                     ? 'border-blue-500 bg-blue-100'
@@ -177,29 +212,20 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 onClick={() => toggle(i)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                initial={{ x: 300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ 
+                  delay: i * 0.05,
+                  duration: 0.3,
+                  ease: "easeOut"
+                }}
               >
-                {/* Image with effects */}
+                {/* Image without effects */}
                 <div className="relative w-full h-20">
                   <img
                     src={image.src}
                     alt={`Captcha option ${i + 1}`}
                     className="w-full h-full object-cover"
-                    style={getImageStyle(image)}
-                  />
-                  
-                  {/* Pixelation/Distortion Overlay */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none"
-                    style={getOverlayStyle(image)}
-                  />
-                  
-                  {/* Additional noise overlay for authenticity */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none opacity-20"
-                    style={{
-                      background: `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, rgba(0,0,0,0.1) 1px, transparent 1px)`,
-                      backgroundSize: `${Math.random() * 3 + 2}px ${Math.random() * 3 + 2}px`,
-                    }}
                   />
                 </div>
 
@@ -218,7 +244,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 )}
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Error Message */}
           <AnimatePresence>
@@ -229,7 +255,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                Please select at least one image
+                {errorMessage}
               </motion.div>
             )}
           </AnimatePresence>
@@ -238,7 +264,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
           <div className="flex justify-end items-center space-x-2 mb-6 md:mb-2">
             <button
               onClick={() => setSelected([])}
-              disabled={isVerifying || selected.length === 0}
+              disabled={isVerifying || selected.length === 0 || isRegenerating}
               className="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-sans"
             >
               Clear
@@ -246,7 +272,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
 
             <button
               onClick={handleVerify}
-              disabled={isVerifying}
+              disabled={isVerifying || isRegenerating}
               className={`px-4 py-2 text-sm rounded transition-all duration-200 font-sans font-medium ${
                 isVerifying
                   ? 'bg-blue-400 text-white cursor-wait'
