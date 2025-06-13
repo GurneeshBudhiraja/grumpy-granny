@@ -27,11 +27,11 @@ class SoundManager implements SoundManagerInterface {
     }
   }
 
-  async playKeyboardSound(): Promise<void> {
+  async playKeyboardSound(volume: number = 0.15): Promise<void> {
     try {
       // Clone and play to avoid conflicts
       const audio = this.keyboardSound.cloneNode() as HTMLAudioElement;
-      audio.volume = 0.15; // Reduced volume for terminal typing
+      audio.volume = volume; // Reduced volume for terminal typing
       await audio.play();
     } catch (error) {
       console.log('Keyboard audio play failed:', error);
@@ -41,7 +41,7 @@ class SoundManager implements SoundManagerInterface {
   // Initialize sounds on first user interaction
   async initializeSounds(): Promise<void> {
     if (this.isInitialized) return;
-    
+
     try {
       // Load the audio files
       await Promise.all([
@@ -56,7 +56,7 @@ class SoundManager implements SoundManagerInterface {
           this.keyboardSound.load();
         })
       ]);
-      
+
       this.isInitialized = true;
       console.log('Sounds initialized successfully');
     } catch (error) {

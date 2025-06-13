@@ -119,7 +119,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
           </AnimatePresence>
 
           {/* Action Buttons */}
-          <div className="flex justify-end items-center space-x-2">
+          <div className="flex justify-end items-center space-x-2 mb-6 md:mb-2">
             <button
               onClick={() => setSelected([])}
               disabled={isVerifying || selected.length === 0}

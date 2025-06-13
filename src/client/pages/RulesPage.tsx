@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { GameStatus } from '../../shared/types';
+import { GameStatus, GrannyStatus } from '../../shared/types';
 import { CaptchaChallenge } from '../components/components';
 import { soundManager } from '../utils/soundManager';
 
@@ -13,9 +13,11 @@ Can you outwit her sass and survive the ultimate patience test, or will you be r
 interface RulesPageProps {
   gameStatus?: GameStatus;
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+  grannyStatus: GrannyStatus;
+  setGrannyStatus: React.Dispatch<React.SetStateAction<GrannyStatus>>;
 }
 
-function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
+function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
@@ -23,39 +25,46 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   const [showCaptchaButton, setShowCaptchaButton] = useState(false);
   const [showCaptchaOverlay, setShowCaptchaOverlay] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSkipped, setIsSkipped] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
+
+  const handleSkip = () => {
+    setIsSkipped(true);
+    setDisplayedText(RULES_HTML);
+    setCurrentIndex(RULES_HTML.length);
+    setShowCursor(false);
+  };
 
   // Typing animation effect with reduced sound frequency
   useEffect(() => {
-    if (currentIndex < RULES_HTML.length) {
-      const timer = setTimeout(
-        async () => {
-          // Play typing sound less frequently (every 3rd character) and only for visible characters
-          const currentChar = RULES_HTML[currentIndex];
-          const isVisibleChar =
-            currentChar &&
-            currentChar !== '<' &&
-            currentChar !== '>' &&
-            !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<');
+    if (currentIndex < RULES_HTML.length && !isSkipped) {
+      const timer = setTimeout(async () => {
+        // Play typing sound less frequently (every 3rd character) and only for visible characters
+        const currentChar = RULES_HTML[currentIndex];
+        const isVisibleChar =
+          currentChar &&
+          currentChar !== '<' &&
+          currentChar !== '>' &&
+          !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<');
 
+        if (!isSkipped) {
           if (isVisibleChar && currentIndex % 3 === 0) {
             // Play sound every 3rd visible character
             await soundManager.initializeSounds();
-            await soundManager.playKeyboardSound();
+            await soundManager.playKeyboardSound(0.05);
           }
+        }
 
-          setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
-          setCurrentIndex(currentIndex + 1);
-        },
-        Math.random() * 15 + 8
-      ); // Faster typing: 8-23ms instead of 15-45ms
+        setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
+        setCurrentIndex(currentIndex + 1);
+      }, 10);
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
       // Show captcha button after typing is complete
       setTimeout(() => setShowCaptchaButton(true), 1000);
     }
-  }, [currentIndex]);
+  }, [currentIndex, isSkipped]);
 
   // Cursor blinking effect
   useEffect(() => {
@@ -112,24 +121,27 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
       >
         {/* Back button */}
         <button
-          className="w-4 h-4 flex items-center justify-center mr-2 hover:bg-gray-600 transition-colors"
-          onClick={() => setGameStatus('start')}
-          style={{
-            backgroundColor: 'var(--button-face)',
-            border: '1px solid var(--button-shadow)',
-            padding: 0,
-          }}
+          className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center mr-2 bg-button-face hover:bg-button-face/80 transition-colors text-highlight-bg text-xl md:text-2xl border border-button-shadow cursor-pointer"
+          onClick={() =>
+            setGrannyStatus((prev) => ({
+              ...prev,
+              state: 'shouting',
+            }))
+          }
         >
           ←
         </button>
         {/* Title */}
         <span className="flex-1 text-center select-none">GRANNY TERMINAL</span>
         {/* Window controls */}
-        <div className="flex space-x-1">
+        <div className="flex space-x-1 granny-rotating-face">
           <img src="/granny-face-laughing.png" className="w-10 h-10" />
         </div>
       </div>
 
+      <div className="text-center bg-red-500 text-highlight-bg">
+        Press back at your own peril—Granny's scream will shatter eardrums
+      </div>
       {/* Terminal Content with Thin Grey Scrollbar */}
       <div
         ref={terminalRef}
@@ -154,7 +166,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
 
         {/* Simple Captcha Button at Bottom - Left Aligned */}
         {showCaptchaButton && (
-          <>
+          <div className="mb-12 md:mb-10">
             <button className="text-highlight-bg font-windows text-sm font-bold px-4 py-2 rounded border-2 border-button-shadow bg-button-face transition">
               Survive Granny's final captcha ↓
             </button>
@@ -180,7 +192,7 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
                 </div>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
 
@@ -203,6 +215,15 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
           }}
         />
       </div>
+      {/* {  */}
+      {!isTypingComplete && !isSkipped && (
+        <button
+          onClick={handleSkip}
+          className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer  transition "
+        >
+          Skip Intro
+        </button>
+      )}
     </motion.div>
   );
 }

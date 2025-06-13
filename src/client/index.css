@@ -112,22 +112,63 @@
 
 /* Blinking animation for warning text */
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0.3; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0.3;
+  }
 }
 
 .blink {
   animation: blink 1s infinite;
 }
 
+.granny-rotating-face {
+  filter: brightness(1.25) saturate(1.2);
+  animation: rotate-face 1s infinite ease-in-out;
+}
+
+@keyframes rotate-face {
+  0% {
+    transform: rotate(-45deg) scale(1);
+  }
+  45% {
+    transform: rotate(-45deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(45deg) scale(1);
+  }
+  95% {
+    transform: rotate(45deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(-45deg) scale(1);
+  }
+}
+
 /* Glitch animation for captcha */
 @keyframes glitch {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-2px); }
-  40% { transform: translateX(2px); }
-  60% { transform: translateX(-1px); }
-  80% { transform: translateX(1px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  60% {
+    transform: translateX(-1px);
+  }
+  80% {
+    transform: translateX(1px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 @theme {

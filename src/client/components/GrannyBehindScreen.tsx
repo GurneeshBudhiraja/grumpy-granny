@@ -1,10 +1,15 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GrannyStatus } from '../../shared/types';
 
-type GrannyBehindScreenProps = GrannyStatus;
+interface GrannyBehindScreenProps {
+  grannyStatus: GrannyStatus;
+  setGrannyStatus: React.Dispatch<React.SetStateAction<GrannyStatus>>;
+}
 
-function GrannyBehindScreen({ state, words }: GrannyBehindScreenProps) {
+function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScreenProps) {
+  // destructure the object
+  const { state, words } = grannyStatus;
   const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
@@ -14,10 +19,23 @@ function GrannyBehindScreen({ state, words }: GrannyBehindScreenProps) {
       }, 500);
       return () => clearInterval(blinkInterval);
     }
-  }, [state]);
+    if (state === 'shouting') {
+      setIsBlinking(false);
+      const audio = new Audio('/granny-sounds/granny-yell.mp3');
+      audio.volume = 1;
+      audio.loop = true;
+      audio.currentTime = 1;
+      audio.play().catch(() => console.log('failed to play yelling audio'));
 
-  // TODO: change this later on
-  if (state !== 'blinking') return null;
+      setTimeout(() => {
+        setGrannyStatus((prev) => ({
+          ...prev,
+          state: 'blinking',
+        }));
+        audio.pause();
+      }, 2000);
+    }
+  }, [state]);
 
   return (
     <AnimatePresence>
@@ -45,19 +63,36 @@ function GrannyBehindScreen({ state, words }: GrannyBehindScreenProps) {
         >
           {/* Granny Image - Responsive sizing that scales with monitor */}
           <div className="relative">
-            <motion.img
-              src={isBlinking ? '/granny-blink.png' : '/granny-idle.png'}
-              alt="Granny watching from behind"
-              className={`object-contain ${
-                // Responsive Granny sizing - scales proportionally with monitor
-                'w-[390px] mb-11 ' +
-                'sm:w-[350px] sm:mb-0   ' +
-                'md:w-[390px] ' +
-                'lg:w-[450px] ' +
-                'xl:w-[460px] '
-              }`}
-              style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
-            />
+            {state === 'blinking' && (
+              <motion.img
+                src={isBlinking ? '/granny-blink.png' : '/granny-idle.png'}
+                alt="Granny blinking"
+                className={`object-contain ${
+                  // Responsive Granny sizing - scales proportionally with monitor
+                  'w-[390px] mb-11 ' +
+                  'sm:w-[350px] sm:mb-0   ' +
+                  'md:w-[390px] ' +
+                  'lg:w-[450px] ' +
+                  'xl:w-[460px] '
+                }`}
+                style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
+              />
+            )}
+            {state === 'shouting' && (
+              <motion.img
+                src={'/granny-yell-up.png'}
+                alt="Granny shouting"
+                className={`object-contain ${
+                  // Responsive Granny sizing - scales proportionally with monitor
+                  'w-[390px] mb-11 ' +
+                  'sm:w-[350px] sm:mb-0   ' +
+                  'md:w-[390px] ' +
+                  'lg:w-[450px] ' +
+                  'xl:w-[460px] '
+                }`}
+                style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
+              />
+            )}
           </div>
         </div>
 

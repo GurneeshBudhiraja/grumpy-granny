@@ -103,6 +103,8 @@ export const App = () => {
                         key="rules"
                         setGameStatus={setGameStatus}
                         gameStatus={gameStatus}
+                        setGrannyStatus={setGrannyStatus}
+                        grannyStatus={grannyStatus}
                       />
                     )}
                   </AnimatePresence>
@@ -152,7 +154,7 @@ export const App = () => {
 
         {/* Granny Behind Screen - Only visible on rules page */}
         {gameStatus !== 'start' && (
-          <GrannyBehindScreen state={grannyStatus.state} words={grannyStatus.words} />
+          <GrannyBehindScreen grannyStatus={grannyStatus} setGrannyStatus={setGrannyStatus} />
         )}
       </div>
 

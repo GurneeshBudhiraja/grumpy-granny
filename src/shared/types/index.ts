@@ -76,7 +76,7 @@ export interface CursorState {
   isVisible: boolean;
 }
 
-export type GrannyStatusState = "blinking"
+export type GrannyStatusState = | "blinking" | "shouting"
 
 export interface GrannyStatus {
   state: GrannyStatusState;
