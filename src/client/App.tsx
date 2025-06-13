@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useClickSound, useKeyboardSound } from './hooks/hooks';
-import { StartPage, RulesPage } from './pages/page';
+import { StartPage, RulesPage, PlayPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { cursorManager } from './utils/cursorManager';
@@ -107,6 +107,7 @@ export const App = () => {
                         grannyStatus={grannyStatus}
                       />
                     )}
+                    {gameStatus === 'playing' && <PlayPage />}
                   </AnimatePresence>
                 </div>
               </div>

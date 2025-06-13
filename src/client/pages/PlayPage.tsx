@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-
-interface LockScreenProps {
-  onUnlock: () => void;
-}
 
 interface Hint {
   id: number;
@@ -11,11 +7,11 @@ interface Hint {
   isCompleted: boolean;
 }
 
-const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
+const PlayPage = () => {
   const [password, setPassword] = useState('');
   const [hints, setHints] = useState<Hint[]>([
     { id: 1, text: "Granny's favorite knitting pattern", isCompleted: false },
-    { id: 2, text: "The year she first complained about technology", isCompleted: false },
+    { id: 2, text: 'The year she first complained about technology', isCompleted: false },
   ]);
   const [showPassword, setShowPassword] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -32,9 +28,9 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
     // Simulate hint completion based on password length
     if (newPassword.length >= 3 && !hints[0].isCompleted) {
       // Complete first hint
-      setHints(prev => prev.map(hint => 
-        hint.id === 1 ? { ...hint, isCompleted: true } : hint
-      ));
+      setHints((prev) =>
+        prev.map((hint) => (hint.id === 1 ? { ...hint, isCompleted: true } : hint))
+      );
     }
   };
 
@@ -43,7 +39,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
     if (e.key === 'Enter') {
       // For now, just simulate unlock after any password
       if (password.length > 0) {
-        onUnlock();
+        console.log('Password is being entered.');
       }
     }
   };
@@ -57,13 +53,13 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
       transition={{ duration: 0.5 }}
     >
       {/* Windows 98 Desktop Background Pattern */}
-      <div 
+      <div
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `
             repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px),
             repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)
-          `
+          `,
         }}
       />
 
@@ -80,7 +76,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
         >
           {/* Title Bar */}
-          <div 
+          <div
             className="bg-titlebar-active-bg text-titlebar-active-text px-2 py-1 flex items-center justify-between border-b-2 border-button-shadow"
             style={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px' }}
           >
@@ -89,9 +85,15 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               <span className="font-bold">Windows Security</span>
             </div>
             <div className="flex space-x-1">
-              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">_</div>
-              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">□</div>
-              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">×</div>
+              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">
+                _
+              </div>
+              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">
+                □
+              </div>
+              <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">
+                ×
+              </div>
             </div>
           </div>
 
@@ -111,12 +113,12 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
             <div className="flex justify-center">
               <motion.div
                 className="relative"
-                animate={{ 
+                animate={{
                   scale: isTyping ? 1.05 : 1,
                 }}
                 transition={{ duration: 0.2 }}
               >
-                <div 
+                <div
                   className="w-24 h-24 bg-gray-200 border-4 border-button-shadow border-t-button-highlight border-l-button-highlight overflow-hidden"
                   style={{
                     backgroundImage: 'url(/granny-face.png)',
@@ -133,10 +135,8 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
 
             {/* Password Input Section */}
             <div className="space-y-4 mt-8">
-              <div className="text-sm font-windows text-text-color">
-                Password:
-              </div>
-              
+              <div className="text-sm font-windows text-text-color">Password:</div>
+
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -147,7 +147,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                   placeholder="Enter password..."
                   autoFocus
                 />
-                
+
                 {/* Show/Hide Password Toggle */}
                 <button
                   onClick={() => setShowPassword(!showPassword)}
@@ -178,14 +178,10 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               <div className="text-sm font-windows font-bold text-text-color mb-2">
                 Password Hints:
               </div>
-              
+
               <div className="space-y-2">
                 {hints.map((hint, index) => (
-                  <motion.div
-                    key={hint.id}
-                    className="flex items-center space-x-3"
-                    layout
-                  >
+                  <motion.div key={hint.id} className="flex items-center space-x-3" layout>
                     {/* Icon */}
                     <motion.div
                       className="w-4 h-4 flex items-center justify-center"
@@ -220,9 +216,7 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
                     {/* Hint Text */}
                     <motion.div
                       className={`text-xs font-windows ${
-                        hint.isCompleted 
-                          ? 'text-green-700 line-through' 
-                          : 'text-text-color'
+                        hint.isCompleted ? 'text-green-700 line-through' : 'text-text-color'
                       }`}
                       animate={{
                         color: hint.isCompleted ? '#15803d' : '#000000',
@@ -244,10 +238,9 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
               >
                 Clear
               </button>
-              
+
               <button
                 className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight disabled:opacity-50"
-                onClick={onUnlock}
                 disabled={password.length === 0}
               >
                 OK
@@ -264,9 +257,9 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
             Start
           </button>
         </div>
-        
+
         <div className="flex-1"></div>
-        
+
         <div className="text-xs font-windows text-text-color bg-gray-200 px-2 py-1 border border-gray-400">
           {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
@@ -277,7 +270,8 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
         <div
           className="w-full h-full"
           style={{
-            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #000000 2px, #000000 4px)',
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 2px, #000000 2px, #000000 4px)',
           }}
         />
       </div>
@@ -285,4 +279,4 @@ const LockScreen: React.FC<LockScreenProps> = ({ onUnlock }) => {
   );
 };
 
-export default LockScreen;
+export default PlayPage;

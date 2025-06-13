@@ -1,4 +1,4 @@
 import StartPage from "./StartPage";
 import RulesPage from "./RulesPage";
-
-export { StartPage, RulesPage };
+import PlayPage from "./PlayPage";
+export { StartPage, RulesPage, PlayPage };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { GameStatus, GrannyStatus } from '../../shared/types';
-import { CaptchaChallenge, LockScreen } from '../components/components';
+import { CaptchaChallenge } from '../components/components';
 import { soundManager } from '../utils/soundManager';
 
 const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herself out (again), and only your brain cells can save her! Use the sneaky hints to guess her password, but beware: every wrong answer means Granny will unleash her full arsenal of grumpy love. No mercy, no turning back—just pure, unfiltered brainrot. 
@@ -24,7 +24,6 @@ function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [showCaptchaButton, setShowCaptchaButton] = useState(false);
   const [showCaptchaOverlay, setShowCaptchaOverlay] = useState(false);
-  const [showLockScreen, setShowLockScreen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSkipped, setIsSkipped] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -88,26 +87,17 @@ function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
     setTimeout(() => {
       setIsLoading(false);
       setShowCaptchaOverlay(true);
-    }, 2000);
+    }, 10);
   };
 
   const handleCaptchaVerified = () => {
     setShowCaptchaOverlay(false);
-    setShowLockScreen(true);
+    setGameStatus('playing');
   };
 
   const handleCaptchaClose = () => {
     setShowCaptchaOverlay(false);
   };
-
-  const handleLockScreenUnlock = () => {
-    setGameStatus('playing');
-  };
-
-  // If lock screen should be shown, render it instead
-  if (showLockScreen) {
-    return <LockScreen onUnlock={handleLockScreenUnlock} />;
-  }
 
   return (
     <motion.div
@@ -231,7 +221,7 @@ function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
           onClick={handleSkip}
           className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer  transition "
         >
-          Skip Intro
+          Show full rules
         </button>
       )}
     </motion.div>
