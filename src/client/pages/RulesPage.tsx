@@ -123,12 +123,32 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
         </div>
       </div>
 
-      {/* Terminal Content with Custom Scrollbar */}
+      {/* Terminal Content with Thin Grey Scrollbar */}
       <div
         ref={terminalRef}
-        className="h-full p-4 overflow-y-auto terminal-custom-scrollbar relative"
-        style={{ height: 'calc(100% - 40px)' }}
+        className="h-full p-4 overflow-y-auto relative"
+        style={{ 
+          height: 'calc(100% - 40px)',
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#666666 #1a1a1a'
+        }}
       >
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            width: 4px;
+          }
+          div::-webkit-scrollbar-track {
+            background: #1a1a1a;
+          }
+          div::-webkit-scrollbar-thumb {
+            background: #666666;
+            border-radius: 2px;
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background: #888888;
+          }
+        `}</style>
+
         {/* Typed Rules Text with HTML rendering */}
         <div
           className="whitespace-pre-wrap text-sm leading-relaxed mb-4 relative z-10"
@@ -141,28 +161,26 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
           }}
         />
 
-        {/* Simple Captcha Button at Bottom */}
+        {/* Simple Captcha Button at Bottom - Left Aligned */}
         {showCaptchaButton && (
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8">
             <div 
-              className="bg-white border-2 border-gray-300 p-4 rounded cursor-pointer hover:bg-gray-50 transition-colors flex items-center space-x-3 shadow-lg"
+              className="bg-white border-2 border-gray-300 p-3 rounded cursor-pointer hover:bg-gray-50 transition-colors flex items-center space-x-3 shadow-lg inline-block"
               onClick={handleCaptchaButtonClick}
-              style={{ minWidth: '280px' }}
+              style={{ minWidth: '260px' }}
             >
-              <div className="w-6 h-6 border-2 border-gray-400 bg-white flex items-center justify-center">
+              <div className="w-5 h-5 border-2 border-gray-400 bg-white flex items-center justify-center">
                 {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <span className="text-gray-600">☐</span>
-                )}
+                  <div className="w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                ) : null}
               </div>
               <span className="text-gray-800 font-sans text-sm">
                 {isLoading ? 'Verifying...' : "I'm not a robot"}
               </span>
-              <div className="ml-auto">
-                <div className="text-xs text-gray-500">reCAPTCHA</div>
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin opacity-75"></div>
+              <div className="ml-auto flex flex-col items-center">
+                <div className="text-xs text-gray-500 mb-1">reCAPTCHA</div>
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin opacity-75"></div>
                 </div>
               </div>
             </div>
@@ -170,10 +188,10 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
         )}
       </div>
 
-      {/* Captcha Overlay - Appears on top like real captcha */}
+      {/* Captcha Overlay - Smaller window inside monitor viewport */}
       {showCaptchaOverlay && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative">
+        <div className="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="relative max-w-sm mx-4">
             <CaptchaChallenge 
               onVerified={handleCaptchaVerified}
               onClose={handleCaptchaClose}
