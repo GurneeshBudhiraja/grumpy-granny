@@ -167,38 +167,48 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
   return (
     <AnimatePresence>
       <motion.div
-        className="bg-white rounded-lg shadow-2xl border border-gray-300 w-full max-w-sm sm:max-w-xs mx-auto mt-10 lg:my-0 flex flex-col"
+        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-hidden"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: -20 }}
         transition={{ duration: 0.3 }}
         style={{
+          width: '95%',
+          maxWidth: '400px',
           height: 'auto',
-          maxHeight: '90vh',
-          scrollbarWidth: 'thin',
-          scrollbarColor: '#666666 #f0f0f0'
+          maxHeight: '85vh',
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         {/* Header - Fixed */}
-        <div className="bg-blue-600 text-white p-3 flex items-center justify-between flex-shrink-0">
+        <div className="bg-blue-600 text-white p-2 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center space-x-2">
-            <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center">
+              <div className="w-2 h-2 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <span className="font-sans text-sm font-medium">Select all images with Granny</span>
+            <span className="font-sans text-xs font-medium">Select all images with Granny</span>
           </div>
           {onClose && (
             <div onClick={onClose} className="cursor-pointer">
-              <img src="/windows98-icons/cross-icon.png" alt="Close" className="w-4 h-4" />
+              <span className="text-white text-lg font-bold">×</span>
             </div>
           )}
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: '300px' }}>
+        <div 
+          className="flex-1 overflow-y-auto p-3"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#999999 #f0f0f0',
+            maxHeight: 'calc(85vh - 120px)', // Account for header and footer
+          }}
+        >
           {/* Image Grid */}
           <motion.div 
-            className="grid grid-cols-3 gap-1 mb-4"
+            className="grid grid-cols-3 gap-1 mb-3"
             animate={{ 
               x: isRegenerating ? 300 : 0,
               opacity: isRegenerating ? 0 : 1 
@@ -226,13 +236,20 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                   duration: 0.3,
                   ease: "easeOut"
                 }}
+                style={{
+                  aspectRatio: '1',
+                  minHeight: '60px',
+                }}
               >
-                {/* Image without effects */}
-                <div className="relative w-full h-20">
+                {/* Image */}
+                <div className="relative w-full h-full">
                   <img
                     src={image.src}
                     alt={`Captcha option ${i + 1}`}
                     className="w-full h-full object-cover"
+                    style={{
+                      imageRendering: 'auto',
+                    }}
                   />
                 </div>
 
@@ -244,7 +261,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                    <div className="bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs font-bold">
                       ✓
                     </div>
                   </motion.div>
@@ -257,7 +274,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
           <AnimatePresence>
             {showError && (
               <motion.div
-                className="text-red-500 text-sm text-center font-sans mb-4"
+                className="text-red-500 text-xs text-center font-sans mb-3"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -269,12 +286,12 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
         </div>
 
         {/* Action Buttons - Fixed at Bottom */}
-        <div className="flex-shrink-0 p-4 pt-0 border-t border-gray-100">
+        <div className="flex-shrink-0 p-3 pt-0 border-t border-gray-100">
           <div className="flex justify-end items-center space-x-2">
             <button
               onClick={() => setSelected([])}
               disabled={isVerifying || selected.length === 0 || isRegenerating}
-              className="px-3 py-2 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-sans"
+              className="px-2 py-1 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-sans"
             >
               Clear
             </button>
@@ -282,15 +299,15 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
             <button
               onClick={handleVerify}
               disabled={isVerifying || isRegenerating}
-              className={`px-4 py-2 text-sm rounded transition-all duration-200 font-sans font-medium ${
+              className={`px-3 py-1 text-xs rounded transition-all duration-200 font-sans font-medium ${
                 isVerifying
                   ? 'bg-blue-400 text-white cursor-wait'
                   : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg'
               }`}
             >
               {isVerifying ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex items-center space-x-1">
+                  <div className="w-2 h-2 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Verifying...</span>
                 </div>
               ) : (
@@ -299,6 +316,24 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
             </button>
           </div>
         </div>
+
+        {/* Custom scrollbar styles for webkit browsers */}
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            width: 6px;
+          }
+          div::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 3px;
+          }
+          div::-webkit-scrollbar-thumb {
+            background: #999999;
+            border-radius: 3px;
+          }
+          div::-webkit-scrollbar-thumb:hover {
+            background: #777777;
+          }
+        `}</style>
       </motion.div>
     </AnimatePresence>
   );
