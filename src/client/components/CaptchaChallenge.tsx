@@ -167,19 +167,20 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
   return (
     <AnimatePresence>
       <motion.div
-        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-auto w-full max-w-sm sm:max-w-xs mx-auto h-96 mt-10 lg:my-0"
+        className="bg-white rounded-lg shadow-2xl border border-gray-300 w-full max-w-sm sm:max-w-xs mx-auto mt-10 lg:my-0 flex flex-col"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: -20 }}
         transition={{ duration: 0.3 }}
         style={{
-          maxHeight: '400px',
+          height: 'auto',
+          maxHeight: '90vh',
           scrollbarWidth: 'thin',
           scrollbarColor: '#666666 #f0f0f0'
         }}
       >
-        {/* Header */}
-        <div className="bg-blue-600 text-white p-3 flex items-center justify-between sticky top-0 z-10">
+        {/* Header - Fixed */}
+        <div className="bg-blue-600 text-white p-3 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center space-x-2">
             <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
               <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -194,10 +195,10 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
         </div>
 
         {/* Scrollable Content Area */}
-        <div className="p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4" style={{ maxHeight: '300px' }}>
           {/* Image Grid */}
           <motion.div 
-            className="grid grid-cols-3 gap-1"
+            className="grid grid-cols-3 gap-1 mb-4"
             animate={{ 
               x: isRegenerating ? 300 : 0,
               opacity: isRegenerating ? 0 : 1 
@@ -256,7 +257,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
           <AnimatePresence>
             {showError && (
               <motion.div
-                className="text-red-500 text-sm text-center font-sans"
+                className="text-red-500 text-sm text-center font-sans mb-4"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -265,9 +266,11 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end items-center space-x-2 pt-2">
+        {/* Action Buttons - Fixed at Bottom */}
+        <div className="flex-shrink-0 p-4 pt-0 border-t border-gray-100">
+          <div className="flex justify-end items-center space-x-2">
             <button
               onClick={() => setSelected([])}
               disabled={isVerifying || selected.length === 0 || isRegenerating}
