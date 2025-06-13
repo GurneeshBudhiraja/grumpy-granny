@@ -82,3 +82,14 @@ export interface GrannyStatus {
   state: GrannyStatusState;
   words: string;
 }
+
+// Lock Screen types
+export interface LockScreenProps {
+  onUnlock: () => void;
+}
+
+export interface Hint {
+  id: number;
+  text: string;
+  isCompleted: boolean;
+}
