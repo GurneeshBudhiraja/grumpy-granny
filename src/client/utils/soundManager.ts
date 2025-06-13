@@ -13,7 +13,7 @@ class SoundManager implements SoundManagerInterface {
 
     this.keyboardSound = new Audio('/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
-    this.keyboardSound.volume = 0.4;
+    this.keyboardSound.volume = 0.15; // Reduced from 0.4 to 0.15 for less intrusive typing sound
   }
 
   async playClickSound(): Promise<void> {
@@ -31,7 +31,7 @@ class SoundManager implements SoundManagerInterface {
     try {
       // Clone and play to avoid conflicts
       const audio = this.keyboardSound.cloneNode() as HTMLAudioElement;
-      audio.volume = 0.4;
+      audio.volume = 0.15; // Reduced volume for terminal typing
       await audio.play();
     } catch (error) {
       console.log('Keyboard audio play failed:', error);

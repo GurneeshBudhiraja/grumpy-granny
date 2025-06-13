@@ -25,21 +25,23 @@ function RulesPage({ gameStatus, setGameStatus }: RulesPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  // Typing animation effect with sound
+  // Typing animation effect with reduced sound frequency
   useEffect(() => {
     if (currentIndex < RULES_HTML.length) {
       const timer = setTimeout(async () => {
-        // Play typing sound for visible characters (not HTML tags)
+        // Play typing sound less frequently (every 3rd character) and only for visible characters
         const currentChar = RULES_HTML[currentIndex];
-        if (currentChar && currentChar !== '<' && currentChar !== '>' && 
-            !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<')) {
+        const isVisibleChar = currentChar && currentChar !== '<' && currentChar !== '>' && 
+            !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<');
+        
+        if (isVisibleChar && currentIndex % 3 === 0) { // Play sound every 3rd visible character
           await soundManager.initializeSounds();
           await soundManager.playKeyboardSound();
         }
         
         setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, Math.random() * 30 + 15); // Variable typing speed for realism
+      }, Math.random() * 15 + 8); // Faster typing: 8-23ms instead of 15-45ms
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
