@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-// Using real online images for captcha (will be replaced later)
-const captchaImages = [
-  'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/416978/pexels-photo-416978.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/1108117/pexels-photo-1108117.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/416160/pexels-photo-416160.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/1108102/pexels-photo-1108102.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/1108098/pexels-photo-1108098.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/416179/pexels-photo-416179.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
-  'https://images.pexels.com/photos/1108103/pexels-photo-1108103.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=1',
+// Local captcha images (non-granny)
+const normalCaptchaImages = [
+  '/captcha/image0.png',
+  '/captcha/image1.png',
+  '/captcha/image2.png',
+  '/captcha/image3.png',
+  '/captcha/image4.png',
+  '/captcha/image5.png',
+  '/captcha/image6.png',
+  '/captcha/image7.png',
+  '/captcha/image8.png',
+];
+
+// Granny captcha images
+const grannyCaptchaImages = [
+  '/captcha/granny/image0.png',
+  '/captcha/granny/image1.png',
+  '/captcha/granny/image2.png',
+  '/captcha/granny/image3.png',
 ];
 
 interface CaptchaChallengeProps {
@@ -19,10 +27,63 @@ interface CaptchaChallengeProps {
   onClose?: () => void;
 }
 
+interface CaptchaImage {
+  src: string;
+  isGranny: boolean;
+  rotation: number;
+  blur: number;
+  pixelate: number;
+}
+
 const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose }) => {
   const [selected, setSelected] = useState<number[]>([]);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [captchaImages, setCaptchaImages] = useState<CaptchaImage[]>([]);
+
+  // Generate randomized captcha grid
+  useEffect(() => {
+    const generateCaptchaGrid = () => {
+      // Randomly decide how many granny images to show (2-4)
+      const grannyCount = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+      
+      // Select random granny images
+      const shuffledGrannyImages = [...grannyCaptchaImages].sort(() => Math.random() - 0.5);
+      const selectedGrannyImages = shuffledGrannyImages.slice(0, grannyCount);
+      
+      // Calculate how many normal images we need (total 9 - granny count)
+      const normalCount = 9 - grannyCount;
+      
+      // Select random normal images
+      const shuffledNormalImages = [...normalCaptchaImages].sort(() => Math.random() - 0.5);
+      const selectedNormalImages = shuffledNormalImages.slice(0, normalCount);
+      
+      // Create image objects with random effects
+      const grannyImageObjects: CaptchaImage[] = selectedGrannyImages.map(src => ({
+        src,
+        isGranny: true,
+        rotation: Math.floor(Math.random() * 21) - 10, // -10 to +10 degrees
+        blur: Math.random() * 1.5 + 0.5, // 0.5 to 2px blur
+        pixelate: Math.random() * 2 + 1, // 1 to 3px pixelation
+      }));
+      
+      const normalImageObjects: CaptchaImage[] = selectedNormalImages.map(src => ({
+        src,
+        isGranny: false,
+        rotation: Math.floor(Math.random() * 21) - 10, // -10 to +10 degrees
+        blur: Math.random() * 1.5 + 0.5, // 0.5 to 2px blur
+        pixelate: Math.random() * 2 + 1, // 1 to 3px pixelation
+      }));
+      
+      // Combine and shuffle all images
+      const allImages = [...grannyImageObjects, ...normalImageObjects];
+      const shuffledImages = allImages.sort(() => Math.random() - 0.5);
+      
+      setCaptchaImages(shuffledImages);
+    };
+
+    generateCaptchaGrid();
+  }, []);
 
   const toggle = (i: number) => {
     setSelected((prev) => (prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]));
@@ -44,6 +105,40 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
     }, 2000);
   };
 
+  const getImageStyle = (image: CaptchaImage) => {
+    return {
+      transform: `rotate(${image.rotation}deg)`,
+      filter: `blur(${image.blur}px)`,
+      imageRendering: 'pixelated' as const,
+      // Add pixelation effect using CSS
+      ...(image.pixelate > 1.5 && {
+        filter: `blur(${image.blur}px) contrast(1.1) saturate(0.9)`,
+      }),
+    };
+  };
+
+  const getOverlayStyle = (image: CaptchaImage) => {
+    return {
+      background: `
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent ${image.pixelate}px,
+          rgba(0,0,0,0.1) ${image.pixelate}px,
+          rgba(0,0,0,0.1) ${image.pixelate * 2}px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent ${image.pixelate}px,
+          rgba(0,0,0,0.1) ${image.pixelate}px,
+          rgba(0,0,0,0.1) ${image.pixelate * 2}px
+        )
+      `,
+      mixBlendMode: 'multiply' as const,
+    };
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -61,18 +156,20 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
             </div>
             <span className="font-sans text-sm font-medium">Select all images with Granny</span>
           </div>
-          <div onClick={onClose}>
-            <img src="/windows98-icons/cross-icon.png" />
-          </div>
+          {onClose && (
+            <div onClick={onClose} className="cursor-pointer">
+              <img src="/windows98-icons/cross-icon.png" alt="Close" className="w-4 h-4" />
+            </div>
+          )}
         </div>
 
         {/* Image Grid */}
         <div className="p-3">
           <div className="grid grid-cols-3 mb-5">
-            {captchaImages.map((src, i) => (
+            {captchaImages.map((image, i) => (
               <motion.div
                 key={i}
-                className={`relative border-2 cursor-pointer transition-all duration-200 ${
+                className={`relative border-2 cursor-pointer transition-all duration-200 overflow-hidden ${
                   selected.includes(i)
                     ? 'border-blue-500 bg-blue-100'
                     : 'border-gray-300 hover:border-blue-300'
@@ -81,11 +178,30 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <img
-                  src={src}
-                  alt={`Captcha option ${i + 1}`}
-                  className="w-full h-20 object-cover"
-                />
+                {/* Image with effects */}
+                <div className="relative w-full h-20">
+                  <img
+                    src={image.src}
+                    alt={`Captcha option ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    style={getImageStyle(image)}
+                  />
+                  
+                  {/* Pixelation/Distortion Overlay */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none"
+                    style={getOverlayStyle(image)}
+                  />
+                  
+                  {/* Additional noise overlay for authenticity */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-20"
+                    style={{
+                      background: `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, rgba(0,0,0,0.1) 1px, transparent 1px)`,
+                      backgroundSize: `${Math.random() * 3 + 2}px ${Math.random() * 3 + 2}px`,
+                    }}
+                  />
+                </div>
 
                 {/* Selection Overlay */}
                 {selected.includes(i) && (
