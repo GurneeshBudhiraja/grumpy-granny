@@ -36,7 +36,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
     }
 
     setIsVerifying(true);
-    
+
     // Simulate verification process
     setTimeout(() => {
       setIsVerifying(false);
@@ -47,12 +47,11 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
   return (
     <AnimatePresence>
       <motion.div
-        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-hidden"
+        className="bg-white rounded-lg shadow-2xl border border-gray-300 overflow-scroll w-full max-w-sm sm:max-w-xs mx-auto h-72 mt-10 lg:my-0"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: -20 }}
         transition={{ duration: 0.3 }}
-        style={{ width: '350px', maxHeight: '500px' }}
       >
         {/* Header */}
         <div className="bg-blue-600 text-white p-3 flex items-center justify-between">
@@ -60,46 +59,34 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
             <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center">
               <div className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <span className="font-sans text-sm font-medium">Select all images with traffic lights</span>
+            <span className="font-sans text-sm font-medium">Select all images with Granny</span>
           </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="text-white hover:text-gray-200 text-xl font-bold"
-            >
-              ×
-            </button>
-          )}
-        </div>
-
-        {/* Instructions */}
-        <div className="p-3 bg-gray-50 border-b border-gray-200">
-          <p className="text-gray-700 text-sm font-sans">
-            Click verify once there are none left.
-          </p>
+          <div onClick={onClose}>
+            <img src="/windows98-icons/cross-icon.png" />
+          </div>
         </div>
 
         {/* Image Grid */}
         <div className="p-3">
-          <div className="grid grid-cols-3 gap-1 mb-3">
+          <div className="grid grid-cols-3 mb-5">
             {captchaImages.map((src, i) => (
               <motion.div
                 key={i}
                 className={`relative border-2 cursor-pointer transition-all duration-200 ${
-                  selected.includes(i) 
-                    ? 'border-blue-500 bg-blue-100' 
+                  selected.includes(i)
+                    ? 'border-blue-500 bg-blue-100'
                     : 'border-gray-300 hover:border-blue-300'
                 }`}
                 onClick={() => toggle(i)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <img 
-                  src={src} 
-                  alt={`Captcha option ${i + 1}`} 
+                <img
+                  src={src}
+                  alt={`Captcha option ${i + 1}`}
                   className="w-full h-20 object-cover"
                 />
-                
+
                 {/* Selection Overlay */}
                 {selected.includes(i) && (
                   <motion.div
@@ -140,7 +127,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
             >
               Clear
             </button>
-            
+
             <button
               onClick={handleVerify}
               disabled={isVerifying}
@@ -159,20 +146,6 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 'Verify'
               )}
             </button>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="bg-gray-100 p-2 flex items-center justify-between text-xs text-gray-600 font-sans">
-          <div className="flex items-center space-x-1">
-            <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-              <div className="w-2 h-2 border border-white border-t-transparent rounded-full animate-spin"></div>
-            </div>
-            <span>reCAPTCHA</span>
-          </div>
-          <div className="flex space-x-3">
-            <button className="hover:text-blue-600">Privacy</button>
-            <button className="hover:text-blue-600">Terms</button>
           </div>
         </div>
       </motion.div>
