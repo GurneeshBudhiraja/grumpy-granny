@@ -63,7 +63,7 @@ Devvit.addCustomPostType({
       <zstack width="100%" height="100%">
         {/* Background image covers the whole post */}
         <image
-          url="app-page.png"
+          url="reddit-page.gif"
           height="100%"
           width="100%"
           imageHeight={600}

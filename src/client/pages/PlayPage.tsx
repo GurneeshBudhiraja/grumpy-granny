@@ -97,7 +97,7 @@ const PlayPage = () => {
           {/* Password Input Section */}
           <div className="px-6 pb-1 mt-4">
             <div className="text-button-text ml-1">Let the hints guide you:</div>
-            <div className="relative">
+            <div className="relative selection:bg-highlight-bg selection:text-highlight-text">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
