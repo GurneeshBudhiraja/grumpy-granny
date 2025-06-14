@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface Hint {
   id: number;
@@ -14,19 +14,14 @@ const PlayPage = () => {
     { id: 2, text: 'The year she first complained about technology', isCompleted: false },
   ]);
   const [showPassword, setShowPassword] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
 
   // Handle password input changes
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
-    setIsTyping(true);
-
-    // Clear typing indicator after 500ms
-    setTimeout(() => setIsTyping(false), 500);
 
     // Simulate hint completion based on password length
-    if (newPassword.length >= 3 && !hints[0].isCompleted) {
+    if (newPassword.length >= 3 && hints[0]?.isCompleted) {
       // Complete first hint
       setHints((prev) =>
         prev.map((hint) => (hint.id === 1 ? { ...hint, isCompleted: true } : hint))
@@ -67,7 +62,7 @@ const PlayPage = () => {
           <div className="bg-highlight-text w-[99%] flex px-1 justify-between ml-px">
             <div className="flex items-center gap-1">
               <div className="h-3 w-3 bg-red-500 " />
-              <span className="font-windows">Windows Password Manager</span>
+              <span className="font-windows">Password Manager</span>
             </div>
             <div className="relative self-center border cursor-pointer group">
               <img
@@ -76,7 +71,7 @@ const PlayPage = () => {
                 className="w-3 h-3 cursor-pointer"
               />
               {/* Tooltip */}
-              <div className="absolute right-1 mt-1 w-max px-2 py-1 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight text-xs font-windows text-text-color whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute right-1 mt-1 w-max px-2 py-1 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight text-xs font-windows text-text-color whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 Use the hints to get the correct password.
               </div>
             </div>
@@ -86,21 +81,22 @@ const PlayPage = () => {
             <div
               className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
               style={{
-                backgroundImage: 'url(/granny-face.png)',
+                backgroundImage: 'url(/granny-face-crown.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+                filter: 'brightness(1.15) saturate(1.05)',
               }}
             />
             {/* User label */}
             <div className="bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap text-center">
-              CalmnessQueen
+              Calmness Queen
             </div>
           </div>
 
           {/* Password Input Section */}
           <div className="px-6 pb-1 mt-4">
-            <div className="text-button-text ml-1">Please enter your password</div>
+            <div className="text-button-text ml-1">Let the hints guide you:</div>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -108,7 +104,7 @@ const PlayPage = () => {
                 onChange={handlePasswordChange}
                 onKeyPress={handleKeyPress}
                 className="w-full px-3 py-2 border-2 border-button-shadow border-t-gray-400 border-l-gray-400 bg-white font-windows text-sm focus:outline-none"
-                placeholder="Enter password..."
+                placeholder="Key in the hint answer..."
                 autoFocus
                 autoComplete="off"
                 style={{
@@ -141,7 +137,7 @@ const PlayPage = () => {
             </div>
 
             <div className="space-y-2">
-              {hints.map((hint, index) => (
+              {hints.map((hint) => (
                 <motion.div key={hint.id} className="flex items-center space-x-3" layout>
                   {/* Icon */}
                   <motion.div
