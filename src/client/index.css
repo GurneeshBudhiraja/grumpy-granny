@@ -110,6 +110,66 @@
   caret-color: #00ff00;
 }
 
+/* Windows 98 style scrollbar */
+.windows-scrollbar {
+  scrollbar-width: thin;
+}
+
+.windows-scrollbar::-webkit-scrollbar {
+  width: 20px; /* Windows 98 scrollbars were wider */
+}
+
+.windows-scrollbar::-webkit-scrollbar-track {
+  background: var(--window-bg);
+  border: 1px inset var(--button-face);
+  border-color: var(--button-shadow) var(--button-highlight) var(--button-highlight)
+    var(--button-shadow);
+}
+
+.windows-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--button-face);
+  border: 1px outset var(--button-face);
+  border-color: var(--button-highlight) var(--button-shadow) var(--button-shadow)
+    var(--button-highlight);
+  min-height: 20px;
+}
+
+.windows-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--button-face);
+  border-color: var(--button-highlight) var(--button-shadow) var(--button-shadow)
+    var(--button-highlight);
+  filter: brightness(1.05);
+}
+
+.windows-scrollbar::-webkit-scrollbar-thumb:active {
+  border: 1px inset var(--button-face);
+  border-color: var(--button-shadow) var(--button-highlight) var(--button-highlight)
+    var(--button-shadow);
+}
+
+.windows-scrollbar::-webkit-scrollbar-button {
+  background: var(--button-face);
+  border: 1px outset var(--button-face);
+  border-color: var(--button-highlight) var(--button-shadow) var(--button-shadow)
+    var(--button-highlight);
+  height: 20px;
+  width: 20px;
+}
+
+.windows-scrollbar::-webkit-scrollbar-button:hover {
+  filter: brightness(1.05);
+}
+
+.windows-scrollbar::-webkit-scrollbar-button:active {
+  border: 1px inset var(--button-face);
+  border-color: var(--button-shadow) var(--button-highlight) var(--button-highlight)
+    var(--button-shadow);
+}
+
+.windows-scrollbar::-webkit-scrollbar-corner {
+  background: var(--window-border);
+}
+
 /* Blinking animation for warning text */
 @keyframes blink {
   0%,

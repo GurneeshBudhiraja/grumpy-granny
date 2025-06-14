@@ -46,62 +46,61 @@ const PlayPage = () => {
 
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-hidden"
+      className="w-full h-full bg-desktop-bg relative flex flex-col windows-scrollbar overflow-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
       {/* Main Lock Screen Content - Centered */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-1">
         <motion.div
           className="bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight shadow-lg w-full max-w-md mx-auto"
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
           style={{
-            boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf'
+            boxShadow:
+              'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
           }}
         >
-          {/* Lock Screen Header */}
-          <div className="text-center py-4 px-6">
-            <div className="text-lg font-windows font-bold text-text-color mb-2">
-              This computer is locked
+          <div className="bg-highlight-text w-[99%] flex px-1 justify-between ml-px">
+            <div className="flex items-center gap-1">
+              <div className="h-3 w-3 bg-red-500 " />
+              <span className="font-windows">Windows Password Manager</span>
             </div>
-            <div className="text-sm font-windows text-gray-600">
-              Only Granny or an administrator can unlock this computer.
+            <div className="relative self-center border cursor-pointer group">
+              <img
+                src="/windows98-icons/question-icon.png"
+                alt="question icon"
+                className="w-3 h-3 cursor-pointer"
+              />
+              {/* Tooltip */}
+              <div className="absolute right-1 mt-1 w-max px-2 py-1 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight text-xs font-windows text-text-color whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                Use the hints to get the correct password.
+              </div>
             </div>
           </div>
-
           {/* Granny Profile Section */}
-          <div className="flex justify-center pb-4">
-            <motion.div
-              className="relative"
-              animate={{
-                scale: isTyping ? 1.05 : 1,
+          <div className="flex flex-col justify-center items-center mt-1 gap-1">
+            <div
+              className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
+              style={{
+                backgroundImage: 'url(/granny-face.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
               }}
-              transition={{ duration: 0.2 }}
-            >
-              <div
-                className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
-                style={{
-                  backgroundImage: 'url(/granny-face.png)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff'
-                }}
-              />
-              {/* User label */}
-              <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap">
-                Granny
-              </div>
-            </motion.div>
+            />
+            {/* User label */}
+            <div className="bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap text-center">
+              CalmnessQueen
+            </div>
           </div>
 
           {/* Password Input Section */}
-          <div className="px-6 pb-4 space-y-3 mt-4">
-            <div className="text-sm font-windows text-text-color">Password:</div>
-
+          <div className="px-6 pb-1 mt-4">
+            <div className="text-button-text ml-1">Please enter your password</div>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -113,7 +112,7 @@ const PlayPage = () => {
                 autoFocus
                 autoComplete="off"
                 style={{
-                  boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0'
+                  boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
                 }}
               />
 
@@ -122,33 +121,19 @@ const PlayPage = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center"
                 style={{
-                  boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff'
+                  boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
                 }}
               >
                 {showPassword ? '👁️' : '•••'}
               </button>
             </div>
-
-            {/* Typing Indicator */}
-            <AnimatePresence>
-              {isTyping && (
-                <motion.div
-                  className="text-xs font-windows text-gray-600 flex items-center space-x-1"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span>Typing...</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Hints Section */}
-          <div className="mx-6 mb-4 bg-gray-100 border-2 border-gray-400 border-t-white border-l-white p-3"
+          <div
+            className="mx-6 mb-4 bg-gray-100 border-2 border-gray-400 border-t-white border-l-white p-3"
             style={{
-              boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0'
+              boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
             }}
           >
             <div className="text-sm font-windows font-bold text-text-color mb-2">
@@ -212,7 +197,7 @@ const PlayPage = () => {
               className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight"
               onClick={() => setPassword('')}
               style={{
-                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff'
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
               }}
             >
               Clear
@@ -222,7 +207,7 @@ const PlayPage = () => {
               className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight disabled:opacity-50"
               disabled={password.length === 0}
               style={{
-                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff'
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
               }}
             >
               OK
@@ -231,34 +216,8 @@ const PlayPage = () => {
         </motion.div>
       </div>
 
-      {/* Windows 98 Taskbar - Only if it fits without overflow */}
-      <div className="h-7 bg-button-face border-t-2 border-button-highlight flex items-center px-2 flex-shrink-0">
-        {/* Start Button */}
-        <button 
-          className="h-5 px-2 bg-button-face border border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-xs hover:bg-gray-300 flex items-center space-x-1"
-          style={{
-            boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff'
-          }}
-        >
-          <div className="w-3 h-3 bg-red-500 border border-gray-400"></div>
-          <span>Start</span>
-        </button>
-
-        {/* Spacer */}
-        <div className="flex-1"></div>
-
-        {/* System Clock */}
-        <div className="text-xs font-windows text-text-color bg-gray-200 px-2 py-1 border border-gray-400"
-          style={{
-            boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0'
-          }}
-        >
-          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </div>
-      </div>
-
       {/* Vintage CRT Effect */}
-      <div className="absolute inset-0 pointer-events-none opacity-5">
+      <div className="fixed inset-0 pointer-events-none opacity-5">
         <div
           className="w-full h-full"
           style={{
