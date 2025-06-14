@@ -46,43 +46,25 @@ const PlayPage = () => {
 
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative overflow-hidden"
+      className="w-screen h-screen bg-desktop-bg relative p-2 sm:p-4 flex items-center justify-center overflow-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Windows 98 Desktop Background Pattern */}
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px),
-            repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)
-          `,
-        }}
-      />
-
       {/* Main Lock Screen Dialog */}
-      <div className="absolute inset-0 flex items-center justify-center p-4">
+      <div className=" overflow-scroll">
         <motion.div
-          className="bg-window-bg border-4 border-button-highlight border-b-button-shadow border-r-button-shadow shadow-2xl"
-          style={{
-            width: 'min(90vw, 480px)',
-            minHeight: '400px',
-          }}
+          className="bg-window-bg border-4 border-button-highlight border-b-button-shadow border-r-button-shadow shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto h-full"
           initial={{ scale: 0.8, y: 50 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
         >
           {/* Title Bar */}
-          <div
-            className="bg-titlebar-active-bg text-titlebar-active-text px-2 py-1 flex items-center justify-between border-b-2 border-button-shadow"
-            style={{ fontFamily: 'Tahoma, sans-serif', fontSize: '11px' }}
-          >
+          <div className="bg-titlebar-active-bg text-titlebar-active-text px-2 py-1 flex items-center justify-between border-b-2 border-button-shadow">
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-red-500 border border-gray-400"></div>
-              <span className="font-bold">Windows Security</span>
+              <div className="w-3 h-3 bg-red-500 border border-gray-400"></div>
+              <span className="text-sm md:text-xs">Windows Security</span>
             </div>
             <div className="flex space-x-1">
               <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">
@@ -92,20 +74,17 @@ const PlayPage = () => {
                 □
               </div>
               <div className="w-4 h-4 bg-button-face border border-button-shadow hover:bg-gray-300 cursor-pointer flex items-center justify-center text-xs">
-                ×
+                x
               </div>
             </div>
           </div>
 
           {/* Lock Screen Content */}
-          <div className="p-6 space-y-6">
+          <div className="p-1 space-y-1 overflow-auto h-full">
             {/* Header Section */}
-            <div className="text-center space-y-2">
+            <div className="text-center">
               <div className="text-lg font-windows font-bold text-text-color">
                 This computer is locked
-              </div>
-              <div className="text-sm font-windows text-gray-600">
-                Only Granny or an administrator can unlock this computer
               </div>
             </div>
 
@@ -119,7 +98,7 @@ const PlayPage = () => {
                 transition={{ duration: 0.2 }}
               >
                 <div
-                  className="w-24 h-24 bg-gray-200 border-4 border-button-shadow border-t-button-highlight border-l-button-highlight overflow-hidden"
+                  className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-200 border-4 border-button-shadow border-t-button-highlight border-l-button-highlight "
                   style={{
                     backgroundImage: 'url(/granny-face.png)',
                     backgroundSize: 'cover',
@@ -127,7 +106,7 @@ const PlayPage = () => {
                   }}
                 />
                 {/* User label */}
-                <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap">
+                <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 bg-yellow-200 px-2 py-1 border border-gray-400 text-[10px] sm:text-xs font-windows whitespace-nowrap">
                   Granny
                 </div>
               </motion.div>
@@ -146,6 +125,7 @@ const PlayPage = () => {
                   className="w-full px-3 py-2 border-2 border-button-shadow border-t-gray-400 border-l-gray-400 bg-white font-windows text-sm focus:outline-none"
                   placeholder="Enter password..."
                   autoFocus
+                  autoComplete="off"
                 />
 
                 {/* Show/Hide Password Toggle */}
@@ -251,19 +231,11 @@ const PlayPage = () => {
       </div>
 
       {/* Windows 98 Taskbar */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-button-face border-t-2 border-button-highlight flex items-center px-2">
-        <div className="flex items-center space-x-2">
-          <button className="px-2 py-1 bg-button-face border border-button-highlight border-b-button-shadow border-r-button-shadow text-xs font-windows hover:bg-gray-300">
-            Start
-          </button>
-        </div>
-
-        <div className="flex-1"></div>
-
-        <div className="text-xs font-windows text-text-color bg-gray-200 px-2 py-1 border border-gray-400">
+      {/* <div className="fixed bottom-0 left-0 right-0 h-6 sm:h-8 bg-button-face border-t-2 border-button-highlight flex items-center px-2">
+        <div className="text-[10px] sm:text-xs font-windows text-text-color bg-gray-200 px-2 py-1 border border-gray-400 ">
           {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
-      </div>
+      </div> */}
 
       {/* Vintage CRT Effect */}
       <div className="absolute inset-0 pointer-events-none opacity-5">
