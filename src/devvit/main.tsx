@@ -1,5 +1,4 @@
-import { Devvit, Post } from '@devvit/public-api';
-
+import { Devvit, Post, useWebView, Context } from '@devvit/public-api';
 import { defineConfig } from '@devvit/server';
 
 defineConfig({
@@ -11,18 +10,29 @@ defineConfig({
 
 export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Loading...' }) => {
   return (
-    <zstack width={'100%'} height={'100%'} alignment="center middle">
-      <vstack width={'100%'} height={'100%'} alignment="center middle">
+    <zstack width="100%" height="100%" alignment="center middle">
+      <vstack height={'100%'} width={'100%'}>
+        <image
+          url="wall-background.png"
+          height={'100%'}
+          width={'100%'}
+          imageHeight={500}
+          imageWidth={500}
+          resizeMode="cover"
+        />
+      </vstack>
+      <vstack width="100%" height="100%" alignment="center middle">
         <image
           url="loading.gif"
           description="Loading..."
-          height={'140px'}
-          width={'140px'}
-          imageHeight={'240px'}
-          imageWidth={'240px'}
+          height="350px"
+          width="600px"
+          imageHeight="240px"
+          imageWidth="240px"
+          resizeMode="scale-down"
         />
         <spacer size="small" />
-        <text maxWidth={`80%`} size="large" weight="bold" alignment="center middle" wrap>
+        <text maxWidth="80%" size="large" weight="bold" alignment="center middle" wrap>
           {text}
         </text>
       </vstack>
@@ -30,7 +40,59 @@ export const Preview: Devvit.BlockComponent<{ text?: string }> = ({ text = 'Load
   );
 };
 
-// Menu item for creating new posts
+// Define the expected message type from the webview
+type WebViewMessage = {
+  type: 'navigate';
+  data?: { url: string };
+};
+
+Devvit.addCustomPostType({
+  name: '[Grumpy Granny] Post',
+  height: 'tall',
+  render: (context: Context) => {
+    const { mount } = useWebView<WebViewMessage>({
+      url: 'index.html',
+      onMessage: (message, _webView) => {
+        if (message.type === 'navigate' && message.data?.url) {
+          context.ui.navigateTo(message.data.url);
+        }
+      },
+    });
+
+    return (
+      <zstack width="100%" height="100%">
+        {/* Background image covers the whole post */}
+        <image
+          url="app-page.png"
+          height="100%"
+          width="100%"
+          imageHeight={600}
+          imageWidth={600}
+          resizeMode="cover"
+          description="Background"
+        />
+
+        {/* Top-right badge */}
+        <hstack width="100%" height="20%" alignment="top end" padding="small">
+          <image
+            onPress={() => {
+              context.ui.navigateTo('https://bolt.new/');
+            }}
+            url="bolt-badge/white-badge.png"
+            imageWidth={80}
+            imageHeight={80}
+            description="Built with Bolt.new badge"
+          />
+        </hstack>
+
+        <hstack width="100%" height="100%" alignment="bottom center" padding="large">
+          <hstack width={40} height={40} backgroundColor="transparent" onPress={mount} />
+        </hstack>
+      </zstack>
+    );
+  },
+});
+
 Devvit.addMenuItem({
   label: '[Grumpy Granny]: New Post',
   location: 'subreddit',
@@ -44,11 +106,11 @@ Devvit.addMenuItem({
       post = await reddit.submitPost({
         title: 'Grumpy Granny',
         subredditName: subreddit.name,
-        preview: <Preview text="Can you guess the Granny's password? 👵💀" />,
+        preview: <Preview text="" />,
       });
 
       ui.showToast({ text: 'Grumpy Granny post!' });
-      ui.navigateTo(post.url);
+      ui.navigateTo(post);
     } catch (error) {
       if (post) {
         await post.remove(false);

@@ -90,7 +90,7 @@ const PlayPage = () => {
             />
             {/* User label */}
             <div className="bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap text-center">
-              Calmness Queen
+              Chillin Queen
             </div>
           </div>
 

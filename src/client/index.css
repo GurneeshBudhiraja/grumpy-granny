@@ -170,6 +170,10 @@
   background: var(--window-border);
 }
 
+.bolt-badge {
+  transition: all 0.3s ease;
+}
+
 /* Blinking animation for warning text */
 @keyframes blink {
   0%,

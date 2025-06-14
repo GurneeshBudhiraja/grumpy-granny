@@ -25,6 +25,36 @@ export const App = () => {
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
+      {/* Bolt badge on the start */}
+      {gameStatus === 'start' && (
+        <div
+          className="fixed top-4 right-4 z-50"
+          onClick={() => {
+            console.log('Navigating');
+            window.parent.postMessage(
+              {
+                type: 'navigate',
+                data: { url: 'https://bolt.new/' },
+              },
+              '*'
+            );
+          }}
+        >
+          <a
+            href="https://bolt.new/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block transition-all duration-300 hover:shadow-2xl"
+          >
+            <img
+              src="/bolt-badge/white-badge.png"
+              alt="Built with Bolt.new badge"
+              className="w-20 h-20 md:w-28 md:h-28 rounded-full shadow-lg  "
+            />
+          </a>
+        </div>
+      )}
+
       {/* Wall Background Container */}
       <div className="relative">
         {/* Wall Background - Full Viewport Coverage */}
