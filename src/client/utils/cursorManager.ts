@@ -128,12 +128,12 @@ class CursorManager {
 
     if (this.state.cursorType === 'windows') {
       // Use Windows cursors inside screen
-      screenElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
+      screenElement.style.setProperty('cursor', 'url("/windows-cursor/normal-cursor.cur"), auto', 'important');
 
       // Update clickable elements to use Windows pointer cursor
       const clickableElements = screenElement.querySelectorAll('button, a, [role="button"], .cursor-pointer, input[type="button"], input[type="submit"], input[type="reset"], [onclick]');
       clickableElements.forEach(el => {
-        (el as HTMLElement).style.setProperty('cursor', 'url("/pointer-cursor.cur"), pointer', 'important');
+        (el as HTMLElement).style.setProperty('cursor', 'url("/windows-cursor/pointer-cursor.cur"), pointer', 'important');
       });
     } else {
       // Use granny cursors (handled by custom cursor element)
@@ -155,11 +155,11 @@ class CursorManager {
       // Set pointer cursor for clickable elements outside screen
       const globalClickableElements = document.querySelectorAll('button:not(.bg-desktop-bg\\/90 *), a:not(.bg-desktop-bg\\/90 *), [role="button"]:not(.bg-desktop-bg\\/90 *), .cursor-pointer:not(.bg-desktop-bg\\/90 *)');
       globalClickableElements.forEach(el => {
-        (el as HTMLElement).style.setProperty('cursor', 'url("/pointer-cursor.cur"), pointer', 'important');
+        (el as HTMLElement).style.setProperty('cursor', 'url("/windows-cursor/pointer-cursor.cur"), pointer', 'important');
       });
     } else {
-      document.body.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
-      document.documentElement.style.setProperty('cursor', 'url("/cursor-image.cur"), auto', 'important');
+      document.body.style.setProperty('cursor', 'url("/windows-cursor/normal-cursor.cur"), auto', 'important');
+      document.documentElement.style.setProperty('cursor', 'url("/windows-cursor/normal-cursor.cur"), auto', 'important');
     }
   }
 
@@ -167,10 +167,8 @@ class CursorManager {
     if (!this.cursorImage) return;
 
     if (this.state.cursorType === 'granny') {
-      // Always show granny face (not the pointer) - keeping pointer code for future use
-      this.cursorImage.src = '/granny-face.png';
-      // Future granny pointer code (commented out for now):
-      // this.cursorImage.src = this.state.isPointer ? '/granny-pointer.png' : '/granny-face.png';
+      // Use granny face for normal cursor, granny pointer for clickable elements
+      this.cursorImage.src = this.state.isPointer ? '/granny-cursor/granny-pointer.cur' : '/granny-cursor/granny-face.cur';
     }
   }
 
