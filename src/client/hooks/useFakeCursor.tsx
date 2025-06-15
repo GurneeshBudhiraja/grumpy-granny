@@ -51,11 +51,11 @@ export function useFakeCursor() {
       src={
         cursorType === 'windows'
           ? pointerType === 'pointer'
-            ? '/windows-cursor/pointer-cursor.png'
-            : '/windows-cursor/normal-cursor.png'
+            ? '/cursor/windows-cursor/pointer-cursor.png'
+            : '/cursor/windows-cursor/normal-cursor.png'
           : pointerType === 'pointer'
-            ? '/granny-cursor/granny-pointer.png'
-            : '/granny-cursor/granny-face.png'
+            ? '/cursor/granny-cursor/granny-pointer.png'
+            : '/cursor/granny-cursor/granny-face.png'
       }
       alt="cursor"
       style={{
