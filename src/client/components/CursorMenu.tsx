@@ -106,21 +106,6 @@ function CursorMenu({ onCursorChange }: CursorMenuProps) {
           )}
         </motion.div>
 
-        {/* Tooltip showing selected cursor name */}
-        {!isHovered && (
-          <motion.div
-            className="absolute bottom-full right-0 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap opacity-0 pointer-events-none"
-            animate={{ 
-              opacity: isHovered ? 0 : 0.8,
-              y: isHovered ? 5 : 0 
-            }}
-            transition={{ delay: 1 }}
-          >
-            {selectedOption?.name} Cursor
-            <div className="absolute top-full right-2 w-0 h-0 border-l-2 border-r-2 border-t-4 border-transparent border-t-gray-800"></div>
-          </motion.div>
-        )}
-
         {/* Expanded tooltip showing both options */}
         {isHovered && (
           <motion.div
