@@ -39,34 +39,9 @@ class CursorManager {
   }
 
   private setupCursor() {
-    this.createCustomCursor();
     this.findScreenElement();
     this.addEventListeners();
     this.isInitialized = true;
-  }
-
-  private createCustomCursor() {
-    // Create custom cursor element for granny mode
-    this.cursorElement = document.createElement('div');
-    this.cursorElement.style.position = 'fixed';
-    this.cursorElement.style.top = '0';
-    this.cursorElement.style.left = '0';
-    this.cursorElement.style.width = '32px';
-    this.cursorElement.style.height = '32px';
-    this.cursorElement.style.pointerEvents = 'none';
-    this.cursorElement.style.zIndex = '9999';
-    this.cursorElement.style.transition = 'opacity 0.1s ease';
-    this.cursorElement.style.opacity = '0';
-
-    // Create image element
-    this.cursorImage = document.createElement('img');
-    this.cursorImage.style.width = '100%';
-    this.cursorImage.style.height = '100%';
-    this.cursorImage.style.objectFit = 'contain';
-    this.cursorImage.src = '/granny-cursor/granny-face.png';
-    
-    this.cursorElement.appendChild(this.cursorImage);
-    document.body.appendChild(this.cursorElement);
   }
 
   private findScreenElement() {
@@ -113,9 +88,8 @@ class CursorManager {
   private updatePosition(x: number, y: number) {
     this.position = { x, y };
     if (this.cursorElement) {
-      // Offset cursor to center it on the mouse position
-      this.cursorElement.style.left = `${x - 16}px`;
-      this.cursorElement.style.top = `${y - 16}px`;
+      this.cursorElement.style.left = `${x}px`;
+      this.cursorElement.style.top = `${y}px`;
     }
   }
 
@@ -139,8 +113,8 @@ class CursorManager {
     if (!this.cursorElement) return;
 
     if (this.state.cursorType === 'granny') {
-      // For granny mode, show custom cursor when visible
-      if (this.state.isVisible) {
+      // For granny mode, show custom cursor everywhere but hide when hovering clickable elements
+      if (this.state.isVisible && !this.state.isPointer) {
         this.cursorElement.style.opacity = '1';
       } else {
         this.cursorElement.style.opacity = '0';
@@ -196,8 +170,10 @@ class CursorManager {
     if (!this.cursorImage) return;
 
     if (this.state.cursorType === 'granny') {
-      // Use granny face for normal cursor, granny pointer for clickable elements
-      this.cursorImage.src = this.state.isPointer ? '/granny-cursor/granny-pointer.png' : '/granny-cursor/granny-face.png';
+      // Always show granny face (not the pointer) - keeping pointer code for future use
+      this.cursorImage.src = '/granny-cursor/granny-face.png';
+      // Future granny pointer code (commented out for now):
+      // this.cursorImage.src = this.state.isPointer ? '/granny-cursor/granny-pointer.png' : '/granny-cursor/granny-face.png';
     }
   }
 
