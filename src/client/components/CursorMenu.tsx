@@ -8,8 +8,8 @@ interface CursorOption {
 }
 
 const cursorOptions: CursorOption[] = [
-  { id: 'windows', name: 'Windows', icon: '/windows-cursor/normal-cursor.cur' },
-  { id: 'granny', name: 'Granny', icon: '/granny-cursor/granny-face.cur' },
+  { id: 'windows', name: 'Windows', icon: '/windows-cursor/normal-cursor.png' },
+  { id: 'granny', name: 'Granny', icon: '/granny-cursor/granny-face.png' },
 ];
 
 interface CursorMenuProps {
