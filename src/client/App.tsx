@@ -26,7 +26,7 @@ export const App = () => {
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
       {/* Bolt badge on the start */}
-      {/* {gameStatus === 'start' && (
+      {gameStatus === 'start' && (
         <div
           className="fixed top-4 right-4 z-50"
           onClick={() => {
@@ -53,7 +53,7 @@ export const App = () => {
             />
           </a>
         </div>
-      )} */}
+      )}
 
       {/* Wall Background Container */}
       <div className="relative">
