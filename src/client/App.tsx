@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { useClickSound, useKeyboardSound } from './hooks/hooks';
+import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
 import { StartPage, RulesPage, PlayPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
-import { cursorManager } from './utils/cursorManager';
 import { AnimatePresence } from 'motion/react';
-import './utils/cursorManager'; // Initialize cursor manager
 
 export const App = () => {
   // Add global click sound effect
@@ -19,9 +17,8 @@ export const App = () => {
     state: 'blinking',
     words: '',
   });
-  const handleCursorChange = (cursorType: 'windows' | 'granny') => {
-    cursorManager.setCursorType(cursorType);
-  };
+
+  const { setCursorType, CursorImg } = useFakeCursor();
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
@@ -189,8 +186,9 @@ export const App = () => {
         )}
       </div>
 
+      {CursorImg}
       {/* Cursor Selection Menu */}
-      <CursorMenu onCursorChange={handleCursorChange} />
+      <CursorMenu onCursorChange={setCursorType} />
     </div>
   );
 };

@@ -13,114 +13,83 @@ const cursorOptions: CursorOption[] = [
 ];
 
 interface CursorMenuProps {
-  onCursorChange: (cursorType: 'windows' | 'granny') => void;
+  onCursorChange?: (cursorType: 'windows' | 'granny') => void;
 }
 
-function CursorMenu({ onCursorChange }: CursorMenuProps) {
-  const [selectedCursor, setSelectedCursor] = useState<'windows' | 'granny'>('windows');
-  const [isHovered, setIsHovered] = useState(false);
+export default function CursorMenu({ onCursorChange }: CursorMenuProps) {
+  const [selected, setSelected] = useState<'windows' | 'granny'>('windows');
+  const [hovered, setHovered] = useState(false);
 
-  const handleSelect = (cursorType: 'windows' | 'granny') => {
-    setSelectedCursor(cursorType);
-    onCursorChange(cursorType);
+  const pick = (id: 'windows' | 'granny') => {
+    setSelected(id);
+    if (onCursorChange) onCursorChange(id);
   };
 
-  const selectedOption = cursorOptions.find(opt => opt.id === selectedCursor);
+  const active = cursorOptions.find((o) => o.id === selected)!;
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <motion.div 
+      <motion.div
         className="relative"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
+        {/* collapsible pill */}
         <motion.div
-          className="bg-amber-100/95 backdrop-blur-sm rounded-full border-2 border-amber-300 shadow-lg overflow-hidden flex items-center"
+          className="bg-amber-100/90 backdrop-blur-sm rounded-full border-2 border-amber-300 shadow-lg flex items-center justify-center overflow-hidden"
           animate={{
-            width: isHovered ? 'auto' : 50,
-            paddingLeft: isHovered ? 4 : 0,
-            paddingRight: isHovered ? 4 : 0,
-          }}
-          transition={{ 
-            duration: 0.2, 
-            ease: "easeInOut" 
-          }}
-          style={{
+            width: hovered ? 100 : 50,
             height: 50,
-            minWidth: 50,
           }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          {/* Collapsed state - show only selected cursor */}
-          {!isHovered && selectedOption && (
-            <motion.div
-              className="w-full h-full flex items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
+          {/* collapsed: full-circle icon */}
+          {!hovered && (
+            <button
+              onClick={() => pick(selected)}
+              className="w-full h-full flex items-center justify-center rounded-full border-2 border-blue-500 bg-blue-100 p-1"
             >
-              <div className="w-10 h-10 rounded-full border-2 border-blue-500 bg-blue-100 flex items-center justify-center">
-                <img 
-                  src={selectedOption.icon} 
-                  alt={selectedOption.name} 
-                  className="w-6 h-6 object-contain" 
-                />
-              </div>
-            </motion.div>
+              <img src={active.icon} alt={active.name} className="w-full h-full object-contain" />
+            </button>
           )}
 
-          {/* Expanded state - show all options */}
-          {isHovered && (
-            <motion.div
-              className="flex items-center gap-1"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {cursorOptions.map((opt) => {
-                const isActive = opt.id === selectedCursor;
+          {/* expanded: two 42px buttons + gap */}
+          {hovered && (
+            <div className="flex items-center gap-2 px-2">
+              {cursorOptions.map((o) => {
+                const isActive = o.id === selected;
                 return (
-                  <motion.button
-                    key={opt.id}
-                    className={`flex items-center justify-center rounded-full transition-all duration-200 ${
-                      isActive 
-                        ? 'border-2 border-blue-500 bg-blue-100' 
-                        : 'border-2 border-transparent hover:border-amber-400 hover:bg-amber-50'
-                    }`}
-                    onClick={() => handleSelect(opt.id)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{ 
-                      width: 42, 
-                      height: 42 
-                    }}
+                  <button
+                    key={o.id}
+                    onClick={() => pick(o.id)}
+                    className={
+                      'w-10 h-10 flex items-center justify-center rounded-full transition-all ' +
+                      (isActive
+                        ? 'border-2 border-blue-500 bg-blue-100'
+                        : 'border-2 border-transparent hover:border-amber-400 hover:bg-amber-50')
+                    }
                   >
-                    <img 
-                      src={opt.icon} 
-                      alt={opt.name} 
-                      className="w-6 h-6 object-contain" 
-                    />
-                  </motion.button>
+                    <img src={o.icon} alt={o.name} className="w-6 h-6 object-contain" />
+                  </button>
                 );
               })}
-            </motion.div>
+            </div>
           )}
         </motion.div>
 
-        {/* Expanded tooltip showing both options */}
-        {isHovered && (
+        {/* tooltip */}
+        {hovered && (
           <motion.div
-            className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-800 text-white text-xs rounded whitespace-nowrap"
+            className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap"
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 0.9, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
           >
-            Choose Cursor Style
-            <div className="absolute top-full right-4 w-0 h-0 border-l-2 border-r-2 border-t-4 border-transparent border-t-gray-800"></div>
+            Choose Cursor
+            <div className="absolute top-full right-4 w-0 h-0 border-l-2 border-r-2 border-t-4 border-transparent border-t-gray-800" />
           </motion.div>
         )}
       </motion.div>
     </div>
   );
 }
-
-export default CursorMenu;

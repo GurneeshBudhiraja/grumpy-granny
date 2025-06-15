@@ -35,16 +35,16 @@
   font-family: 'pixel';
   src: url('./fonts/pixel-font/VT323-Regular.ttf');
 }
-
 @layer base {
   * {
     @apply m-0 p-0 box-border font-windows select-none;
-    cursor: url('/windows-cursor/normal-cursor.cur'), auto;
+    /* default: Windows pointer */
+    cursor: none;
   }
 }
 
 .cursor-pointer {
-  cursor: url('/windows-cursor/pointer-cursor.cur'), auto;
+  cursor: none;
 }
 
 /* Terminal scrollbar styling - Custom sleek design */
