@@ -27,9 +27,6 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
 ]
 
-// Track used passwords to avoid immediate repetition
-let _usedPasswords: number[] = [];
-
 function getRandomIndex(min: number, max: number): number {
   const range = max - min + 1;
   const byteLength = Math.ceil(Math.log2(range) / 8);
@@ -55,25 +52,15 @@ function getRandomIndex(min: number, max: number): number {
 export default function getRandomPassword() {
   const totalPasswords = PASSWORDS.length;
   
-  // If all passwords have been used, reset the used list
-  if (_usedPasswords.length >= totalPasswords) {
-    _usedPasswords = [];
-  }
+  // Always get a truly random index - no tracking needed for simple 2-option case
+  const selectedIndex = getRandomIndex(0, totalPasswords - 1);
   
-  let selectedIndex: number;
-  
-  // Keep trying until we get an unused password
-  do {
-    selectedIndex = getRandomIndex(0, totalPasswords - 1);
-  } while (_usedPasswords.includes(selectedIndex));
-  
-  // Mark this password as used
-  _usedPasswords.push(selectedIndex);
+  console.log(`Selected password set ${selectedIndex + 1} of ${totalPasswords}`);
   
   return { info: PASSWORDS[selectedIndex] };
 }
 
 // Export function to reset password history (useful for testing)
 export function resetPasswordHistory() {
-  _usedPasswords = [];
+  // No longer needed but keeping for compatibility
 }

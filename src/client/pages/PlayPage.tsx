@@ -52,6 +52,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
         throw new Error('No password info found');
       }
       const { hints } = info;
+      console.log('Fetched password info:', info);
       setPasswordAPIResponse({
         ...info,
       });
