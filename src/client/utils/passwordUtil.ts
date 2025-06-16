@@ -1,5 +1,3 @@
-import { PasswordAPIResponse } from "../pages/PlayPage"
-
 const PASSWORDS: PasswordAPIResponse[] = [
   {
     hints: [
@@ -7,7 +5,7 @@ const PASSWORDS: PasswordAPIResponse[] = [
       "Include three 5s",
       "Write 17 in Roman numerals.",
       "The sum of digits add up to 69.",
-      "Include Granny's ex's namefrom document",
+      "Include Granny's ex's name from document",
       "Toss in exactly one \"!\".",
       "Include the current hour of the day (1-12).",
       "Finish with \"DD\"."
@@ -17,44 +15,65 @@ const PASSWORDS: PasswordAPIResponse[] = [
   {
     hints: [
       "Start with Granny's age",
-      "Include exactly three “7” characters.",
+      "Include exactly three \"7\" characters.",
       "Write 12 in Roman numerals.",
       "Make all digits sum to 60.",
-      "Include the Granny's birth date",
-      "Use one and only one tilde “~”.",
+      "Include the Granny's birth year from ID",
+      "Use one and only one tilde \"~\".",
       "Append today's day of the month (1-31).",
-      "Finish with “!!”."
+      "Finish with \"!!\"."
     ],
     verifyFuntion: "checkGrannyAgePassword"
   },
 ]
 
+// Track used passwords to avoid immediate repetition
+let _usedPasswords: number[] = [];
 
-let _lastIndex = -1
-function randIndex(min: number, max: number): number {
-  const range = max - min + 1
-  const byteLength = Math.ceil(Math.log2(range) / 8)
-  const maxValue = Math.pow(256, byteLength)
-  const maxRange = maxValue - (maxValue % range)
+function getRandomIndex(min: number, max: number): number {
+  const range = max - min + 1;
+  const byteLength = Math.ceil(Math.log2(range) / 8);
+  const maxValue = Math.pow(256, byteLength);
+  const maxRange = maxValue - (maxValue % range);
 
-  let rnd
+  let rnd;
   do {
-    const bytes = new Uint8Array(byteLength)
-    crypto.getRandomValues(bytes)
-    let value = 0
+    const bytes = new Uint8Array(byteLength);
+    crypto.getRandomValues(bytes);
+    let value = 0;
     for (let i = 0; i < bytes.length; i++) {
-      value = (value << 8) + bytes[i]!
+      value = (value << 8) + bytes[i]!;
     }
     if (value < maxRange) {
-      rnd = min + (value % range)
+      rnd = min + (value % range);
     }
-  } while (rnd === undefined || rnd === _lastIndex)
+  } while (rnd === undefined);
 
-  _lastIndex = rnd
-  return rnd
+  return rnd;
 }
 
-
 export default function getRandomPassword() {
-  return { info: PASSWORDS[randIndex(0, PASSWORDS.length - 1)] }
+  const totalPasswords = PASSWORDS.length;
+  
+  // If all passwords have been used, reset the used list
+  if (_usedPasswords.length >= totalPasswords) {
+    _usedPasswords = [];
+  }
+  
+  let selectedIndex: number;
+  
+  // Keep trying until we get an unused password
+  do {
+    selectedIndex = getRandomIndex(0, totalPasswords - 1);
+  } while (_usedPasswords.includes(selectedIndex));
+  
+  // Mark this password as used
+  _usedPasswords.push(selectedIndex);
+  
+  return { info: PASSWORDS[selectedIndex] };
+}
+
+// Export function to reset password history (useful for testing)
+export function resetPasswordHistory() {
+  _usedPasswords = [];
 }

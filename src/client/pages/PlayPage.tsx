@@ -71,8 +71,14 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
   useEffect(() => {
     // Set start time when component mounts
     setStartTime(Date.now());
+    // Reset form state
+    setPassword('');
+    setShowPassword(false);
+    setShowIdCard(false);
+    setShowDocument(false);
+    // Fetch new password set
     fetchPassword().catch(() => setGameStatus('start'));
-  }, []);
+  }, []); // Empty dependency array ensures this runs fresh each time component mounts
 
   // Handle password input changes with real-time verification
   const handlePasswordChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -433,6 +439,10 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-windows font-bold text-gray-700">Age:</span>
                     <span className="font-windows">73 years</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Birth Date:</span>
+                    <span className="font-windows">1951</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-windows font-bold text-gray-700">Occupation:</span>
