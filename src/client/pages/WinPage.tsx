@@ -17,11 +17,6 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
     setGameStatus('start');
   };
 
-  const handlePost = () => {
-    // Navigate to create post or share functionality
-    console.log('Post functionality - could integrate with Reddit API');
-  };
-
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-2 relative z-10 bg-window-bg overflow-hidden">
       {/* Vintage CRT scanlines effect */}
@@ -41,13 +36,13 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
       <div className="relative flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm lg:max-w-md px-2 mx-auto">
         {/* "YOU" - Coming from left - Smaller text */}
         <motion.div
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-pixel drop-shadow-lg mb-1 sm:mb-2 text-green-400"
+          className="text-highlight-bg sm:text-4xl md:text-5xl lg:text-6xl font-pixel drop-shadow-lg mb-1 sm:mb-2 "
           style={{
             filter: 'brightness(1.2)',
-            WebkitTextStroke: '1px var(--text-color)',
+            WebkitTextStroke: '1px var(--button-text)',
           }}
           initial={{ x: -300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
+          animate={{ x: -10, opacity: 1 }}
           exit={{ x: -300, opacity: 0 }}
           transition={{
             type: 'spring',
@@ -66,7 +61,7 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
             filter: 'brightness(1.2)',
             WebkitTextStroke: '1px var(--text-color)',
           }}
-          className="text-green-400 drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-pixel w-full text-center -mt-2 md:-mt-4 px-2"
+          className="text-highlight-bg drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-pixel w-full text-center -mt-2 md:-mt-4 px-2"
           initial={{ x: 300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 300, opacity: 0 }}
@@ -130,21 +125,6 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
           >
             <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               HOME
-            </span>
-          </div>
-        </button>
-
-        {/* Post Button - Smaller */}
-        <button
-          onClick={handlePost}
-          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
-        >
-          <div
-            className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
-            style={{ filter: 'brightness(1.2)' }}
-          >
-            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
-              POST
             </span>
           </div>
         </button>

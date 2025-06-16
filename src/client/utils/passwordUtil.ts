@@ -1,3 +1,5 @@
+import { PasswordAPIResponse } from "../pages/PlayPage";
+
 const PASSWORDS: PasswordAPIResponse[] = [
   {
     hints: [
@@ -51,12 +53,12 @@ function getRandomIndex(min: number, max: number): number {
 
 export default function getRandomPassword() {
   const totalPasswords = PASSWORDS.length;
-  
+
   // Always get a truly random index - no tracking needed for simple 2-option case
   const selectedIndex = getRandomIndex(0, totalPasswords - 1);
-  
+
   console.log(`Selected password set ${selectedIndex + 1} of ${totalPasswords}`);
-  
+
   return { info: PASSWORDS[selectedIndex] };
 }
 
