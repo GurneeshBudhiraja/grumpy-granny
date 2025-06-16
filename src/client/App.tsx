@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
-import { StartPage, RulesPage, PlayPage } from './pages/page';
+import { StartPage, RulesPage, PlayPage, WinPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen, WallShelf } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { AnimatePresence } from 'motion/react';
@@ -20,8 +20,15 @@ export const App = () => {
 
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
+  const [completionTime, setCompletionTime] = useState<string>('');
 
   const { setCursorType, CursorImg } = useFakeCursor();
+
+  // Handle win condition
+  const handleWin = (time: string) => {
+    setCompletionTime(time);
+    setGameStatus('win');
+  };
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
@@ -144,7 +151,21 @@ export const App = () => {
                         onShowDocument={() => setShowDocument(true)}
                       />
                     )}
-                    {gameStatus === 'playing' && <PlayPage setGameStatus={setGameStatus} />}
+                    {gameStatus === 'playing' && (
+                      <PlayPage 
+                        key="playing"
+                        setGameStatus={setGameStatus} 
+                        onWin={handleWin}
+                      />
+                    )}
+                    {gameStatus === 'win' && (
+                      <WinPage
+                        key="win"
+                        setGameStatus={setGameStatus}
+                        gameStatus={gameStatus}
+                        completionTime={completionTime}
+                      />
+                    )}
                   </AnimatePresence>
                 </div>
               </div>
@@ -191,7 +212,7 @@ export const App = () => {
         </div>
 
         {/* Granny Behind Screen - Only visible on rules page */}
-        {gameStatus !== 'start' && (
+        {gameStatus !== 'start' && gameStatus !== 'win' && (
           <GrannyBehindScreen grannyStatus={grannyStatus} setGrannyStatus={setGrannyStatus} />
         )}
       </div>
@@ -346,7 +367,7 @@ export const App = () => {
                   <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">
                     P.S. - If anyone finds this diary, remember:{' '}
                     <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span>{' '}
-                    is the ex's name, and I\'ll always be grumpier than yesterday!
+                    is the ex's name, and I'll always be grumpier than yesterday!
                   </p>
                   <p className="text-right italic font-bold">- Bertha "The Grump" Grumpington</p>
                 </div>

@@ -1,4 +1,5 @@
 import StartPage from "./StartPage";
 import RulesPage from "./RulesPage";
 import PlayPage from "./PlayPage";
-export { StartPage, RulesPage, PlayPage };
+import WinPage from "./WinPage";
+export { StartPage, RulesPage, PlayPage, WinPage };

@@ -1,5 +1,5 @@
 export type GameStatus =
-  'start' | 'rules' | 'playing' | 'paused' | 'ended' | '';
+  'start' | 'rules' | 'playing' | 'paused' | 'ended' | 'win' | '';
 
 export interface StartPageProps {
   gameStatus?: GameStatus;

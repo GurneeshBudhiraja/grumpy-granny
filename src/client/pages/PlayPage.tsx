@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GameStatus } from '../../shared/types';
 import getRandomPassword from '../utils/passwordUtil';
-import { checkWordlePassword, PasswordCheckResult } from '../utils/verifyPassword';
+import { checkWordlePassword, checkGrannyAgePassword, PasswordCheckResult } from '../utils/verifyPassword';
 
 interface Hint {
   id: number;
@@ -13,6 +13,7 @@ interface Hint {
 
 export interface PlayPageProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+  onWin?: (completionTime: string) => void;
 }
 
 export interface PasswordAPIResponse {
@@ -20,7 +21,7 @@ export interface PasswordAPIResponse {
   verifyFuntion: 'checkWordlePassword' | 'checkGrannyAgePassword' | '';
 }
 
-const PlayPage = ({ setGameStatus }: PlayPageProps) => {
+const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
   const [password, setPassword] = useState('');
   const [hints, setHints] = useState<Hint[]>([]);
   const [showPassword, setShowPassword] = useState(false);
@@ -30,6 +31,19 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   });
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
+  const [startTime, setStartTime] = useState<number>(Date.now());
+
+  // Format time helper
+  const formatTime = (milliseconds: number): string => {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (minutes > 0) {
+      return `${minutes}m ${remainingSeconds}s`;
+    }
+    return `${remainingSeconds}s`;
+  };
 
   async function fetchPassword() {
     try {
@@ -55,6 +69,8 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   }
 
   useEffect(() => {
+    // Set start time when component mounts
+    setStartTime(Date.now());
     fetchPassword().catch(() => setGameStatus('start'));
   }, []);
 
@@ -65,7 +81,17 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
 
     if (newPassword.length > 0) {
       try {
-        const result: PasswordCheckResult = await checkWordlePassword(newPassword);
+        let result: PasswordCheckResult;
+        
+        // Use the appropriate verification function based on the selected hint set
+        if (passwordAPIResponse.verifyFuntion === 'checkWordlePassword') {
+          result = await checkWordlePassword(newPassword);
+        } else if (passwordAPIResponse.verifyFuntion === 'checkGrannyAgePassword') {
+          result = await checkGrannyAgePassword(newPassword);
+        } else {
+          // Default fallback
+          result = await checkWordlePassword(newPassword);
+        }
 
         // Update hints based on verification result
         setHints((prev) =>
@@ -75,6 +101,19 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
             isCompleted: result.completedHints[index] || false,
           }))
         );
+
+        // Check if all hints are completed (win condition)
+        if (result.isValid) {
+          const completionTime = formatTime(Date.now() - startTime);
+          console.log('Password is correct! You win!');
+          
+          // Wait 2 seconds before showing win screen
+          setTimeout(() => {
+            if (onWin) {
+              onWin(completionTime);
+            }
+          }, 2000);
+        }
       } catch (error) {
         console.log('Password verification error:', error);
       }
@@ -94,10 +133,27 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && password.length > 0) {
       try {
-        const result: PasswordCheckResult = await checkWordlePassword(password);
+        let result: PasswordCheckResult;
+        
+        // Use the appropriate verification function
+        if (passwordAPIResponse.verifyFuntion === 'checkWordlePassword') {
+          result = await checkWordlePassword(password);
+        } else if (passwordAPIResponse.verifyFuntion === 'checkGrannyAgePassword') {
+          result = await checkGrannyAgePassword(password);
+        } else {
+          result = await checkWordlePassword(password);
+        }
+
         if (result.isValid) {
-          console.log('Password is correct! Unlocking...');
-          // Add success logic here
+          const completionTime = formatTime(Date.now() - startTime);
+          console.log('Password is correct! You win!');
+          
+          // Wait 2 seconds before showing win screen
+          setTimeout(() => {
+            if (onWin) {
+              onWin(completionTime);
+            }
+          }, 2000);
         } else {
           console.log('Password is incorrect');
         }
@@ -322,23 +378,24 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
 
       {/* ID Card Popup */}
       {showIdCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-2xl max-w-sm mx-4">
-            <motion.div
-              initial={{ scale: 0.5, rotate: -10, y: -100 }}
-              animate={{ scale: 1, rotate: 0, y: 0 }}
-              exit={{ scale: 0.5, rotate: 10, y: 100 }}
-              onClick={(e) => e.stopPropagation()}
+        <div
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
+          onClick={() => setShowIdCard(false)}
+        >
+          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm mx-4">
+            <div
               style={{
                 background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
                 border: '2px solid #2563eb',
               }}
               className="rounded-lg"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
+              {/* Close Button - Bigger and more clickable */}
               <button
                 onClick={() => setShowIdCard(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors"
+                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
+                style={{ lineHeight: '1' }}
               >
                 ×
               </button>
@@ -406,20 +463,19 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       )}
 
       {/* Document Popup */}
       {showDocument && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
+          onClick={() => setShowDocument(false)}
+        >
           <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300">
-            <motion.div
-              initial={{ scale: 0.5, y: -100, rotate: -5 }}
-              animate={{ scale: 1, y: 0, rotate: 0 }}
-              exit={{ scale: 0.5, y: 100, rotate: 5 }}
-              onClick={(e) => e.stopPropagation()}
+            <div
               style={{
                 background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
                 backgroundImage: `
@@ -430,11 +486,13 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                 backgroundPosition: '0 0, 0 0',
               }}
               className="rounded-lg"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
+              {/* Close Button - Bigger and more clickable */}
               <button
                 onClick={() => setShowDocument(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
+                style={{ lineHeight: '1' }}
               >
                 ×
               </button>
@@ -498,7 +556,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                   backgroundSize: '50px 50px',
                 }}
               ></div>
-            </motion.div>
+            </div>
           </div>
         </div>
       )}

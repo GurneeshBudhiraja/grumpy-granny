@@ -86,3 +86,59 @@ export async function checkWordlePassword(pwd: string): Promise<PasswordCheckRes
     completedHints: completedHints as readonly boolean[]
   };
 }
+
+export async function checkGrannyAgePassword(pwd: string): Promise<PasswordCheckResult> {
+  const completedHints = new Array<boolean>(8).fill(false);
+
+  // Granny's info
+  const grannyAge = "73"; // From ID card
+  const romanNumeral = "XII"; // 12 in Roman numerals
+  const grannyBirthYear = "1951"; // From the quote in ID card
+  const currentDay = new Date().getDate(); // 1-31
+
+  // 1) Must start with Granny's age "73"
+  completedHints[0] = pwd.startsWith(grannyAge);
+
+  // 2) Must include exactly three "7"s
+  const sevens: number = (pwd.match(/7/g) || []).length;
+  completedHints[1] = sevens === 3;
+
+  // 3) Must include the exact Roman numeral XII (12)
+  completedHints[2] = pwd.includes(romanNumeral);
+
+  // 4) Digits sum to 60 (including Roman numeral conversion)
+  let digitSum = 0;
+  // Add regular digits
+  pwd.split('').forEach((char: string) => {
+    if (/\d/.test(char)) {
+      digitSum += parseInt(char, 10);
+    }
+  });
+  // Add Roman numeral value if present
+  if (pwd.includes(romanNumeral)) {
+    digitSum += romanToNumber(romanNumeral);
+  }
+  completedHints[3] = digitSum === 60;
+
+  // 5) Must include Granny's birth year "1951"
+  completedHints[4] = pwd.includes(grannyBirthYear);
+
+  // 6) Exactly one tilde "~"
+  const tildes: number = (pwd.match(/~/g) || []).length;
+  completedHints[5] = tildes === 1;
+
+  // 7) Must include today's day of the month (1-31) as a substring
+  const dayStr: string = currentDay.toString();
+  completedHints[6] = pwd.includes(dayStr);
+
+  // 8) Must end with "!!"
+  completedHints[7] = pwd.endsWith('!!');
+
+  // Overall validation - all hints must be completed
+  const isValid: boolean = completedHints.every((hint: boolean): boolean => hint);
+
+  return {
+    isValid,
+    completedHints: completedHints as readonly boolean[]
+  };
+}
