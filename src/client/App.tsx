@@ -347,7 +347,7 @@ export const App = () => {
                   <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">
                     P.S. - If anyone finds this diary, remember:{' '}
                     <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span>{' '}
-                    is the ex's name, and I'll always be grumpier than yesterday!
+                    is the ex's name, and I\'ll always be grumpier than yesterday!
                   </p>
                   <p className="text-right italic font-bold">- Bertha "The Grump" Grumpington</p>
                 </div>
