@@ -17,7 +17,7 @@ export interface PlayPageProps {
 
 export interface PasswordAPIResponse {
   hints: string[];
-  verifyFuntion: 'checkWordlePassword' | '';
+  verifyFuntion: 'checkWordlePassword' | 'checkGrannyAgePassword' | '';
 }
 
 const PlayPage = ({ setGameStatus }: PlayPageProps) => {

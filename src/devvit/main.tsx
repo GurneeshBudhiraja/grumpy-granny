@@ -1,5 +1,4 @@
 import { Devvit, Post, useWebView, Context } from '@devvit/public-api';
-import '../server/index';
 import { defineConfig } from '@devvit/server';
 
 defineConfig({
