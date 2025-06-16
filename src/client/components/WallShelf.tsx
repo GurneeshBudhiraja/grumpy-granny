@@ -1,0 +1,60 @@
+import React from 'react';
+import { motion } from 'motion/react';
+import IdCard from './IdCard';
+import Document from './Document';
+
+interface WallShelfProps {
+  onIdClick: () => void;
+  onDocumentClick: () => void;
+}
+
+const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => {
+  return (
+    <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-10">
+      {/* Wooden Shelf */}
+      <div className="relative">
+        {/* Shelf Surface */}
+        <div 
+          className="w-48 h-4 bg-gradient-to-b from-amber-700 to-amber-900 rounded-lg shadow-lg"
+          style={{
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)'
+          }}
+        >
+          {/* Wood grain effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-30 rounded-lg"></div>
+          <div className="absolute top-1 left-0 w-full h-px bg-amber-600 opacity-40"></div>
+          <div className="absolute top-2 left-0 w-full h-px bg-amber-800 opacity-60"></div>
+        </div>
+        
+        {/* Shelf Brackets */}
+        <div className="absolute -bottom-2 left-2 w-3 h-6 bg-amber-800 rounded-b transform rotate-12"></div>
+        <div className="absolute -bottom-2 right-2 w-3 h-6 bg-amber-800 rounded-b transform -rotate-12"></div>
+        
+        {/* Items on Shelf */}
+        <div className="absolute -top-8 left-4 flex space-x-8">
+          {/* ID Card */}
+          <motion.div
+            onClick={onIdClick}
+            className="cursor-pointer"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <IdCard isOnShelf={true} />
+          </motion.div>
+          
+          {/* Document */}
+          <motion.div
+            onClick={onDocumentClick}
+            className="cursor-pointer"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Document isOnShelf={true} />
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WallShelf;

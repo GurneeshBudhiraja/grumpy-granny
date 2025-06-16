@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { GameStatus } from '../../shared/types';
 import getRandomPassword from '../utils/passwordUtil';
 import { checkWordlePassword, PasswordCheckResult } from '../utils/verifyPassword';
+import { WallShelf, IdCard, Document } from '../components/components';
 
 interface Hint {
   id: number;
@@ -113,42 +114,17 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
 
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative flex flex-col windows-scrollbar overflow-auto"
+      className="w-full h-full bg-desktop-bg relative flex flex-col windows-scrollbar overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Wall Document Holders - Positioned in top right outside the screen */}
-      <div className="absolute right-4 top-4 flex flex-col space-y-4 z-20">
-        {/* ID Card Holder */}
-        <motion.div
-          className="w-8 h-12 bg-amber-800 border-2 border-amber-900 rounded-sm shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-          onClick={() => setShowIdCard(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="w-full h-full bg-gradient-to-b from-amber-100 to-amber-200 rounded-sm p-1">
-            <div className="w-full h-3 bg-blue-600 rounded-sm mb-1"></div>
-            <div className="w-full h-2 bg-gray-300 rounded-sm mb-1"></div>
-            <div className="w-3/4 h-1 bg-gray-400 rounded-sm"></div>
-          </div>
-        </motion.div>
-
-        {/* Document Holder */}
-        <motion.div
-          className="w-8 h-10 bg-amber-800 border-2 border-amber-900 rounded-sm shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
-          onClick={() => setShowDocument(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="w-full h-full bg-gradient-to-b from-yellow-100 to-yellow-200 rounded-sm p-1">
-            <div className="w-full h-1 bg-blue-800 mb-1"></div>
-            <div className="w-full h-1 bg-blue-800 mb-1"></div>
-            <div className="w-3/4 h-1 bg-blue-800"></div>
-          </div>
-        </motion.div>
-      </div>
+      {/* Wall Shelf with ID and Document */}
+      <WallShelf 
+        onIdClick={() => setShowIdCard(true)}
+        onDocumentClick={() => setShowDocument(true)}
+      />
 
       {/* Main Lock Screen Content - Centered */}
       <div className="flex-1 flex items-center justify-center p-1">
@@ -345,150 +321,16 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
       </div>
 
       {/* ID Card Popup */}
-      <AnimatePresence>
-        {showIdCard && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowIdCard(false)}
-          >
-            <motion.div
-              className="bg-white rounded-lg shadow-2xl p-6 max-w-sm mx-4 relative"
-              initial={{ scale: 0.5, rotate: -10 }}
-              animate={{ scale: 1, rotate: 0 }}
-              exit={{ scale: 0.5, rotate: 10 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setShowIdCard(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600"
-              >
-                ×
-              </button>
-              
-              <div className="text-center">
-                <div className="bg-blue-600 text-white p-2 rounded-t-lg mb-4">
-                  <h3 className="font-windows font-bold">OFFICIAL ID CARD</h3>
-                </div>
-                
-                <div
-                  className="w-20 h-20 bg-gray-200 rounded-full mx-auto mb-4 border-4 border-blue-600"
-                  style={{
-                    backgroundImage: 'url(/granny-face-crown.png)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                />
-                
-                <div className="space-y-2 text-left">
-                  <div className="flex justify-between">
-                    <span className="font-windows font-bold">Name:</span>
-                    <span className="font-windows">Bertha Grumpington</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-windows font-bold">Initials:</span>
-                    <span className="font-windows text-red-600 font-bold">BG</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-windows font-bold">Age:</span>
-                    <span className="font-windows">73</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-windows font-bold">Status:</span>
-                    <span className="font-windows">Professional Grump</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-windows font-bold">ID:</span>
-                    <span className="font-windows">GG-2024-555</span>
-                  </div>
-                </div>
-                
-                <div className="mt-4 p-2 bg-yellow-100 rounded border-l-4 border-yellow-500">
-                  <p className="text-xs font-windows italic">
-                    "I've been grumpy since before it was cool!"
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <IdCard 
+        isExpanded={showIdCard}
+        onClose={() => setShowIdCard(false)}
+      />
 
       {/* Document Popup */}
-      <AnimatePresence>
-        {showDocument && (
-          <motion.div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowDocument(false)}
-          >
-            <motion.div
-              className="bg-yellow-100 rounded-lg shadow-2xl p-6 max-w-md mx-4 relative border-2 border-yellow-300"
-              style={{
-                backgroundImage: 'linear-gradient(45deg, #fefce8 25%, transparent 25%), linear-gradient(-45deg, #fefce8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #fefce8 75%), linear-gradient(-45deg, transparent 75%, #fefce8 75%)',
-                backgroundSize: '20px 20px',
-                backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
-              }}
-              initial={{ scale: 0.5, y: -100 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.5, y: 100 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setShowDocument(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600"
-              >
-                ×
-              </button>
-              
-              <div className="text-blue-800">
-                <div className="text-center mb-4">
-                  <h3 className="font-windows font-bold text-lg underline">PERSONAL DIARY</h3>
-                  <p className="font-windows text-sm italic">Property of Bertha G.</p>
-                </div>
-                
-                <div className="space-y-3 font-windows text-sm leading-relaxed">
-                  <p className="text-blue-900">
-                    <strong>Dear Diary,</strong>
-                  </p>
-                  
-                  <p>
-                    That fool <span className="font-bold text-red-600">Melvin</span> left me again! 
-                    After 47 years of putting up with his snoring and terrible jokes, 
-                    he has the audacity to say I'm "too grumpy"!
-                  </p>
-                  
-                  <p>
-                    Well, good riddance! I've got my knitting, my cats, and my 
-                    collection of vintage complaints. Who needs him anyway?
-                  </p>
-                  
-                  <p>
-                    Note to self: Change all the passwords. That man knows too much 
-                    about my secret cookie stash locations.
-                  </p>
-                  
-                  <p className="text-right italic">
-                    - Bertha "The Grump" Grumpington
-                  </p>
-                  
-                  <div className="mt-4 p-2 bg-yellow-200 rounded border border-yellow-400">
-                    <p className="text-xs italic">
-                      P.S. - If anyone finds this diary, remember: 
-                      <span className="font-bold"> Melvin</span> is the ex's name, 
-                      and I'll always be grumpier than yesterday!
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Document 
+        isExpanded={showDocument}
+        onClose={() => setShowDocument(false)}
+      />
 
       {/* Vintage CRT Effect */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
