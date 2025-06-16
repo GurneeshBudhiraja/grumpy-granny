@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
-import { StartPage, RulesPage, PlayPage, WinPage } from './pages/page';
+import { StartPage, RulesPage, PlayPage, WinPage, LeaderBoardPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen, WallShelf } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { AnimatePresence } from 'motion/react';
@@ -12,7 +12,7 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('start');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('win');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
     state: 'blinking',
     words: '',
@@ -161,6 +161,9 @@ export const App = () => {
                         gameStatus={gameStatus}
                         completionTime={completionTime}
                       />
+                    )}
+                    {gameStatus === 'leaderboard' && (
+                      <LeaderBoardPage setGameStatus={setGameStatus} />
                     )}
                   </AnimatePresence>
                 </div>

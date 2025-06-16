@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { GameStatus } from '../../shared/types';
 
@@ -16,6 +16,45 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
   const handleHome = () => {
     setGameStatus('start');
   };
+
+  const handleLeaderboard = () => {
+    setGameStatus('leaderboard');
+  };
+
+  function saveScore(completionTime: string) {
+    const score = convertCompletionTimeToNumber(completionTime);
+    console.log('posting the message to save the score');
+    window.parent.postMessage(
+      {
+        type: 'saveLeaderboard',
+        data: { score },
+      },
+      '*'
+    );
+  }
+
+  function convertCompletionTimeToNumber(completionTime: string): number {
+    let total = 0;
+
+    // match minutes (e.g. "1m" or "12m")
+    const m = completionTime.match(/(\d+)\s*m/);
+    if (m) {
+      total += parseInt(m[1], 10) * 60;
+    }
+
+    // match seconds (e.g. "30s")
+    const s = completionTime.match(/(\d+)\s*s/);
+    if (s) {
+      total += parseInt(s[1], 10);
+    }
+
+    return total;
+  }
+
+  useEffect(() => {
+    if (!completionTime) return;
+    saveScore(completionTime);
+  }, [completionTime]);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-2 relative z-10 bg-window-bg overflow-hidden">
@@ -125,6 +164,20 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
           >
             <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               HOME
+            </span>
+          </div>
+        </button>
+        {/* Leaderboard Button - Smaller */}
+        <button
+          onClick={handleLeaderboard}
+          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
+        >
+          <div
+            className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
+            style={{ filter: 'brightness(1.2)' }}
+          >
+            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+              Leaderboard &#127942;
             </span>
           </div>
         </button>
