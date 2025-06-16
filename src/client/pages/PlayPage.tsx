@@ -30,15 +30,6 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   });
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // Update time every second
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   async function fetchPassword() {
     try {
@@ -116,16 +107,20 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
     }
   };
 
+  // Separate completed and incomplete hints
+  const completedHints = hints.filter(hint => hint.isCompleted);
+  const incompleteHints = hints.filter(hint => !hint.isCompleted);
+
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-hidden"
+      className="w-full h-full bg-desktop-bg relative flex flex-col windows-scrollbar overflow-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Wall Document Holders - Positioned outside the monitor */}
-      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex flex-col space-y-4 z-20">
+      {/* Wall Document Holders - Positioned in top right outside the screen */}
+      <div className="absolute right-4 top-4 flex flex-col space-y-4 z-20">
         {/* ID Card Holder */}
         <motion.div
           className="w-8 h-12 bg-amber-800 border-2 border-amber-900 rounded-sm shadow-lg cursor-pointer hover:shadow-xl transition-shadow"
@@ -156,96 +151,162 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
       </div>
 
       {/* Main Lock Screen Content - Centered */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-1">
         <motion.div
-          className="bg-window-bg border-4 border-gray-400 shadow-2xl w-full max-w-md mx-auto rounded-lg overflow-hidden"
+          className="bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight shadow-lg w-full max-w-md mx-auto"
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+          style={{
+            boxShadow:
+              'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
+          }}
         >
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-3 text-center">
-            <h2 className="font-windows text-lg font-bold">Windows Lock Screen</h2>
+          <div className="bg-highlight-text w-[99%] flex px-1 justify-between ml-px">
+            <div className="flex items-center gap-1">
+              <div className="h-3 w-3 bg-red-500 " />
+              <span className="font-windows">Password Manager</span>
+            </div>
+            <div className="relative self-center border cursor-pointer group">
+              <img
+                src="/windows98-icons/question-icon.png"
+                alt="question icon"
+                className="w-3 h-3 cursor-pointer"
+              />
+              {/* Tooltip */}
+              <div className="absolute right-1 mt-1 w-max px-2 py-1 bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight text-xs font-windows text-text-color whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                Use the hints to get the correct password.
+              </div>
+            </div>
           </div>
-
           {/* Granny Profile Section */}
-          <div className="flex flex-col items-center py-6 bg-gray-100">
+          <div className="flex flex-col justify-center items-center mt-1 gap-1">
             <div
-              className="w-24 h-24 bg-gray-200 border-4 border-white rounded-full shadow-lg mb-3"
+              className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
               style={{
                 backgroundImage: 'url(/granny-face-crown.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
                 filter: 'brightness(1.15) saturate(1.05)',
               }}
             />
-            <div className="text-center">
-              <h3 className="font-windows text-lg font-bold text-gray-800">Bertha Grumpington</h3>
-              <p className="font-windows text-sm text-gray-600">The Chillin Queen</p>
+            {/* User label */}
+            <div className="bg-yellow-200 px-2 py-1 border border-gray-400 text-xs font-windows whitespace-nowrap text-center">
+              Chillin Queen
             </div>
           </div>
 
           {/* Password Input Section */}
-          <div className="px-6 pb-4">
-            <div className="mb-4">
-              <label className="block text-sm font-windows text-gray-700 mb-2">Password:</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={handlePasswordChange}
-                  onKeyPress={handleKeyPress}
-                  className="w-full px-3 py-2 border-2 border-gray-300 bg-white font-windows text-sm focus:outline-none focus:border-blue-500 rounded"
-                  placeholder="Enter password..."
-                  autoFocus
-                  autoComplete="off"
-                />
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gray-200 border border-gray-400 hover:bg-gray-300 text-xs font-windows flex items-center justify-center rounded"
-                >
-                  {showPassword ? '👁️' : '•••'}
-                </button>
-              </div>
-            </div>
+          <div className="px-6 pb-1 mt-4">
+            <div className="text-button-text ml-1">Let the hints guide you:</div>
+            <div className="relative selection:bg-highlight-bg selection:text-highlight-text">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={handlePasswordChange}
+                onKeyPress={handleKeyPress}
+                className="w-full px-3 py-2 border-2 border-button-shadow border-t-gray-400 border-l-gray-400 bg-white font-windows text-sm focus:outline-none"
+                placeholder="Key in the hint answer..."
+                autoFocus
+                autoComplete="off"
+                style={{
+                  boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
+                }}
+              />
 
-            {/* Hints Section */}
-            {hints.length > 0 && (
-              <div className="bg-white border-2 border-gray-300 rounded p-3 mb-4">
-                <div className="text-sm font-windows font-bold text-gray-800 mb-2">
-                  Password Hints:
-                </div>
-                <div className="space-y-1 max-h-32 overflow-y-auto">
-                  {hints.map((hint) => (
-                    <motion.div key={hint.id} className="flex items-center space-x-2" layout>
+              {/* Show/Hide Password Toggle */}
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center"
+                style={{
+                  boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+                }}
+              >
+                {showPassword ? '👁️' : '•••'}
+              </button>
+            </div>
+          </div>
+
+          {/* Hints Section */}
+          {!!hints.length && (
+            <div
+              className="mx-6 mb-4 bg-gray-100 border-2 border-gray-400 border-t-white border-l-white p-3"
+              style={{
+                boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
+              }}
+            >
+              <div className="text-sm font-windows font-bold text-text-color mb-2">
+                Password Hints:
+              </div>
+
+              <div className="space-y-2 max-h-20 overflow-y-scroll">
+                {/* Incomplete hints first */}
+                {incompleteHints.map((hint) => (
+                  <motion.div key={hint.id} className="flex items-center space-x-3" layout>
+                    {/* Icon */}
+                    <motion.div
+                      className="w-4 h-4 flex items-center justify-center"
+                      animate={{
+                        scale: hint.isCompleted ? [1, 1.2, 1] : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.img
+                        src="/windows98-icons/cross-icon.png"
+                        alt="Incomplete"
+                        className="w-4 h-4"
+                      />
+                    </motion.div>
+
+                    {/* Hint Text */}
+                    <motion.div
+                      className="text-xs font-windows text-text-color"
+                    >
+                      {hint.text}
+                    </motion.div>
+                  </motion.div>
+                ))}
+
+                {/* Completed hints at the bottom with animation */}
+                <AnimatePresence>
+                  {completedHints.map((hint) => (
+                    <motion.div 
+                      key={hint.id} 
+                      className="flex items-center space-x-3" 
+                      layout
+                      initial={{ y: -20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ 
+                        type: 'spring', 
+                        stiffness: 300, 
+                        damping: 20,
+                        layout: { duration: 0.5 }
+                      }}
+                    >
+                      {/* Icon */}
                       <motion.div
                         className="w-4 h-4 flex items-center justify-center"
                         animate={{
-                          scale: hint.isCompleted && !hint.previouslyCompleted ? [1, 1.3, 1] : 1,
+                          scale: hint.isCompleted && !hint.previouslyCompleted ? [1, 1.2, 1] : 1,
                         }}
                         transition={{ duration: 0.3 }}
                       >
-                        {hint.isCompleted ? (
-                          <motion.div
-                            className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center"
-                            initial={hint.previouslyCompleted ? {} : { scale: 0, rotate: -180 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                          >
-                            <span className="text-white text-xs font-bold">✓</span>
-                          </motion.div>
-                        ) : (
-                          <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">✗</span>
-                          </div>
-                        )}
+                        <motion.img
+                          src="/windows98-icons/check-icon.png"
+                          alt="Completed"
+                          className="w-4 h-4"
+                          initial={hint.previouslyCompleted ? {} : { scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        />
                       </motion.div>
+
+                      {/* Hint Text */}
                       <motion.div
-                        className={`text-xs font-windows ${
-                          hint.isCompleted ? 'text-green-700 line-through' : 'text-gray-700'
-                        }`}
+                        className="text-xs font-windows text-green-700 line-through"
                         animate={{
-                          color: hint.isCompleted ? '#15803d' : '#374151',
+                          color: '#15803d',
                         }}
                         transition={{ duration: 0.3 }}
                       >
@@ -253,39 +314,34 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                       </motion.div>
                     </motion.div>
                   ))}
-                </div>
+                </AnimatePresence>
               </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex justify-end space-x-2">
-              <button
-                className="px-4 py-2 bg-gray-300 border border-gray-400 font-windows text-sm hover:bg-gray-400 rounded"
-                onClick={() => setPassword('')}
-              >
-                Clear
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 text-white border border-blue-700 font-windows text-sm hover:bg-blue-700 disabled:opacity-50 rounded"
-                disabled={password.length === 0}
-              >
-                OK
-              </button>
             </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex justify-end space-x-2 px-6 pb-4">
+            <button
+              className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight"
+              onClick={() => setPassword('')}
+              style={{
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+              }}
+            >
+              Clear
+            </button>
+
+            <button
+              className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight disabled:opacity-50"
+              disabled={password.length === 0}
+              style={{
+                boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+              }}
+            >
+              OK
+            </button>
           </div>
         </motion.div>
-      </div>
-
-      {/* Windows Taskbar Footer */}
-      <div className="bg-gray-300 border-t-2 border-gray-400 px-4 py-1 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <div className="bg-gray-400 border border-gray-500 px-2 py-1 rounded text-xs font-windows">
-            Start
-          </div>
-        </div>
-        <div className="text-xs font-windows text-gray-800">
-          {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </div>
       </div>
 
       {/* ID Card Popup */}
@@ -433,6 +489,17 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Vintage CRT Effect */}
+      <div className="fixed inset-0 pointer-events-none opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 2px, #000000 2px, #000000 4px)',
+          }}
+        />
+      </div>
     </motion.div>
   );
 };
