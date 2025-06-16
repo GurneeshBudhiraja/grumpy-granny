@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
 import { StartPage, RulesPage, PlayPage } from './pages/page';
-import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
+import { GrannySprite, CursorMenu, GrannyBehindScreen, WallShelf } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { AnimatePresence } from 'motion/react';
 import { API_ROUTES } from './constants';
@@ -19,6 +19,9 @@ export const App = () => {
     state: 'blinking',
     words: '',
   });
+
+  const [showIdCard, setShowIdCard] = useState(false);
+  const [showDocument, setShowDocument] = useState(false);
 
   const { setCursorType, CursorImg } = useFakeCursor();
 
@@ -61,6 +64,14 @@ export const App = () => {
           className="bg-conic bg-center bg-no-repeat aspect-[5/3] min-h-[90vh] max-w-6xl"
           style={{ backgroundImage: 'url(/wall-background.png)' }}
         >
+          {/* Wall Shelf - Only visible during playing state */}
+          {gameStatus === 'playing' && (
+            <WallShelf 
+              onIdClick={() => setShowIdCard(true)}
+              onDocumentClick={() => setShowDocument(true)}
+            />
+          )}
+
           {/* Table at bottom of wall - wider to support larger monitor */}
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-5/6 h-20 bg-gradient-to-b from-amber-900 to-amber-800 rounded-t-lg shadow-2xl z-10">
             {/* Table surface with wood grain effect */}
@@ -187,6 +198,158 @@ export const App = () => {
           <GrannyBehindScreen grannyStatus={grannyStatus} setGrannyStatus={setGrannyStatus} />
         )}
       </div>
+
+      {/* Global ID Card and Document Popups */}
+      {showIdCard && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white rounded-lg shadow-2xl max-w-sm mx-4">
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                border: '2px solid #2563eb'
+              }}
+              className="rounded-lg"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowIdCard(false)}
+                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+              >
+                ×
+              </button>
+              
+              {/* ID Card Header */}
+              <div className="bg-blue-600 text-white p-3 rounded-t-lg">
+                <h3 className="font-windows font-bold text-center">OFFICIAL IDENTIFICATION</h3>
+                <div className="text-center text-xs opacity-90">Government Issued ID</div>
+              </div>
+              
+              <div className="p-6">
+                {/* Photo */}
+                <div className="flex justify-center mb-4">
+                  <div
+                    className="w-20 h-20 bg-gray-200 rounded border-4 border-blue-600"
+                    style={{
+                      backgroundImage: 'url(/granny-face-crown.png)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: 'brightness(1.1) contrast(1.1)'
+                    }}
+                  />
+                </div>
+                
+                {/* Personal Information */}
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Full Name:</span>
+                    <span className="font-windows">Bertha Grumpington</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Initials:</span>
+                    <span className="font-windows text-red-600 font-bold text-lg">BG</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Age:</span>
+                    <span className="font-windows">73 years</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Occupation:</span>
+                    <span className="font-windows">Professional Grump</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">ID Number:</span>
+                    <span className="font-windows">BG-2024-555</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-windows font-bold text-gray-700">Status:</span>
+                    <span className="font-windows text-green-600">Active</span>
+                  </div>
+                </div>
+                
+                {/* Quote */}
+                <div className="mt-4 p-3 bg-yellow-50 rounded border-l-4 border-yellow-400">
+                  <p className="text-xs font-windows italic text-gray-700">
+                    "I've been perfecting the art of grumpiness since 1951!"
+                  </p>
+                  <p className="text-xs font-windows text-right mt-1 text-gray-500">- Bertha G.</p>
+                </div>
+                
+                {/* Security Features */}
+                <div className="mt-4 text-center">
+                  <div className="inline-block bg-blue-100 px-3 py-1 rounded-full">
+                    <span className="text-xs font-windows text-blue-800">🔒 Verified Identity</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDocument && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300">
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
+                backgroundImage: `
+                  linear-gradient(90deg, #fbbf24 1px, transparent 1px),
+                  linear-gradient(#fbbf24 1px, transparent 1px)
+                `,
+                backgroundSize: '20px 20px, 20px 20px',
+                backgroundPosition: '0 0, 0 0'
+              }}
+              className="rounded-lg"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowDocument(false)}
+                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+              >
+                ×
+              </button>
+              
+              {/* Document Header */}
+              <div className="text-center p-4 border-b border-yellow-400">
+                <h3 className="font-windows font-bold text-lg text-blue-900 underline">PERSONAL DIARY</h3>
+                <p className="font-windows text-sm italic text-blue-800">Property of Bertha G.</p>
+                <div className="text-xs text-gray-600 mt-1">Est. 1951 - Still Grumpy</div>
+              </div>
+              
+              {/* Document Content */}
+              <div className="p-6 text-blue-900">
+                <div className="font-windows text-sm leading-relaxed space-y-3">
+                  <p className="font-bold">Dear Diary,</p>
+                  <p>That fool <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span> left me again! After 47 years of putting up with his snoring and terrible jokes, he has the audacity to say I'm "too grumpy"!</p>
+                  <p>Well, good riddance! I've got my knitting, my cats, and my collection of vintage complaints. Who needs him anyway?</p>
+                  <p>Note to self: Change all the passwords. That man knows too much about my secret cookie stash locations.</p>
+                  <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">P.S. - If anyone finds this diary, remember: <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span> is the ex's name, and I'll always be grumpier than yesterday!</p>
+                  <p className="text-right italic font-bold">- Bertha "The Grump" Grumpington</p>
+                </div>
+                
+                {/* Signature */}
+                <div className="mt-6 pt-4 border-t border-yellow-400">
+                  <div className="text-right">
+                    <div className="inline-block transform -rotate-2">
+                      <div className="text-blue-900 font-windows italic text-lg" style={{ fontFamily: 'cursive' }}>
+                        Bertha G. 💢
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Paper aging effects */}
+              <div className="absolute inset-0 pointer-events-none rounded-lg opacity-10"
+                style={{
+                  background: 'radial-gradient(circle at 10% 20%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 80% 80%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 40% 40%, #8b5cf6 1px, transparent 1px)',
+                  backgroundSize: '50px 50px'
+                }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {CursorImg}
       {/* Cursor Selection Menu */}
