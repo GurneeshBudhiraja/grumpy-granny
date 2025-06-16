@@ -5,15 +5,17 @@
 
 // Roman numeral conversion helper
 function romanToNumber(roman: string): number {
-  const romanNumerals: { [key: string]: number } = {
+  const romanNumerals: Record<string, number> = {
     'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000
   };
-  
+
   let result = 0;
   for (let i = 0; i < roman.length; i++) {
-    const current = romanNumerals[roman[i]];
-    const next = romanNumerals[roman[i + 1]];
-    
+    const currentChar = roman[i]!;
+    const nextChar = roman[i + 1];
+    const current = romanNumerals[currentChar] ?? 0;
+    const next = nextChar !== undefined ? romanNumerals[nextChar] ?? 0 : 0;
+
     if (next && current < next) {
       result += next - current;
       i++; // Skip next character
@@ -26,23 +28,23 @@ function romanToNumber(roman: string): number {
 
 export interface PasswordCheckResult {
   isValid: boolean;
-  completedHints: boolean[];
+  completedHints: readonly boolean[];
 }
 
 export async function checkWordlePassword(pwd: string): Promise<PasswordCheckResult> {
-  const completedHints: boolean[] = [];
-  
+  const completedHints = new Array<boolean>(8).fill(false);
+
   // Granny's info from ID and documents
   const grannyInitials = "BG"; // Bertha Grumpington
   const grannyExName = "Melvin"; // From the document
   const romanNumeral = "XVII"; // 17 in Roman numerals
-  const currentHour = new Date().getHours() % 12 || 12; // 1-12 format
-  
+  const currentHour: number = new Date().getHours() % 12 || 12; // 1-12 format
+
   // 1) Must start with Granny's initials "BG"
   completedHints[0] = pwd.startsWith(grannyInitials);
 
   // 2) Must include exactly three "5"s
-  const fives = (pwd.match(/5/g) || []).length;
+  const fives: number = (pwd.match(/5/g) || []).length;
   completedHints[1] = fives === 3;
 
   // 3) Must include the exact Roman numeral XVII (17)
@@ -51,7 +53,7 @@ export async function checkWordlePassword(pwd: string): Promise<PasswordCheckRes
   // 4) Digits sum to 69 (including Roman numeral conversion)
   let digitSum = 0;
   // Add regular digits
-  pwd.split('').forEach(char => {
+  pwd.split('').forEach((char: string) => {
     if (/\d/.test(char)) {
       digitSum += parseInt(char, 10);
     }
@@ -66,21 +68,21 @@ export async function checkWordlePassword(pwd: string): Promise<PasswordCheckRes
   completedHints[4] = pwd.toLowerCase().includes(grannyExName.toLowerCase());
 
   // 6) Exactly one exclamation mark
-  const bangs = (pwd.match(/!/g) || []).length;
+  const bangs: number = (pwd.match(/!/g) || []).length;
   completedHints[5] = bangs === 1;
 
   // 7) Must include the current hour (1–12) as a substring
-  const hourStr = currentHour.toString();
+  const hourStr: string = currentHour.toString();
   completedHints[6] = pwd.includes(hourStr);
 
   // 8) Must end with "DD"
   completedHints[7] = pwd.endsWith('DD');
 
   // Overall validation - all hints must be completed
-  const isValid = completedHints.every(hint => hint);
+  const isValid: boolean = completedHints.every((hint: boolean): boolean => hint);
 
   return {
     isValid,
-    completedHints
+    completedHints: completedHints as readonly boolean[]
   };
 }

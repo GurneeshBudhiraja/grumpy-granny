@@ -66,13 +66,13 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
     if (newPassword.length > 0) {
       try {
         const result: PasswordCheckResult = await checkWordlePassword(newPassword);
-        
+
         // Update hints based on verification result
-        setHints(prev => 
+        setHints((prev) =>
           prev.map((hint, index) => ({
             ...hint,
             previouslyCompleted: hint.isCompleted,
-            isCompleted: result.completedHints[index] || false
+            isCompleted: result.completedHints[index] || false,
           }))
         );
       } catch (error) {
@@ -80,11 +80,11 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
       }
     } else {
       // Reset all hints when password is empty
-      setHints(prev => 
-        prev.map(hint => ({
+      setHints((prev) =>
+        prev.map((hint) => ({
           ...hint,
           isCompleted: false,
-          previouslyCompleted: false
+          previouslyCompleted: false,
         }))
       );
     }
@@ -108,8 +108,8 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   };
 
   // Separate completed and incomplete hints
-  const completedHints = hints.filter(hint => hint.isCompleted);
-  const incompleteHints = hints.filter(hint => !hint.isCompleted);
+  const completedHints = hints.filter((hint) => hint.isCompleted);
+  const incompleteHints = hints.filter((hint) => !hint.isCompleted);
 
   return (
     <motion.div
@@ -229,9 +229,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                     </motion.div>
 
                     {/* Hint Text */}
-                    <motion.div
-                      className="text-xs font-windows text-text-color"
-                    >
+                    <motion.div className="text-xs font-windows text-text-color">
                       {hint.text}
                     </motion.div>
                   </motion.div>
@@ -240,17 +238,17 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                 {/* Completed hints at the bottom with animation */}
                 <AnimatePresence>
                   {completedHints.map((hint) => (
-                    <motion.div 
-                      key={hint.id} 
-                      className="flex items-center space-x-3" 
+                    <motion.div
+                      key={hint.id}
+                      className="flex items-center space-x-3"
                       layout
                       initial={{ y: -20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
-                      transition={{ 
-                        type: 'spring', 
-                        stiffness: 300, 
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
                         damping: 20,
-                        layout: { duration: 0.5 }
+                        layout: { duration: 0.5 },
                       }}
                     >
                       {/* Icon */}
@@ -292,7 +290,16 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
           <div className="flex justify-end space-x-2 px-6 pb-4">
             <button
               className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight"
-              onClick={() => setPassword('')}
+              onClick={() => {
+                setPassword('');
+                setHints(
+                  hints.map((hint) => ({
+                    ...hint,
+                    isCompleted: false,
+                    previouslyCompleted: false,
+                  }))
+                );
+              }}
               style={{
                 boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
               }}
@@ -324,7 +331,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
               onClick={(e) => e.stopPropagation()}
               style={{
                 background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-                border: '2px solid #2563eb'
+                border: '2px solid #2563eb',
               }}
               className="rounded-lg"
             >
@@ -335,13 +342,13 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
               >
                 ×
               </button>
-              
+
               {/* ID Card Header */}
               <div className="bg-blue-600 text-white p-3 rounded-t-lg">
                 <h3 className="font-windows font-bold text-center">OFFICIAL IDENTIFICATION</h3>
                 <div className="text-center text-xs opacity-90">Government Issued ID</div>
               </div>
-              
+
               <div className="p-6">
                 {/* Photo */}
                 <div className="flex justify-center mb-4">
@@ -351,11 +358,11 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                       backgroundImage: 'url(/granny-face-crown.png)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      filter: 'brightness(1.1) contrast(1.1)'
+                      filter: 'brightness(1.1) contrast(1.1)',
                     }}
                   />
                 </div>
-                
+
                 {/* Personal Information */}
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between border-b border-gray-200 pb-1">
@@ -383,7 +390,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                     <span className="font-windows text-green-600">Active</span>
                   </div>
                 </div>
-                
+
                 {/* Quote */}
                 <div className="mt-4 p-3 bg-yellow-50 rounded border-l-4 border-yellow-400">
                   <p className="text-xs font-windows italic text-gray-700">
@@ -391,7 +398,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                   </p>
                   <p className="text-xs font-windows text-right mt-1 text-gray-500">- Bertha G.</p>
                 </div>
-                
+
                 {/* Security Features */}
                 <div className="mt-4 text-center">
                   <div className="inline-block bg-blue-100 px-3 py-1 rounded-full">
@@ -420,7 +427,7 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
                   linear-gradient(#fbbf24 1px, transparent 1px)
                 `,
                 backgroundSize: '20px 20px, 20px 20px',
-                backgroundPosition: '0 0, 0 0'
+                backgroundPosition: '0 0, 0 0',
               }}
               className="rounded-lg"
             >
@@ -431,42 +438,64 @@ const PlayPage = ({ setGameStatus }: PlayPageProps) => {
               >
                 ×
               </button>
-              
+
               {/* Document Header */}
               <div className="text-center p-4 border-b border-yellow-400">
-                <h3 className="font-windows font-bold text-lg text-blue-900 underline">PERSONAL DIARY</h3>
+                <h3 className="font-windows font-bold text-lg text-blue-900 underline">
+                  PERSONAL DIARY
+                </h3>
                 <p className="font-windows text-sm italic text-blue-800">Property of Bertha G.</p>
                 <div className="text-xs text-gray-600 mt-1">Est. 1951 - Still Grumpy</div>
               </div>
-              
+
               {/* Document Content */}
               <div className="p-6 text-blue-900">
                 <div className="font-windows text-sm leading-relaxed space-y-3">
                   <p className="font-bold">Dear Diary,</p>
-                  <p>That fool <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span> left me again! After 47 years of putting up with his snoring and terrible jokes, he has the audacity to say I'm "too grumpy"!</p>
-                  <p>Well, good riddance! I've got my knitting, my cats, and my collection of vintage complaints. Who needs him anyway?</p>
-                  <p>Note to self: Change all the passwords. That man knows too much about my secret cookie stash locations.</p>
-                  <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">P.S. - If anyone finds this diary, remember: <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span> is the ex's name, and I'll always be grumpier than yesterday!</p>
+                  <p>
+                    That fool{' '}
+                    <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span>{' '}
+                    left me again! After 47 years of putting up with his snoring and terrible jokes,
+                    he has the audacity to say I'm "too grumpy"!
+                  </p>
+                  <p>
+                    Well, good riddance! I've got my knitting, my cats, and my collection of vintage
+                    complaints. Who needs him anyway?
+                  </p>
+                  <p>
+                    Note to self: Change all the passwords. That man knows too much about my secret
+                    cookie stash locations.
+                  </p>
+                  <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">
+                    P.S. - If anyone finds this diary, remember:{' '}
+                    <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span>{' '}
+                    is the ex's name, and I'll always be grumpier than yesterday!
+                  </p>
                   <p className="text-right italic font-bold">- Bertha "The Grump" Grumpington</p>
                 </div>
-                
+
                 {/* Signature */}
                 <div className="mt-6 pt-4 border-t border-yellow-400">
                   <div className="text-right">
                     <div className="inline-block transform -rotate-2">
-                      <div className="text-blue-900 font-windows italic text-lg" style={{ fontFamily: 'cursive' }}>
+                      <div
+                        className="text-blue-900 font-windows italic text-lg"
+                        style={{ fontFamily: 'cursive' }}
+                      >
                         Bertha G. 💢
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               {/* Paper aging effects */}
-              <div className="absolute inset-0 pointer-events-none rounded-lg opacity-10"
+              <div
+                className="absolute inset-0 pointer-events-none rounded-lg opacity-10"
                 style={{
-                  background: 'radial-gradient(circle at 10% 20%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 80% 80%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 40% 40%, #8b5cf6 1px, transparent 1px)',
-                  backgroundSize: '50px 50px'
+                  background:
+                    'radial-gradient(circle at 10% 20%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 80% 80%, #8b5cf6 1px, transparent 1px), radial-gradient(circle at 40% 40%, #8b5cf6 1px, transparent 1px)',
+                  backgroundSize: '50px 50px',
                 }}
               ></div>
             </motion.div>

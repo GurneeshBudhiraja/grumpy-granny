@@ -7,9 +7,9 @@ const PASSWORDS: PasswordAPIResponse[] = [
       "Include three 5s",
       "Write 17 in Roman numerals.",
       "The sum of digits add up to 69.",
-      "Add Granny's ex's name from document",
+      "Include Granny's ex's namefrom document",
       "Toss in exactly one \"!\".",
-      "Include the current hour (1-12).",
+      "Include the current hour of the day (1-12).",
       "Finish with \"DD\"."
     ],
     verifyFuntion: "checkWordlePassword"
