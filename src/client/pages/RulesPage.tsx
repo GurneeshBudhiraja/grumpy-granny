@@ -8,6 +8,8 @@ const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herse
 
 <span class="font-windows text-yellow-300 font-extrabold">WARNING: Hit the back button if you dare, but be prepared for Granny's scream to echo through your soul!</span> 
 
+Look for clues in Granny's <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-id">ID card</span> and her personal <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">document</span> on the shelf to crack the password.
+
 Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
 interface RulesPageProps {
@@ -15,9 +17,11 @@ interface RulesPageProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
   grannyStatus: GrannyStatus;
   setGrannyStatus: React.Dispatch<React.SetStateAction<GrannyStatus>>;
+  onShowId?: () => void;
+  onShowDocument?: () => void;
 }
 
-function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
+function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }: RulesPageProps) {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
@@ -33,6 +37,18 @@ function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
     setDisplayedText(RULES_HTML);
     setCurrentIndex(RULES_HTML.length);
     setShowCursor(false);
+  };
+
+  // Handle clicks on links in the rules text
+  const handleRulesClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const action = target.getAttribute('data-action');
+    
+    if (action === 'show-id' && onShowId) {
+      onShowId();
+    } else if (action === 'show-document' && onShowDocument) {
+      onShowDocument();
+    }
   };
 
   // Typing animation effect with reduced sound frequency
@@ -151,6 +167,7 @@ function RulesPage({ setGameStatus, setGrannyStatus }: RulesPageProps) {
           scrollbarWidth: 'thin',
           scrollbarColor: '#666666 #1a1a1a',
         }}
+        onClick={handleRulesClick}
       >
         {/* Typed Rules Text with HTML rendering */}
         <div

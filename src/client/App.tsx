@@ -141,6 +141,8 @@ export const App = () => {
                         gameStatus={gameStatus}
                         setGrannyStatus={setGrannyStatus}
                         grannyStatus={grannyStatus}
+                        onShowId={() => setShowIdCard(true)}
+                        onShowDocument={() => setShowDocument(true)}
                       />
                     )}
                     {gameStatus === 'playing' && <PlayPage setGameStatus={setGameStatus} />}
@@ -197,7 +199,10 @@ export const App = () => {
 
       {/* Global ID Card and Document Popups */}
       {showIdCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
+          onClick={() => setShowIdCard(false)}
+        >
           <div className="relative bg-white rounded-lg shadow-2xl max-w-sm mx-4">
             <div
               style={{
@@ -205,11 +210,13 @@ export const App = () => {
                 border: '2px solid #2563eb',
               }}
               className="rounded-lg"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
+              {/* Close Button - Bigger and more clickable */}
               <button
                 onClick={() => setShowIdCard(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
+                style={{ lineHeight: '1' }}
               >
                 ×
               </button>
@@ -283,7 +290,10 @@ export const App = () => {
       )}
 
       {showDocument && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
+          onClick={() => setShowDocument(false)}
+        >
           <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300">
             <div
               style={{
@@ -296,11 +306,13 @@ export const App = () => {
                 backgroundPosition: '0 0, 0 0',
               }}
               className="rounded-lg"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
+              {/* Close Button - Bigger and more clickable */}
               <button
                 onClick={() => setShowDocument(false)}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
+                style={{ lineHeight: '1' }}
               >
                 ×
               </button>
