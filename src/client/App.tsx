@@ -13,7 +13,7 @@ export const App = () => {
   useKeyboardSound();
 
   // TODO change to start in prod
-  const [gameStatus, setGameStatus] = useState<GameStatus>('start');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('playing');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
     state: 'blinking',
     words: '',
@@ -199,7 +199,7 @@ export const App = () => {
 
       {/* Global ID Card and Document Popups */}
       {showIdCard && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
           onClick={() => setShowIdCard(false)}
         >
@@ -290,7 +290,7 @@ export const App = () => {
       )}
 
       {showDocument && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
           onClick={() => setShowDocument(false)}
         >

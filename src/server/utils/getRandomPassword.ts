@@ -8,7 +8,7 @@ const PASSWORDS = [
       `Write ${Math.floor(Math.random() * 30) + 1} in Roman numerals.`,
       "Slip in today's Wordle answer.",
       "The sum of digits add up to 69.",
-      "Add Granny's ex's name",
+      "Add Granny's ex's name from document",
       "Toss in exactly one “!”.",
       "Include the current hour (1-12).",
       "Finish with “DD”."

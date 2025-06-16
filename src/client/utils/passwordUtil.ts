@@ -7,7 +7,7 @@ const PASSWORDS: PasswordAPIResponse[] = [
       "Include three 5s",
       "Write 17 in Roman numerals.",
       "The sum of digits add up to 69.",
-      "Add Granny's ex's name",
+      "Add Granny's ex's name from document",
       "Toss in exactly one \"!\".",
       "Include the current hour (1-12).",
       "Finish with \"DD\"."
