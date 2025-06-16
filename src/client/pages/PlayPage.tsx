@@ -1,19 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { GameStatus } from '../../shared/types';
+import getRandomPassword from '../utils/passwordUtil';
 
 interface Hint {
   id: number;
   text: string;
   isCompleted: boolean;
+  previouslyCompleted: boolean;
 }
 
-const PlayPage = () => {
+export interface PlayPageProps {
+  setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
+}
+
+export interface PasswordAPIResponse {
+  hints: string[];
+  verifyFuntion: 'checkWordlePassword' | '';
+}
+
+const PlayPage = ({ setGameStatus }: PlayPageProps) => {
   const [password, setPassword] = useState('');
-  const [hints, setHints] = useState<Hint[]>([
-    { id: 1, text: "Granny's favorite knitting pattern", isCompleted: false },
-    { id: 2, text: 'The year she first complained about technology', isCompleted: false },
-  ]);
+  const [hints, setHints] = useState<Hint[]>([]);
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordAPIResponse, setPasswordAPIResponse] = useState<PasswordAPIResponse>({
+    hints: [],
+    verifyFuntion: '',
+  });
+  async function fetchPassword() {
+    try {
+      const { info } = getRandomPassword();
+      if (!info) {
+        throw new Error('No password info found');
+      }
+      const { hints } = info;
+      setPasswordAPIResponse({
+        ...info,
+      });
+      setHints(
+        hints.map((hint: string, index: number) => ({
+          id: index + 1,
+          text: hint,
+          isCompleted: false,
+          previouslyCompleted: false,
+        }))
+      );
+    } catch (error) {
+      console.log('Error getting random password');
+    }
+  }
+  useEffect(() => {
+    fetchPassword().catch(() => setGameStatus('start'));
+  }, []);
 
   // Handle password input changes
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,66 +164,68 @@ const PlayPage = () => {
           </div>
 
           {/* Hints Section */}
-          <div
-            className="mx-6 mb-4 bg-gray-100 border-2 border-gray-400 border-t-white border-l-white p-3"
-            style={{
-              boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
-            }}
-          >
-            <div className="text-sm font-windows font-bold text-text-color mb-2">
-              Password Hints:
-            </div>
+          {!!hints.length && (
+            <div
+              className="mx-6 mb-4 bg-gray-100 border-2 border-gray-400 border-t-white border-l-white p-3"
+              style={{
+                boxShadow: 'inset 1px 1px 0px 0px #808080, inset 2px 2px 0px 0px #c0c0c0',
+              }}
+            >
+              <div className="text-sm font-windows font-bold text-text-color mb-2">
+                Password Hints:
+              </div>
 
-            <div className="space-y-2">
-              {hints.map((hint) => (
-                <motion.div key={hint.id} className="flex items-center space-x-3" layout>
-                  {/* Icon */}
-                  <motion.div
-                    className="w-4 h-4 flex items-center justify-center"
-                    animate={{
-                      scale: hint.isCompleted ? [1, 1.2, 1] : 1,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {hint.isCompleted ? (
-                      <motion.img
-                        src="/windows98-icons/check-icon.png"
-                        alt="Completed"
-                        className="w-4 h-4"
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      />
-                    ) : (
-                      <motion.img
-                        src="/windows98-icons/cross-icon.png"
-                        alt="Incomplete"
-                        className="w-4 h-4"
-                        animate={{
-                          y: hint.isCompleted ? 20 : 0,
-                          opacity: hint.isCompleted ? 0 : 1,
-                        }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    )}
-                  </motion.div>
+              <div className="space-y-2 max-h-20 overflow-y-scroll">
+                {hints.map((hint) => (
+                  <motion.div key={hint.id} className="flex items-center space-x-3" layout>
+                    {/* Icon */}
+                    <motion.div
+                      className="w-4 h-4 flex items-center justify-center"
+                      animate={{
+                        scale: hint.isCompleted ? [1, 1.2, 1] : 1,
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {hint.isCompleted ? (
+                        <motion.img
+                          src="/windows98-icons/check-icon.png"
+                          alt="Completed"
+                          className="w-4 h-4"
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                        />
+                      ) : (
+                        <motion.img
+                          src="/windows98-icons/cross-icon.png"
+                          alt="Incomplete"
+                          className="w-4 h-4"
+                          animate={{
+                            y: hint.isCompleted ? 20 : 0,
+                            opacity: hint.isCompleted ? 0 : 1,
+                          }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      )}
+                    </motion.div>
 
-                  {/* Hint Text */}
-                  <motion.div
-                    className={`text-xs font-windows ${
-                      hint.isCompleted ? 'text-green-700 line-through' : 'text-text-color'
-                    }`}
-                    animate={{
-                      color: hint.isCompleted ? '#15803d' : '#000000',
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {hint.text}
+                    {/* Hint Text */}
+                    <motion.div
+                      className={`text-xs font-windows ${
+                        hint.isCompleted ? 'text-green-700 line-through' : 'text-text-color'
+                      }`}
+                      animate={{
+                        color: hint.isCompleted ? '#15803d' : '#000000',
+                      }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {hint.text}
+                    </motion.div>
                   </motion.div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2 px-6 pb-4">

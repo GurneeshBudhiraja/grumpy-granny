@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
 import { StartPage, RulesPage, PlayPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { AnimatePresence } from 'motion/react';
+import { API_ROUTES } from './constants';
 
 export const App = () => {
   // Add global click sound effect
@@ -12,7 +13,8 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('start');
+  // TODO change to start in prod
+  const [gameStatus, setGameStatus] = useState<GameStatus>('playing');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
     state: 'blinking',
     words: '',
@@ -134,7 +136,7 @@ export const App = () => {
                         grannyStatus={grannyStatus}
                       />
                     )}
-                    {gameStatus === 'playing' && <PlayPage />}
+                    {gameStatus === 'playing' && <PlayPage setGameStatus={setGameStatus} />}
                   </AnimatePresence>
                 </div>
               </div>
