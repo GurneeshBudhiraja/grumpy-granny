@@ -211,8 +211,8 @@ export const App = () => {
           </div>
         </div>
 
-        {/* Granny Behind Screen - Only visible on rules page */}
-        {gameStatus !== 'start' && gameStatus !== 'win' && (
+        {/* Granny Behind Screen - Visible on rules, playing, and win pages */}
+        {gameStatus !== 'start' && (
           <GrannyBehindScreen grannyStatus={grannyStatus} setGrannyStatus={setGrannyStatus} />
         )}
       </div>
@@ -274,6 +274,10 @@ export const App = () => {
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-windows font-bold text-gray-700">Age:</span>
                     <span className="font-windows">73 years</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-200 pb-1">
+                    <span className="font-windows font-bold text-gray-700">Birth Date:</span>
+                    <span className="font-windows">1951</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-windows font-bold text-gray-700">Occupation:</span>

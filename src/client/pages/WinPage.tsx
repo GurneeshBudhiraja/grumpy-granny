@@ -23,7 +23,7 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4 relative z-10 bg-window-bg">
+    <div className="w-full h-full flex flex-col items-center justify-center p-2 relative z-10 bg-window-bg overflow-hidden">
       {/* Vintage CRT scanlines effect */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="w-full h-full opacity-10 bg-gradient-to-b from-transparent via-amber-500 to-transparent animate-pulse"></div>
@@ -37,14 +37,14 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
         ></div>
       </div>
 
-      {/* Main Win Content Container */}
-      <div className="relative flex flex-col items-center justify-center w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 mx-auto mt-3 md:mt-0">
-        {/* "YOU" - Coming from left */}
+      {/* Main Win Content Container - Compact for screen fit */}
+      <div className="relative flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm lg:max-w-md px-2 mx-auto">
+        {/* "YOU" - Coming from left - Smaller text */}
         <motion.div
-          className="text-6xl sm:text-8xl md:text-9xl font-pixel drop-shadow-lg mb-2 sm:mb-4 text-green-400"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-pixel drop-shadow-lg mb-1 sm:mb-2 text-green-400"
           style={{
             filter: 'brightness(1.2)',
-            WebkitTextStroke: '2px var(--text-color)',
+            WebkitTextStroke: '1px var(--text-color)',
           }}
           initial={{ x: -300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -60,13 +60,13 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
           YOU
         </motion.div>
 
-        {/* "WIN!" - Coming from right */}
+        {/* "WIN!" - Coming from right - Smaller text */}
         <motion.div
           style={{
             filter: 'brightness(1.2)',
-            WebkitTextStroke: '2px var(--text-color)',
+            WebkitTextStroke: '1px var(--text-color)',
           }}
-          className="text-green-400 drop-shadow-lg text-6xl sm:text-8xl md:text-9xl font-pixel w-full text-center -mt-8 md:-mt-10 px-4"
+          className="text-green-400 drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-pixel w-full text-center -mt-2 md:-mt-4 px-2"
           initial={{ x: 300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 300, opacity: 0 }}
@@ -81,80 +81,80 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
           WIN!
         </motion.div>
 
-        {/* Completion Time Tagline */}
+        {/* Completion Time Tagline - Compact */}
         <motion.div
-          className="text-center mt-4 mb-8"
+          className="text-center mt-2 mb-4"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.5 }}
         >
-          <p className="text-lg sm:text-xl md:text-2xl font-windows text-text-color font-bold">
+          <p className="text-xs sm:text-sm md:text-base font-windows text-text-color font-bold">
             🎉 You cracked Granny's password! 🎉
           </p>
-          <p className="text-sm sm:text-base md:text-lg font-windows text-text-color mt-2">
-            Completion Time: <span className="text-green-600 font-bold">{completionTime}</span>
+          <p className="text-xs sm:text-sm font-windows text-text-color mt-1">
+            Time: <span className="text-green-600 font-bold">{completionTime}</span>
           </p>
         </motion.div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - Compact layout */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-4 mt-4"
+        className="flex flex-col sm:flex-row gap-2 mt-2"
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.5 }}
       >
-        {/* Play Again Button */}
+        {/* Play Again Button - Smaller */}
         <button
           onClick={handlePlayAgain}
-          className="relative group cursor-pointer drop-shadow-[3px_4px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
         >
           <div
-            className="border-4 border-button-shadow px-4 sm:px-6 py-2 md:py-3 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
+            className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
             style={{ filter: 'brightness(1.2)' }}
           >
-            <span className="text-lg sm:text-xl md:text-2xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               PLAY AGAIN
             </span>
           </div>
         </button>
 
-        {/* Home Button */}
+        {/* Home Button - Smaller */}
         <button
           onClick={handleHome}
-          className="relative group cursor-pointer drop-shadow-[3px_4px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
         >
           <div
-            className="border-4 border-button-shadow px-4 sm:px-6 py-2 md:py-3 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
+            className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
             style={{ filter: 'brightness(1.2)' }}
           >
-            <span className="text-lg sm:text-xl md:text-2xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               HOME
             </span>
           </div>
         </button>
 
-        {/* Post Button */}
+        {/* Post Button - Smaller */}
         <button
           onClick={handlePost}
-          className="relative group cursor-pointer drop-shadow-[3px_4px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
         >
           <div
-            className="border-4 border-button-shadow px-4 sm:px-6 py-2 md:py-3 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
+            className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
             style={{ filter: 'brightness(1.2)' }}
           >
-            <span className="text-lg sm:text-xl md:text-2xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
               POST
             </span>
           </div>
         </button>
       </motion.div>
 
-      {/* Vintage corner decorations */}
-      <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-window-border/50"></div>
-      <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-window-border/50"></div>
-      <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-window-border/50"></div>
-      <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-window-border/50"></div>
+      {/* Vintage corner decorations - Smaller */}
+      <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-window-border/50"></div>
+      <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-window-border/50"></div>
+      <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-window-border/50"></div>
+      <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-window-border/50"></div>
     </div>
   );
 }
