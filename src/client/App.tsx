@@ -200,10 +200,10 @@ export const App = () => {
       {/* Global ID Card and Document Popups */}
       {showIdCard && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
           onClick={() => setShowIdCard(false)}
         >
-          <div className="relative bg-white rounded-lg shadow-2xl max-w-sm mx-4">
+          <div className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm mx-4">
             <div
               style={{
                 background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
@@ -291,7 +291,7 @@ export const App = () => {
 
       {showDocument && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
           onClick={() => setShowDocument(false)}
         >
           <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300">
@@ -347,7 +347,7 @@ export const App = () => {
                   <p className="text-xs bg-yellow-200 p-2 rounded border border-yellow-400">
                     P.S. - If anyone finds this diary, remember:{' '}
                     <span className="font-bold text-red-600 bg-red-100 px-1 rounded">Melvin</span>{' '}
-                    is the ex's name, and I\'ll always be grumpier than yesterday!
+                    is the ex's name, and I'll always be grumpier than yesterday!
                   </p>
                   <p className="text-right italic font-bold">- Bertha "The Grump" Grumpington</p>
                 </div>

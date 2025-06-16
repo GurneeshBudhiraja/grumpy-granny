@@ -65,14 +65,14 @@ P.S. - If anyone finds this diary, remember: Melvin is the ex's name, and I'll a
     return (
       <AnimatePresence>
         <motion.div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300"
+            className="relative bg-yellow-50 rounded-lg shadow-2xl w-full max-w-md mx-4 border-2 border-yellow-300 max-h-[90vh] overflow-y-auto"
             initial={{ scale: 0.5, y: -100, rotate: -5 }}
             animate={{ scale: 1, y: 0, rotate: 0 }}
             exit={{ scale: 0.5, y: 100, rotate: 5 }}
@@ -90,21 +90,22 @@ P.S. - If anyone finds this diary, remember: Melvin is the ex's name, and I'll a
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold hover:bg-red-600 transition-colors z-10"
+              className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
+              style={{ lineHeight: '1' }}
             >
               ×
             </button>
             
             {/* Document Header */}
-            <div className="text-center p-4 border-b border-yellow-400">
-              <h3 className="font-windows font-bold text-lg text-blue-900 underline">PERSONAL DIARY</h3>
-              <p className="font-windows text-sm italic text-blue-800">Property of Bertha G.</p>
+            <div className="text-center p-3 sm:p-4 border-b border-yellow-400">
+              <h3 className="font-windows font-bold text-base sm:text-lg text-blue-900 underline">PERSONAL DIARY</h3>
+              <p className="font-windows text-xs sm:text-sm italic text-blue-800">Property of Bertha G.</p>
               <div className="text-xs text-gray-600 mt-1">Est. 1951 - Still Grumpy</div>
             </div>
             
             {/* Document Content */}
-            <div className="p-6 text-blue-900">
-              <div className="font-windows text-sm leading-relaxed space-y-3">
+            <div className="p-4 sm:p-6 text-blue-900">
+              <div className="font-windows text-xs sm:text-sm leading-relaxed space-y-3">
                 {content.split('\n\n').map((paragraph, index) => (
                   <p key={index} className={
                     paragraph.startsWith('Dear Diary') ? 'font-bold' :
@@ -129,10 +130,10 @@ P.S. - If anyone finds this diary, remember: Melvin is the ex's name, and I'll a
               </div>
               
               {/* Signature */}
-              <div className="mt-6 pt-4 border-t border-yellow-400">
+              <div className="mt-4 sm:mt-6 pt-4 border-t border-yellow-400">
                 <div className="text-right">
                   <div className="inline-block transform -rotate-2">
-                    <div className="text-blue-900 font-windows italic text-lg" style={{ fontFamily: 'cursive' }}>
+                    <div className="text-blue-900 font-windows italic text-base sm:text-lg" style={{ fontFamily: 'cursive' }}>
                       Bertha G. 💢
                     </div>
                   </div>
