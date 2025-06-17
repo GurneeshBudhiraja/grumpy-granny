@@ -62,8 +62,8 @@ export function useFakeCursor() {
         position: 'fixed',
         top: 0,
         left: 0,
-        width: cursorType === 'windows' ? 32 : 40,
-        height: cursorType === 'windows' ? 32 : 40,
+        width: cursorType === 'windows' ? 32 : 32,
+        height: cursorType === 'windows' ? 32 : 32,
         pointerEvents: 'none', // never block real events
         transform: 'translate3d(-16px,-16px,0)', // center hotspot
         zIndex: 999999,

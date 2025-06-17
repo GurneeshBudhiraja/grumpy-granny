@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { StartPageProps } from '../../shared/types';
 
-function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
+function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
   const handleButtonClick = () => {
     setGameStatus('rules');
   };
@@ -19,6 +19,36 @@ function StartPage({ gameStatus, setGameStatus }: StartPageProps) {
               'repeating-linear-gradient(0deg, transparent, transparent 2px, #00ff00 2px, #00ff00 4px)',
           }}
         ></div>
+      </div>
+      {/* Trophy / Leaderboard button */}
+      <div className="absolute top-5 right-5">
+        <div
+          role="button"
+          tabIndex={0}
+          className="relative group cursor-pointer"
+          onClick={() => setGameStatus('leaderboard')}
+          onKeyDown={(e) => e.key === 'Enter' && setGameStatus('leaderboard')}
+        >
+          <button
+            className="w-10 h-10 bg-window-bg border-2 border-button-shadow shadow-inner flex items-center justify-center rounded"
+            style={{
+              boxShadow: 'inset -1px -1px 0 #808080, inset 1px 1px 0 #fff',
+            }}
+          >
+            <span className="text-xl">🏆</span>
+          </button>
+
+          {/* Tooltip */}
+          <div
+            className="absolute right-1/2 px-2 py-1 bg-window-bg border-2 border-button-shadow text-xs font-windows whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              transform: 'translateX(50%)',
+              boxShadow: 'inset -1px -1px 0 #808080, inset 1px 1px 0 #fff',
+            }}
+          >
+            Leaderboard
+          </div>
+        </div>
       </div>
 
       {/* Main Title Animation Container */}
