@@ -4,11 +4,12 @@ type WebViewMessage =
   | { type: 'navigate'; data?: { url: string } }
   | { type: 'submitPost'; time: string }
   | { type: 'getLeaderboard'; currentPlayer: string }
-  | { type: 'saveLeaderboard'; data: { member: string; score: number } };
+  | { type: 'setLeaderboard'; data: { score: number } };
 
-type DevvitToWebViewMessage = {
+export type DevvitToWebViewMessage = {
   type: 'leaderboardData';
-  data: { member: string; score: number; rank?: number }[];
+  data: string;
+  currentUser: string;
 };
 
 Devvit.configure({
@@ -23,6 +24,8 @@ Devvit.addCustomPostType({
     const { mount } = useWebView<WebViewMessage, DevvitToWebViewMessage>({
       url: 'index.html',
       onMessage: async (message, webView) => {
+        console.log('Message received');
+        console.log(message);
         if (message.type === 'navigate' && message.data?.url) {
           context.ui.navigateTo(message.data.url);
         }
@@ -34,40 +37,45 @@ Devvit.addCustomPostType({
             console.log('`currentPlayer` is `undefined`');
             return;
           }
-          const topN = 9;
-          let leaderboard = await context.redis.zRange('leaderboard', 0, topN, {
-            reverse: true,
-            by: 'score',
-          });
+          const score = (await context.redis.get('score')) ?? '';
+          console.log('score');
+          console.log(score);
 
-          // Check if current player is in the top N
-          const playerIndex = leaderboard.findIndex((entry) => entry.member === currentPlayer);
-
-          if (playerIndex === -1) {
-            // Get current player's score and rank
-            const score = await context.redis.zScore('leaderboard', currentPlayer);
-            const rank = await context.redis.zRank('leaderboard', currentPlayer);
-            if (score !== undefined && rank !== undefined) {
-              // Prepend current player to the leaderboard
-              leaderboard = [{ member: currentPlayer, score, rank }, ...leaderboard];
-            }
-          }
-
-          webView.postMessage({ type: 'leaderboardData', data: leaderboard });
+          webView.postMessage({ type: 'leaderboardData', data: score, currentUser: currentPlayer });
         }
         // Handle leaderboard save
-        else if (message.type === 'saveLeaderboard' && message.data) {
+        else if (message.type === 'setLeaderboard' && message.data) {
           console.log(message.data);
+
           const member = await context.reddit.getCurrentUsername();
           if (!member) {
             console.log('`member` is `undefined`');
             return;
           }
-          await context.redis.zAdd('leaderboard', {
-            member,
-            score: message.data.score,
-          });
-          console.log('leaderboard has been updated');
+          const { score } = message.data;
+          const currentScore = (await context.redis.get('score')) as string | undefined;
+          if (!currentScore) {
+            await context.redis.set('score', JSON.stringify([{ score, userName: member }]));
+            console.log('new entry has been updated in the empty leaderboard');
+          } else {
+            const existingScore = JSON.parse(currentScore) as {
+              userName: string;
+              score: number;
+            }[];
+            // checks if the user entry already exists
+            const userExists = existingScore.find((entry) => entry.userName === member);
+            if (userExists) {
+              // updates the current user entry
+              const updatedScore = existingScore.map((entry) =>
+                entry.userName === member ? { ...entry, score } : entry
+              );
+              await context.redis.set('score', JSON.stringify(updatedScore));
+              return;
+            }
+            // new entry for the user
+            const newScore = [...existingScore, { score, userName: member }];
+            await context.redis.set('score', JSON.stringify(newScore));
+          }
         }
       },
     });

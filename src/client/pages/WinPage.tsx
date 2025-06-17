@@ -21,16 +21,10 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
     setGameStatus('leaderboard');
   };
 
-  function saveScore(completionTime: string) {
-    const score = convertCompletionTimeToNumber(completionTime);
-    console.log('posting the message to save the score');
-    window.parent.postMessage(
-      {
-        type: 'saveLeaderboard',
-        data: { score },
-      },
-      '*'
-    );
+  // This will the be the time in seconds
+  function setLeaderboardData(userCompletionTime: string) {
+    const score = convertCompletionTimeToNumber(userCompletionTime);
+    window.parent.postMessage({ type: 'setLeaderboard', data: { score } }, '*');
   }
 
   function convertCompletionTimeToNumber(completionTime: string): number {
@@ -53,7 +47,7 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
 
   useEffect(() => {
     if (!completionTime) return;
-    saveScore(completionTime);
+    setLeaderboardData(completionTime);
   }, [completionTime]);
 
   return (

@@ -1,27 +1,78 @@
-import React, { useEffect } from 'react';
+'use strict';
+import React, { useEffect, useState } from 'react';
 import { GameStatus } from '../../shared/types';
 
 interface LeaderBoardPageProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
 }
 
+interface LeaderboardStatsType {
+  userName: string;
+  score: number;
+}
+
 function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
+  const [leaderboardStats, setLeaderboardStats] = useState<LeaderboardStatsType[]>([]);
+  const [loading, setLoading] = useState(true);
+
   function getLeaderboardData() {
     window.parent.postMessage({ type: 'getLeaderboard' }, '*');
   }
 
   // Listen for leaderboard data
   window.addEventListener('message', (event) => {
-    if (event.data.type === 'leaderboardData') {
-      console.log('Leaderboard data received:');
-      console.log(event.data);
-    } 
+    const { data: eventData } = event;
+    const { data } = eventData;
+    const { message } = data as {
+      message: {
+        type: 'leaderboardData';
+        data: string;
+        currentUser: string;
+      };
+    };
+
+    if (message.type === 'leaderboardData') {
+      if (!message.data) {
+        setLeaderboardStats([]);
+      } else {
+        const leaderboardData = JSON.parse(message.data) as LeaderboardStatsType[];
+        setLeaderboardStats(leaderboardData);
+      }
+      setLoading(false);
+    }
   });
+
   useEffect(() => {
-    console.log('getting the leaderboard data');
     getLeaderboardData();
   }, []);
-  return <div>LeaderBoardPage</div>;
+
+  return (
+    <div className={`${loading && 'flex h-full w-full justify-center items-center'}`}>
+      {loading ? (
+        <div className="h-20 w-20 animate-spin">
+          <img src="/granny-face.png" className="" alt="Loading..." />
+        </div>
+      ) : (
+        <div>
+          <div onClick={() => setGameStatus('start')}>home</div>
+          {leaderboardStats.length ? (
+            <div>
+              {leaderboardStats.map((stat) => (
+                <div>
+                  <div>Username: {stat.userName}</div>
+                  <div>
+                    Score: {Math.floor(stat.score / 60)}m {stat.score % 60}s
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>No leaderboard data is present</>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default LeaderBoardPage;
