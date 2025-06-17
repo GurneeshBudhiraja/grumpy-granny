@@ -14,9 +14,13 @@ interface LeaderboardStatsType {
 function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
   const [leaderboardStats, setLeaderboardStats] = useState<LeaderboardStatsType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<string>('');
 
   function getLeaderboardData() {
     window.parent.postMessage({ type: 'getLeaderboard' }, '*');
+    window.parent.postMessage({
+      type: 'getCurrentUserName',
+    });
   }
 
   // Listen for leaderboard data
@@ -36,6 +40,8 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
         setLeaderboardStats([]);
       } else {
         const leaderboardData = JSON.parse(message.data) as LeaderboardStatsType[];
+        const { currentUser } = message;
+        setCurrentUser(currentUser);
         setLeaderboardStats(leaderboardData);
       }
       setLoading(false);
@@ -55,11 +61,14 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
       ) : (
         <div>
           <div onClick={() => setGameStatus('start')}>home</div>
+
           {leaderboardStats.length ? (
             <div>
               {leaderboardStats.map((stat) => (
                 <div>
-                  <div>Username: {stat.userName}</div>
+                  <div className={`${stat.userName === currentUser && 'text-red-400'}`}>
+                    Username: {stat.userName}
+                  </div>
                   <div>
                     Score: {Math.floor(stat.score / 60)}m {stat.score % 60}s
                   </div>
