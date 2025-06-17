@@ -32,7 +32,7 @@ function GrannySprite({ gameStatus, className = '' }: GrannySpriteProps) {
       {gameStatus === 'start' && (
         <motion.div
           key="granny-sprite"
-          className={`absolute -top-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 ${className}`}
+          className={`absolute -top-10 md:-top-16 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 ${className}`}
           variants={grannyVariants}
           initial="hidden"
           animate="visible"
