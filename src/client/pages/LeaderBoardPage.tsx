@@ -1,5 +1,6 @@
 'use strict';
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { GameStatus } from '../../shared/types';
 
 interface LeaderBoardPageProps {
@@ -42,7 +43,10 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
         const leaderboardData = JSON.parse(message.data) as LeaderboardStatsType[];
         const { currentUser } = message;
         setCurrentUser(currentUser);
-        setLeaderboardStats(leaderboardData);
+        
+        // Sort by score (ascending - lower time is better)
+        const sortedData = leaderboardData.sort((a, b) => a.score - b.score);
+        setLeaderboardStats(sortedData);
       }
       setLoading(false);
     }
@@ -52,35 +56,239 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
     getLeaderboardData();
   }, []);
 
+  // Format time helper
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (minutes > 0) {
+      return `${minutes}m ${remainingSeconds}s`;
+    }
+    return `${remainingSeconds}s`;
+  };
+
+  // Get medal for position
+  const getMedal = (position: number): string => {
+    switch (position) {
+      case 1: return '🥇'; // Gold
+      case 2: return '🥈'; // Silver
+      case 3: return '🥉'; // Bronze
+      default: return '';
+    }
+  };
+
+  // Get background class for position
+  const getPositionBg = (position: number, isCurrentUser: boolean): string => {
+    if (isCurrentUser) {
+      return 'bg-gradient-to-r from-blue-600 to-blue-700 text-white border-blue-400';
+    }
+    
+    switch (position) {
+      case 1: return 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 border-yellow-600';
+      case 2: return 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 border-gray-500';
+      case 3: return 'bg-gradient-to-r from-orange-400 to-orange-500 text-orange-900 border-orange-600';
+      default: return 'bg-window-bg text-text-color border-button-shadow';
+    }
+  };
+
   return (
-    <div className={`${loading && 'flex h-full w-full justify-center items-center'}`}>
+    <motion.div
+      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Vintage CRT scanlines effect */}
+      <div className="absolute inset-0 pointer-events-none opacity-5">
+        <div
+          className="w-full h-full"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(0deg, transparent, transparent 2px, #00ff00 2px, #00ff00 4px)',
+          }}
+        />
+      </div>
+
       {loading ? (
-        <div className="h-20 w-20 animate-spin">
-          <img src="/granny-face.png" className="" alt="Loading..." />
+        <div className="flex h-full w-full justify-center items-center">
+          <motion.div 
+            className="h-20 w-20"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            <img src="/granny-face.png" className="w-full h-full" alt="Loading..." />
+          </motion.div>
         </div>
       ) : (
-        <div>
-          <div onClick={() => setGameStatus('start')}>home</div>
+        <div className="flex flex-col h-full p-2 sm:p-4">
+          {/* Header */}
+          <motion.div
+            className="bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight shadow-lg mb-4"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              boxShadow:
+                'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
+            }}
+          >
+            {/* Title Bar */}
+            <div className="bg-highlight-bg text-highlight-text px-2 py-1 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setGameStatus('start')}
+                  className="w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center cursor-pointer"
+                  style={{
+                    boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+                  }}
+                >
+                  ←
+                </button>
+                <span className="font-windows text-sm font-bold">🏆 HALL OF FAME 🏆</span>
+              </div>
+              <div className="text-xs font-windows">Granny's Password Champions</div>
+            </div>
 
-          {leaderboardStats.length ? (
-            <div>
-              {leaderboardStats.map((stat) => (
-                <div>
-                  <div className={`${stat.userName === currentUser && 'text-red-400'}`}>
-                    Username: {stat.userName}
-                  </div>
-                  <div>
-                    Score: {Math.floor(stat.score / 60)}m {stat.score % 60}s
+            {/* Leaderboard Header */}
+            <div className="p-3 sm:p-4">
+              <div className="text-center mb-4">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-pixel text-highlight-bg mb-2"
+                    style={{
+                      filter: 'brightness(1.2)',
+                      WebkitTextStroke: '1px var(--text-color)',
+                    }}>
+                  LEADERBOARD
+                </h1>
+                <p className="text-xs sm:text-sm font-windows text-text-color">
+                  Fastest Password Crackers
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Leaderboard Content */}
+          <div className="flex-1 overflow-hidden">
+            {leaderboardStats.length ? (
+              <motion.div
+                className="bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight h-full"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                style={{
+                  boxShadow:
+                    'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
+                }}
+              >
+                {/* Leaderboard Header Row */}
+                <div className="bg-gray-200 border-b-2 border-button-shadow p-2 sm:p-3">
+                  <div className="grid grid-cols-12 gap-2 text-xs sm:text-sm font-windows font-bold text-text-color">
+                    <div className="col-span-2 text-center">RANK</div>
+                    <div className="col-span-6 sm:col-span-7">PLAYER</div>
+                    <div className="col-span-4 sm:col-span-3 text-center">TIME</div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <>No leaderboard data is present</>
-          )}
+
+                {/* Scrollable Leaderboard List */}
+                <div className="h-full overflow-y-auto windows-scrollbar p-2">
+                  <AnimatePresence>
+                    {leaderboardStats.map((stat, index) => {
+                      const position = index + 1;
+                      const isCurrentUser = stat.userName === currentUser;
+                      const medal = getMedal(position);
+                      
+                      return (
+                        <motion.div
+                          key={`${stat.userName}-${stat.score}`}
+                          className={`grid grid-cols-12 gap-2 p-2 sm:p-3 mb-2 border-2 rounded ${getPositionBg(position, isCurrentUser)}`}
+                          initial={{ x: -100, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ duration: 0.4, delay: index * 0.1 }}
+                          style={{
+                            boxShadow: isCurrentUser 
+                              ? 'inset -1px -1px 0px 0px #1e40af, inset 1px 1px 0px 0px #60a5fa, 0 4px 8px rgba(59, 130, 246, 0.3)'
+                              : position <= 3
+                              ? 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, 0 2px 4px rgba(0, 0, 0, 0.2)'
+                              : 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+                          }}
+                        >
+                          {/* Rank Column */}
+                          <div className="col-span-2 flex items-center justify-center">
+                            <div className="flex flex-col items-center">
+                              {medal && (
+                                <div className="text-lg sm:text-xl mb-1">{medal}</div>
+                              )}
+                              <span className="text-sm sm:text-base font-windows font-bold">
+                                #{position}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Player Name Column */}
+                          <div className="col-span-6 sm:col-span-7 flex items-center">
+                            <div className="truncate">
+                              <span className={`text-sm sm:text-base font-windows font-bold ${
+                                isCurrentUser ? 'text-white' : ''
+                              }`}>
+                                {stat.userName}
+                              </span>
+                              {isCurrentUser && (
+                                <span className="ml-2 text-xs bg-white text-blue-600 px-2 py-1 rounded-full font-bold">
+                                  YOU
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Time Column */}
+                          <div className="col-span-4 sm:col-span-3 flex items-center justify-center">
+                            <span className={`text-sm sm:text-base font-windows font-bold ${
+                              position <= 3 && !isCurrentUser ? 'text-gray-800' : ''
+                            }`}>
+                              {formatTime(stat.score)}
+                            </span>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                className="bg-window-bg border-2 border-button-shadow border-t-button-highlight border-l-button-highlight h-full flex items-center justify-center"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                style={{
+                  boxShadow:
+                    'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
+                }}
+              >
+                <div className="text-center p-8">
+                  <div className="text-4xl sm:text-6xl mb-4">🏆</div>
+                  <h2 className="text-lg sm:text-xl font-windows font-bold text-text-color mb-2">
+                    No Champions Yet!
+                  </h2>
+                  <p className="text-sm font-windows text-text-color mb-4">
+                    Be the first to crack Granny's password and claim your spot in the Hall of Fame!
+                  </p>
+                  <button
+                    onClick={() => setGameStatus('start')}
+                    className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight cursor-pointer"
+                    style={{
+                      boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
+                    }}
+                  >
+                    Start Playing
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
