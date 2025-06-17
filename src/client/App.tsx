@@ -12,7 +12,7 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('leaderboard');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('start');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
     state: 'blinking',
     words: '',
