@@ -21,14 +21,14 @@ function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
         ></div>
       </div>
       {/* Trophy / Leaderboard button */}
-      <div className="absolute top-5 right-5">
-        <div
-          role="button"
-          tabIndex={0}
-          className="relative group cursor-pointer"
-          onClick={() => setGameStatus('leaderboard')}
-          onKeyDown={(e) => e.key === 'Enter' && setGameStatus('leaderboard')}
-        >
+      <button
+        className="absolute top-5 right-5 z-50 cursor-pointer"
+        onClick={() => {
+          console.log('Clicking');
+          setGameStatus('leaderboard');
+        }}
+      >
+        <div className="relative group cursor-pointer">
           <button
             className="w-10 h-10 bg-window-bg border-2 border-button-shadow shadow-inner flex items-center justify-center rounded"
             style={{
@@ -49,7 +49,7 @@ function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
             Leaderboard
           </div>
         </div>
-      </div>
+      </button>
 
       {/* Main Title Animation Container */}
       <div className="relative flex flex-col items-center justify-center w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 mx-auto mt-3 md:mt-0">
