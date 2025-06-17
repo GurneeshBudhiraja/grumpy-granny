@@ -106,15 +106,11 @@ export const App = () => {
           {/* Monitor Housing - Responsive sizing */}
           <div
             className={`bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative ${
-              gameStatus === 'start'
-                ? 'w-[500px] h-[300px] md:w-[500px] md:h-[400px]'
-                : `${
-                    'w-[90vw] h-[280px] ' +
-                    'sm:w-[60vw] sm:h-[50vh] ' +
-                    'md:w-[62vw] md:h-[50vh] ' +
-                    'lg:w-[50vw] lg:h-[52vh] ' +
-                    'xl:w-[37vw] xl:h-[345px] '
-                  }`
+              'w-[90vw] h-[280px] ' +
+              'sm:w-[60vw] sm:h-[50vh] ' +
+              'md:w-[62vw] md:h-[50vh] ' +
+              'lg:w-[50vw] lg:h-[52vh] ' +
+              'xl:w-[37vw] xl:h-[345px] '
             }`}
           >
             {/* Vintage monitor texture */}
