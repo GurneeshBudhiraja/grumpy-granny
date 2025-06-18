@@ -33,13 +33,13 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
     // match minutes (e.g. "1m" or "12m")
     const m = completionTime.match(/(\d+)\s*m/);
     if (m) {
-      total += parseInt(m[1], 10) * 60;
+      total += parseInt(m[1]!, 10) * 60;
     }
 
     // match seconds (e.g. "30s")
     const s = completionTime.match(/(\d+)\s*s/);
     if (s) {
-      total += parseInt(s[1], 10);
+      total += parseInt(s[1]!, 10);
     }
 
     return total;
