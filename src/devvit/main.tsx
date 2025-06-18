@@ -76,11 +76,6 @@ Devvit.addCustomPostType({
             const newScore = [...existingScore, { score, userName: member }];
             await context.redis.set('score', JSON.stringify(newScore));
           }
-          // TODO: remove block in prod
-        } else if (message.type === 'clearScoreRedis') {
-          await context.redis.del('score');
-          console.log('scored has been cleared');
-        }
       },
     });
 
