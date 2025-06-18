@@ -40,9 +40,7 @@ const grannyBodyShots = [
 function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScreenProps) {
   const { state, words } = grannyStatus;
   const [isBlinking, setIsBlinking] = useState(false);
-  const [currentBodyShot, setCurrentBodyShot] = useState<string>(
-    '/granny-body-shots/granny-idle.png'
-  );
+  const [currentBodyShot, setCurrentBodyShot] = useState<string>('');
   const [isPlayingSound, setIsPlayingSound] = useState(false);
 
   // Timers and refs
@@ -52,6 +50,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
   const lastPasswordRef = useRef<string>('');
   const lastHintCountRef = useRef<number>(0);
   const isTypingRef = useRef<boolean>(false);
+  const hasStartedTypingRef = useRef<boolean>(false);
 
   // Get random body shot and sound
   const getRandomBodyShot = () => {
@@ -64,9 +63,17 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     };
   };
 
-  // Play body shot with sound
-  const playBodyShotWithSound = (image: string, soundPath: string) => {
+  // Trigger granny reaction with body shot and sound
+  const triggerGrannyReaction = () => {
     if (isPlayingSound) return; // Don't interrupt current sound
+
+    const { image, sound } = getRandomBodyShot();
+    
+    // Update granny status to show the reaction
+    setGrannyStatus({
+      state: 'shouting', // Use shouting state for reactions
+      words: image, // Store the image path in words field
+    });
 
     setCurrentBodyShot(image);
     setIsPlayingSound(true);
@@ -78,7 +85,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     }
 
     // Play new sound
-    const audio = new Audio(soundPath);
+    const audio = new Audio(sound);
     audio.volume = 0.7;
     soundRef.current = audio;
 
@@ -86,12 +93,22 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
     audio.onended = () => {
       setIsPlayingSound(false);
-      setCurrentBodyShot('/granny-body-shots/granny-idle.png'); // Return to idle
+      setCurrentBodyShot('');
+      // Return to blinking state
+      setGrannyStatus({
+        state: 'blinking',
+        words: '',
+      });
     };
 
     audio.onerror = () => {
       setIsPlayingSound(false);
-      setCurrentBodyShot('/granny-body-shots/granny-idle.png'); // Return to idle
+      setCurrentBodyShot('');
+      // Return to blinking state
+      setGrannyStatus({
+        state: 'blinking',
+        words: '',
+      });
     };
   };
 
@@ -103,8 +120,8 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
     inactivityTimerRef.current = setTimeout(() => {
       if (!isPlayingSound) {
-        const { image, sound } = getRandomBodyShot();
-        playBodyShotWithSound(image, sound);
+        console.log('Triggering inactivity reaction');
+        triggerGrannyReaction();
       }
     }, 10000); // 10 seconds
   };
@@ -115,11 +132,11 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
       clearTimeout(typingTimerRef.current);
     }
 
-    if (isTypingRef.current) {
+    if (hasStartedTypingRef.current) {
       typingTimerRef.current = setTimeout(() => {
-        if (!isPlayingSound && isTypingRef.current) {
-          const { image, sound } = getRandomBodyShot();
-          playBodyShotWithSound(image, sound);
+        if (!isPlayingSound && !isTypingRef.current) {
+          console.log('Triggering typing pause reaction');
+          triggerGrannyReaction();
         }
       }, 10000); // 10 seconds after stopping typing
     }
@@ -137,24 +154,34 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
       const target = e.target as HTMLInputElement;
       const currentPassword = target.value;
 
-      // Check if user started typing
-      if (currentPassword.length > 0 && !isTypingRef.current) {
-        isTypingRef.current = true;
-      } else if (currentPassword.length === 0) {
-        isTypingRef.current = false;
+      // Track typing state
+      const wasTyping = isTypingRef.current;
+      isTypingRef.current = currentPassword.length > 0;
+      
+      if (currentPassword.length > 0) {
+        hasStartedTypingRef.current = true;
       }
 
       // Reset timers on any input
       resetInactivityTimer();
-      resetTypingTimer();
+      
+      // If user stopped typing, start typing timer
+      if (wasTyping && !isTypingRef.current) {
+        resetTypingTimer();
+      } else if (isTypingRef.current) {
+        // Clear typing timer if user is actively typing
+        if (typingTimerRef.current) {
+          clearTimeout(typingTimerRef.current);
+        }
+      }
 
       // Check for hint satisfaction/dissatisfaction
       const currentHintCount = document.querySelectorAll('.text-green-700').length;
 
-      // If hints were satisfied and now dissatisfied
-      if (lastHintCountRef.current > currentHintCount && !isPlayingSound) {
-        const { image, sound } = getRandomBodyShot();
-        playBodyShotWithSound(image, sound);
+      // If hints were satisfied and now dissatisfied (user broke a hint)
+      if (lastHintCountRef.current > 0 && lastHintCountRef.current > currentHintCount && !isPlayingSound) {
+        console.log('Triggering hint dissatisfaction reaction');
+        triggerGrannyReaction();
       }
 
       lastPasswordRef.current = currentPassword;
@@ -162,8 +189,22 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     };
 
     const handleKeyDown = () => {
+      isTypingRef.current = true;
       resetInactivityTimer();
-      resetTypingTimer();
+      
+      // Clear typing timer while actively typing
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    };
+
+    const handleKeyUp = () => {
+      // Start typing timer when user stops typing
+      setTimeout(() => {
+        if (hasStartedTypingRef.current) {
+          resetTypingTimer();
+        }
+      }, 100); // Small delay to detect if user continues typing
     };
 
     const handleFocus = () => {
@@ -172,14 +213,15 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
     const handleBlur = () => {
       isTypingRef.current = false;
-      if (typingTimerRef.current) {
-        clearTimeout(typingTimerRef.current);
+      if (hasStartedTypingRef.current) {
+        resetTypingTimer();
       }
     };
 
     // Add event listeners
     passwordInput.addEventListener('input', handleInput);
     passwordInput.addEventListener('keydown', handleKeyDown);
+    passwordInput.addEventListener('keyup', handleKeyUp);
     passwordInput.addEventListener('focus', handleFocus);
     passwordInput.addEventListener('blur', handleBlur);
 
@@ -189,6 +231,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     return () => {
       passwordInput.removeEventListener('input', handleInput);
       passwordInput.removeEventListener('keydown', handleKeyDown);
+      passwordInput.removeEventListener('keyup', handleKeyUp);
       passwordInput.removeEventListener('focus', handleFocus);
       passwordInput.removeEventListener('blur', handleBlur);
     };
@@ -206,9 +249,10 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     }
   }, [state, isPlayingSound]);
 
-  // Handle shouting state (existing functionality)
+  // Handle shouting state (existing functionality + new reactions)
   useEffect(() => {
-    if (state === 'shouting') {
+    if (state === 'shouting' && !words) {
+      // Original shouting behavior (back button)
       setIsBlinking(false);
       const audio = new Audio('/sounds/granny-sounds/granny-yell.mp3');
       audio.volume = 1;
@@ -224,7 +268,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
         audio.pause();
       }, 2000);
     }
-  }, [state, setGrannyStatus]);
+  }, [state, words, setGrannyStatus]);
 
   // Cleanup timers on unmount
   useEffect(() => {
@@ -243,8 +287,14 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
   // Determine which image to show
   const getDisplayImage = () => {
-    if (isPlayingSound) {
+    // If we have a custom body shot from reaction, use it
+    if (currentBodyShot) {
       return currentBodyShot;
+    }
+
+    // If words contains an image path (from reaction), use it
+    if (words && words.includes('/granny-body-shots/')) {
+      return words;
     }
 
     if (state === 'shouting') {
@@ -284,14 +334,14 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
             'xl:left-1/4 xl:top-0 '
           }`}
         >
-          {/* Granny Image - Responsive sizing that scales with monitor */}
+          {/* Granny Image - Consistent sizing maintained */}
           <div className="relative">
             <motion.img
               key={getDisplayImage()} // Force re-render when image changes
               src={getDisplayImage()}
               alt="Granny"
               className={`object-contain ${
-                // Responsive Granny sizing - scales proportionally with monitor
+                // Responsive Granny sizing - scales proportionally with monitor (UNCHANGED)
                 'w-[390px] mb-11 ' +
                 'sm:w-[350px] sm:mb-0   ' +
                 'md:w-[390px] ' +
@@ -306,7 +356,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
           </div>
         </div>
 
-        {/* Floor shadow for Granny - Positioned proportionally under her */}
+        {/* Floor shadow for Granny - Positioned proportionally under her (UNCHANGED) */}
         <div
           className={`absolute bottom-0 bg-black opacity-10 rounded-full blur-sm ${
             // Responsive shadow positioning and sizing
