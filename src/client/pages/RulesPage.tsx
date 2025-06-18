@@ -158,7 +158,7 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
         <span className="flex-1 text-center select-none">GRANNY TERMINAL</span>
         {/* Window controls */}
         <div className="flex space-x-1 granny-rotating-face">
-          <img src="/granny-face-laughing.png" className="w-10 h-10" />
+          <img src="/granny-face-shots/granny-face-laughing.png" className="w-10 h-10" />
         </div>
       </div>
 

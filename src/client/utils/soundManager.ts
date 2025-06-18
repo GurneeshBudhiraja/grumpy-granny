@@ -3,17 +3,22 @@ import { SoundManagerInterface } from '../../shared/types';
 class SoundManager implements SoundManagerInterface {
   private clickSound: HTMLAudioElement;
   private keyboardSound: HTMLAudioElement;
+  private themeSong: HTMLAudioElement | null = null;
   private isInitialized: boolean = false;
 
   constructor() {
-    // Use correct paths without './public/' prefix
     this.clickSound = new Audio('/mouse-click.mp3');
     this.clickSound.preload = 'auto';
     this.clickSound.volume = 0.5;
 
     this.keyboardSound = new Audio('/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
-    this.keyboardSound.volume = 0.15; // Reduced from 0.4 to 0.15 for less intrusive typing sound
+    this.keyboardSound.volume = 0.15;
+
+    // Initialize theme song
+    this.themeSong = new Audio("/sounds/game-theme-song.mp3");
+    this.themeSong.loop = true; // Loop the theme song
+    this.themeSong.volume = 0.05;
   }
 
   async playClickSound(): Promise<void> {
@@ -27,7 +32,7 @@ class SoundManager implements SoundManagerInterface {
     }
   }
 
-  async playKeyboardSound(volume: number = 0.15): Promise<void> {
+  async playKeyboardSound(volume: number = 0.65): Promise<void> {
     try {
       // Clone and play to avoid conflicts
       const audio = this.keyboardSound.cloneNode() as HTMLAudioElement;
@@ -35,6 +40,15 @@ class SoundManager implements SoundManagerInterface {
       await audio.play();
     } catch (error) {
       console.log('Keyboard audio play failed:', error);
+    }
+  }
+
+  async playThemeSong(): Promise<void> {
+    if (!this.themeSong) return;
+    try {
+      await this.themeSong.play();
+    } catch (error) {
+      console.log('Theme song play failed:', error);
     }
   }
 

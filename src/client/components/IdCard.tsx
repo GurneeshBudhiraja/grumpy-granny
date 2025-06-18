@@ -80,7 +80,7 @@ const IdCard: React.FC<IdCardProps> = ({ isOnShelf = false, isExpanded = false, 
                 <div
                   className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-200 rounded border-4 border-blue-600"
                   style={{
-                    backgroundImage: 'url(/granny-face-crown.png)',
+                    backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     filter: 'brightness(1.1) contrast(1.1)'

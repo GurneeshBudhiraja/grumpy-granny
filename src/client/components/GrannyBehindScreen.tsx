@@ -21,7 +21,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     }
     if (state === 'shouting') {
       setIsBlinking(false);
-      const audio = new Audio('/granny-sounds/granny-yell.mp3');
+      const audio = new Audio('/sounds/granny-sounds/granny-yell.mp3');
       audio.volume = 1;
       audio.loop = true;
       audio.currentTime = 1;
@@ -65,7 +65,11 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
           <div className="relative">
             {state === 'blinking' && (
               <motion.img
-                src={isBlinking ? '/granny-blink.png' : '/granny-idle.png'}
+                src={
+                  isBlinking
+                    ? '/granny-body-shots/granny-blink.png'
+                    : '/granny-body-shots/granny-idle.png'
+                }
                 alt="Granny blinking"
                 className={`object-contain ${
                   // Responsive Granny sizing - scales proportionally with monitor
@@ -80,7 +84,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
             )}
             {state === 'shouting' && (
               <motion.img
-                src={'/granny-yell-up.png'}
+                src={'/granny-body-shots/granny-yell-up.png'}
                 alt="Granny shouting"
                 className={`object-contain ${
                   // Responsive Granny sizing - scales proportionally with monitor

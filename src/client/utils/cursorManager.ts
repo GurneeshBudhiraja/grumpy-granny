@@ -170,10 +170,7 @@ class CursorManager {
     if (!this.cursorImage) return;
 
     if (this.state.cursorType === 'granny') {
-      // Always show granny face (not the pointer) - keeping pointer code for future use
       this.cursorImage.src = '/granny-cursor/granny-face.png';
-      // Future granny pointer code (commented out for now):
-      // this.cursorImage.src = this.state.isPointer ? '/granny-cursor/granny-pointer.png' : '/granny-cursor/granny-face.png';
     }
   }
 

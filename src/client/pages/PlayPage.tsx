@@ -38,7 +38,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
     const seconds = Math.floor(milliseconds / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    
+
     if (minutes > 0) {
       return `${minutes}m ${remainingSeconds}s`;
     }
@@ -105,7 +105,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
         if (result.isValid) {
           const completionTime = formatTime(Date.now() - startTime);
           console.log('Password is correct! You win!');
-          
+
           // Wait 2 seconds before showing win screen
           setTimeout(() => {
             if (onWin) {
@@ -138,7 +138,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
         if (result.isValid) {
           const completionTime = formatTime(Date.now() - startTime);
           console.log('Password is correct! You win!');
-          
+
           // Wait 2 seconds before showing win screen
           setTimeout(() => {
             if (onWin) {
@@ -200,7 +200,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
             <div
               className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
               style={{
-                backgroundImage: 'url(/granny-face-crown.png)',
+                backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
@@ -403,7 +403,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
                   <div
                     className="w-20 h-20 bg-gray-200 rounded border-4 border-blue-600"
                     style={{
-                      backgroundImage: 'url(/granny-face-crown.png)',
+                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       filter: 'brightness(1.1) contrast(1.1)',

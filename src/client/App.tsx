@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useClickSound, useFakeCursor, useKeyboardSound } from './hooks/hooks';
+import { useClickSound, useFakeCursor, useKeyboardSound, useThemeSong } from './hooks/hooks';
 import { StartPage, RulesPage, PlayPage, WinPage, LeaderBoardPage } from './pages/page';
 import { GrannySprite, CursorMenu, GrannyBehindScreen, WallShelf } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
@@ -11,6 +11,8 @@ export const App = () => {
 
   // Add global keyboard sound effect
   useKeyboardSound();
+
+  useThemeSong();
 
   const [gameStatus, setGameStatus] = useState<GameStatus>('start');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
@@ -66,7 +68,7 @@ export const App = () => {
         {/* Wall Background - Full Viewport Coverage */}
         <div
           className="bg-conic bg-center bg-no-repeat aspect-[5/3] min-h-[90vh] max-w-6xl"
-          style={{ backgroundImage: 'url(/wall-background.png)' }}
+          style={{ backgroundImage: 'url(/background/wall-background.png)' }}
         >
           {/* Wall Shelf - Only visible during playing state */}
           {gameStatus === 'playing' && (
@@ -246,7 +248,7 @@ export const App = () => {
                   <div
                     className="w-20 h-20 bg-gray-200 rounded border-4 border-blue-600"
                     style={{
-                      backgroundImage: 'url(/granny-face-crown.png)',
+                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       filter: 'brightness(1.1) contrast(1.1)',

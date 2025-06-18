@@ -118,11 +118,14 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
           transition={{ delay: 1.2, duration: 0.5 }}
         >
           <p className="text-xs sm:text-sm font-windows text-text-color font-bold flex items-center gap-1">
-            <img src="/granny-face.png" className="w-8 h-8 animate-spin" />
+            <img src="/granny-face-shots/granny-face.png" className="w-8 h-8 animate-spin" />
             <span className="text-yellow-400 font-bold tracking-wider bg-highlight-bg p-1">
               You cracked Granny's password!
             </span>
-            <img src="/granny-face.png" className="w-8 h-8 animate-spin-reverse" />
+            <img
+              src="/granny-face-shots/granny-face.png"
+              className="w-8 h-8 animate-spin-reverse"
+            />
           </p>
           <p className="text-xs sm:text-sm font-windows text-text-color mt-1">
             Time: <span className="text-green-600 font-bold">{completionTime}</span>

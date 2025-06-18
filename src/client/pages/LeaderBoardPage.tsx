@@ -129,7 +129,11 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           >
-            <img src="/granny-face.png" className="w-full h-full" alt="Loading..." />
+            <img
+              src="/granny-face-shots/granny-face.png"
+              className="w-full h-full"
+              alt="Loading..."
+            />
           </motion.div>
         </div>
       ) : (
