@@ -4,7 +4,9 @@ type WebViewMessage =
   | { type: 'navigate'; data?: { url: string } }
   | { type: 'submitPost'; time: string }
   | { type: 'getLeaderboard' }
-  | { type: 'setLeaderboard'; data: { score: number } };
+  | { type: 'setLeaderboard'; data: { score: number } }
+  // TODO: remove the type in prod
+  | { type: 'clearScoreRedis' };
 
 export type DevvitToWebViewMessage = {
   type: 'leaderboardData';
@@ -76,6 +78,7 @@ Devvit.addCustomPostType({
             const newScore = [...existingScore, { score, userName: member }];
             await context.redis.set('score', JSON.stringify(newScore));
           }
+        }
       },
     });
 
