@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GrannyStatus } from '../../shared/types';
 
@@ -7,18 +7,197 @@ interface GrannyBehindScreenProps {
   setGrannyStatus: React.Dispatch<React.SetStateAction<GrannyStatus>>;
 }
 
+// Define Granny body shots and their corresponding sounds
+const grannyBodyShots = [
+  {
+    image: '/granny-body-shots/granny-mild-frustrate.png',
+    sounds: ['/sounds/granny-sounds/annoyed/granny-ugh.mp3', '/sounds/granny-sounds/annoyed/granny-curse.mp3']
+  },
+  {
+    image: '/granny-body-shots/granny-yell.png',
+    sounds: ['/sounds/granny-sounds/annoyed/granny-you-dummy.mp3', '/sounds/granny-sounds/granny-yell.mp3']
+  },
+  {
+    image: '/granny-body-shots/granny-yell-up.png',
+    sounds: ['/sounds/granny-sounds/granny-yell.mp3']
+  },
+  {
+    image: '/granny-body-shots/granny-smirk.png',
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3']
+  },
+  {
+    image: '/granny-body-shots/granny-laughing.png',
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3']
+  }
+];
+
 function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScreenProps) {
-  // destructure the object
   const { state, words } = grannyStatus;
   const [isBlinking, setIsBlinking] = useState(false);
+  const [currentBodyShot, setCurrentBodyShot] = useState<string>('/granny-body-shots/granny-idle.png');
+  const [isPlayingSound, setIsPlayingSound] = useState(false);
+  
+  // Timers and refs
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const soundRef = useRef<HTMLAudioElement | null>(null);
+  const lastPasswordRef = useRef<string>('');
+  const lastHintCountRef = useRef<number>(0);
+  const isTypingRef = useRef<boolean>(false);
 
+  // Get random body shot and sound
+  const getRandomBodyShot = () => {
+    const randomIndex = Math.floor(Math.random() * grannyBodyShots.length);
+    const bodyShot = grannyBodyShots[randomIndex]!;
+    const randomSoundIndex = Math.floor(Math.random() * bodyShot.sounds.length);
+    return {
+      image: bodyShot.image,
+      sound: bodyShot.sounds[randomSoundIndex]!
+    };
+  };
+
+  // Play body shot with sound
+  const playBodyShotWithSound = (image: string, soundPath: string) => {
+    if (isPlayingSound) return; // Don't interrupt current sound
+
+    setCurrentBodyShot(image);
+    setIsPlayingSound(true);
+
+    // Stop any existing sound
+    if (soundRef.current) {
+      soundRef.current.pause();
+      soundRef.current.currentTime = 0;
+    }
+
+    // Play new sound
+    const audio = new Audio(soundPath);
+    audio.volume = 0.7;
+    soundRef.current = audio;
+
+    audio.play().catch(() => console.log('Failed to play granny sound'));
+
+    audio.onended = () => {
+      setIsPlayingSound(false);
+      setCurrentBodyShot('/granny-body-shots/granny-idle.png'); // Return to idle
+    };
+
+    audio.onerror = () => {
+      setIsPlayingSound(false);
+      setCurrentBodyShot('/granny-body-shots/granny-idle.png'); // Return to idle
+    };
+  };
+
+  // Reset inactivity timer
+  const resetInactivityTimer = () => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+    
+    inactivityTimerRef.current = setTimeout(() => {
+      if (!isPlayingSound) {
+        const { image, sound } = getRandomBodyShot();
+        playBodyShotWithSound(image, sound);
+      }
+    }, 10000); // 10 seconds
+  };
+
+  // Reset typing timer
+  const resetTypingTimer = () => {
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+    
+    if (isTypingRef.current) {
+      typingTimerRef.current = setTimeout(() => {
+        if (!isPlayingSound && isTypingRef.current) {
+          const { image, sound } = getRandomBodyShot();
+          playBodyShotWithSound(image, sound);
+        }
+      }, 10000); // 10 seconds after stopping typing
+    }
+  };
+
+  // Monitor password input and hint completion
   useEffect(() => {
-    if (state === 'blinking') {
+    const passwordInput = document.querySelector('input[type="password"], input[type="text"]') as HTMLInputElement;
+    
+    if (!passwordInput) return;
+
+    const handleInput = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const currentPassword = target.value;
+      
+      // Check if user started typing
+      if (currentPassword.length > 0 && !isTypingRef.current) {
+        isTypingRef.current = true;
+      } else if (currentPassword.length === 0) {
+        isTypingRef.current = false;
+      }
+
+      // Reset timers on any input
+      resetInactivityTimer();
+      resetTypingTimer();
+
+      // Check for hint satisfaction/dissatisfaction
+      const currentHintCount = document.querySelectorAll('.text-green-700').length;
+      
+      // If hints were satisfied and now dissatisfied
+      if (lastHintCountRef.current > currentHintCount && !isPlayingSound) {
+        const { image, sound } = getRandomBodyShot();
+        playBodyShotWithSound(image, sound);
+      }
+
+      lastPasswordRef.current = currentPassword;
+      lastHintCountRef.current = currentHintCount;
+    };
+
+    const handleKeyDown = () => {
+      resetInactivityTimer();
+      resetTypingTimer();
+    };
+
+    const handleFocus = () => {
+      resetInactivityTimer();
+    };
+
+    const handleBlur = () => {
+      isTypingRef.current = false;
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    };
+
+    // Add event listeners
+    passwordInput.addEventListener('input', handleInput);
+    passwordInput.addEventListener('keydown', handleKeyDown);
+    passwordInput.addEventListener('focus', handleFocus);
+    passwordInput.addEventListener('blur', handleBlur);
+
+    // Start initial inactivity timer
+    resetInactivityTimer();
+
+    return () => {
+      passwordInput.removeEventListener('input', handleInput);
+      passwordInput.removeEventListener('keydown', handleKeyDown);
+      passwordInput.removeEventListener('focus', handleFocus);
+      passwordInput.removeEventListener('blur', handleBlur);
+    };
+  }, [isPlayingSound]);
+
+  // Handle blinking animation for idle state
+  useEffect(() => {
+    if (state === 'blinking' && !isPlayingSound) {
       const blinkInterval = setInterval(() => {
         setIsBlinking((prev) => !prev);
       }, 500);
       return () => clearInterval(blinkInterval);
+    } else {
+      setIsBlinking(false);
     }
+  }, [state, isPlayingSound]);
+
+  // Handle shouting state (existing functionality)
+  useEffect(() => {
     if (state === 'shouting') {
       setIsBlinking(false);
       const audio = new Audio('/sounds/granny-sounds/granny-yell.mp3');
@@ -35,7 +214,41 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
         audio.pause();
       }, 2000);
     }
-  }, [state]);
+  }, [state, setGrannyStatus]);
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+      if (soundRef.current) {
+        soundRef.current.pause();
+      }
+    };
+  }, []);
+
+  // Determine which image to show
+  const getDisplayImage = () => {
+    if (isPlayingSound) {
+      return currentBodyShot;
+    }
+    
+    if (state === 'shouting') {
+      return '/granny-body-shots/granny-yell-up.png';
+    }
+    
+    if (state === 'blinking') {
+      return isBlinking 
+        ? '/granny-body-shots/granny-blink.png' 
+        : '/granny-body-shots/granny-idle.png';
+    }
+    
+    return '/granny-body-shots/granny-idle.png';
+  };
 
   return (
     <AnimatePresence>
@@ -47,7 +260,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
         transition={{
           duration: 0.6,
           ease: 'easeOut',
-          delay: 0.2, // Slight delay after rules page appears
+          delay: 0.2,
         }}
       >
         {/* Granny Behind Screen Container - Positioned to maintain minimal gap */}
@@ -63,40 +276,23 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
         >
           {/* Granny Image - Responsive sizing that scales with monitor */}
           <div className="relative">
-            {state === 'blinking' && (
-              <motion.img
-                src={
-                  isBlinking
-                    ? '/granny-body-shots/granny-blink.png'
-                    : '/granny-body-shots/granny-idle.png'
-                }
-                alt="Granny blinking"
-                className={`object-contain ${
-                  // Responsive Granny sizing - scales proportionally with monitor
-                  'w-[390px] mb-11 ' +
-                  'sm:w-[350px] sm:mb-0   ' +
-                  'md:w-[390px] ' +
-                  'lg:w-[450px] ' +
-                  'xl:w-[460px] '
-                }`}
-                style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
-              />
-            )}
-            {state === 'shouting' && (
-              <motion.img
-                src={'/granny-body-shots/granny-yell-up.png'}
-                alt="Granny shouting"
-                className={`object-contain ${
-                  // Responsive Granny sizing - scales proportionally with monitor
-                  'w-[390px] mb-11 ' +
-                  'sm:w-[350px] sm:mb-0   ' +
-                  'md:w-[390px] ' +
-                  'lg:w-[450px] ' +
-                  'xl:w-[460px] '
-                }`}
-                style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
-              />
-            )}
+            <motion.img
+              key={getDisplayImage()} // Force re-render when image changes
+              src={getDisplayImage()}
+              alt="Granny"
+              className={`object-contain ${
+                // Responsive Granny sizing - scales proportionally with monitor
+                'w-[390px] mb-11 ' +
+                'sm:w-[350px] sm:mb-0   ' +
+                'md:w-[390px] ' +
+                'lg:w-[450px] ' +
+                'xl:w-[460px] '
+              }`}
+              style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3 }}
+            />
           </div>
         </div>
 
