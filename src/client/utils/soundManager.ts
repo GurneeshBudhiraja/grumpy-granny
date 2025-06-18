@@ -7,11 +7,11 @@ class SoundManager implements SoundManagerInterface {
   private isInitialized: boolean = false;
 
   constructor() {
-    this.clickSound = new Audio('/mouse-click.mp3');
+    this.clickSound = new Audio('/sounds/mouse-click.mp3');
     this.clickSound.preload = 'auto';
     this.clickSound.volume = 0.5;
 
-    this.keyboardSound = new Audio('/keyboard-click.mp3');
+    this.keyboardSound = new Audio('/sounds/keyboard-click.mp3');
     this.keyboardSound.preload = 'auto';
     this.keyboardSound.volume = 0.15;
 
@@ -21,11 +21,11 @@ class SoundManager implements SoundManagerInterface {
     this.themeSong.volume = 0.05;
   }
 
-  async playClickSound(): Promise<void> {
+  async playClickSound(volume: number = 1): Promise<void> {
     try {
       // Clone and play to avoid conflicts
       const audio = this.clickSound.cloneNode() as HTMLAudioElement;
-      audio.volume = 0.5;
+      audio.volume = volume;
       await audio.play();
     } catch (error) {
       console.log('Click audio play failed:', error);
