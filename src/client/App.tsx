@@ -37,7 +37,7 @@ export const App = () => {
         className="bg-red-500 absolute top-0 z-50 left-0"
         onClick={() => {
           console.log('Clearing the redis cache');
-          window.parent.postMessage({ type: 'clearScoreRedis' });
+          window.parent.postMessage({ type: 'clearScoreRedis' }, '*');
         }}
       >
         Clear the redis score
