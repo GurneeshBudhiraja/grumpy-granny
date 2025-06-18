@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GameStatus } from '../../shared/types';
 import getRandomPassword from '../utils/passwordUtil';
-import { checkWordlePassword, checkGrannyAgePassword, PasswordCheckResult } from '../utils/verifyPassword';
+import { checkCombinedPassword, PasswordCheckResult } from '../utils/verifyPassword';
 
 interface Hint {
   id: number;
@@ -18,7 +18,7 @@ export interface PlayPageProps {
 
 export interface PasswordAPIResponse {
   hints: string[];
-  verifyFuntion: 'checkWordlePassword' | 'checkGrannyAgePassword' | '';
+  verifyFuntion: 'checkCombinedPassword';
 }
 
 const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
@@ -27,7 +27,7 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordAPIResponse, setPasswordAPIResponse] = useState<PasswordAPIResponse>({
     hints: [],
-    verifyFuntion: '',
+    verifyFuntion: 'checkCombinedPassword',
   });
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
@@ -54,7 +54,8 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
       const { hints } = info;
       console.log('Fetched password info:', info);
       setPasswordAPIResponse({
-        ...info,
+        hints,
+        verifyFuntion: 'checkCombinedPassword',
       });
       setHints(
         hints.map((hint: string, index: number) => ({
@@ -88,17 +89,8 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
 
     if (newPassword.length > 0) {
       try {
-        let result: PasswordCheckResult;
-        
-        // Use the appropriate verification function based on the selected hint set
-        if (passwordAPIResponse.verifyFuntion === 'checkWordlePassword') {
-          result = await checkWordlePassword(newPassword);
-        } else if (passwordAPIResponse.verifyFuntion === 'checkGrannyAgePassword') {
-          result = await checkGrannyAgePassword(newPassword);
-        } else {
-          // Default fallback
-          result = await checkWordlePassword(newPassword);
-        }
+        // Use the combined verification function
+        const result: PasswordCheckResult = await checkCombinedPassword(newPassword);
 
         // Update hints based on verification result
         setHints((prev) =>
@@ -140,16 +132,8 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
   const handleKeyPress = async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && password.length > 0) {
       try {
-        let result: PasswordCheckResult;
-        
-        // Use the appropriate verification function
-        if (passwordAPIResponse.verifyFuntion === 'checkWordlePassword') {
-          result = await checkWordlePassword(password);
-        } else if (passwordAPIResponse.verifyFuntion === 'checkGrannyAgePassword') {
-          result = await checkGrannyAgePassword(password);
-        } else {
-          result = await checkWordlePassword(password);
-        }
+        // Use the combined verification function
+        const result: PasswordCheckResult = await checkCombinedPassword(password);
 
         if (result.isValid) {
           const completionTime = formatTime(Date.now() - startTime);
@@ -269,10 +253,10 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
               }}
             >
               <div className="text-sm font-windows font-bold text-text-color mb-2">
-                Password Hints:
+                Password Hints ({completedHints.length}/{hints.length}):
               </div>
 
-              <div className="space-y-2 max-h-20 overflow-y-scroll">
+              <div className="space-y-2 max-h-32 overflow-y-scroll">
                 {/* Incomplete hints first */}
                 {incompleteHints.map((hint) => (
                   <motion.div key={hint.id} className="flex items-center space-x-3" layout>

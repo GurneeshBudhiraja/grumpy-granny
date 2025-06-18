@@ -4,30 +4,74 @@ const PASSWORDS: PasswordAPIResponse[] = [
   {
     hints: [
       "Start with the two letters on Granny's ID card.",
-      "Include three 5s",
-      "Write 17 in Roman numerals.",
-      "The sum of digits add up to 69.",
-      "Include Granny's ex's name from document",
-      "Toss in exactly one \"!\".",
-      "Include the current hour of the day (1-12).",
-      "Finish with \"DD\"."
+      "Include exactly three 5s (because Granny loves bingo!)",
+      "Write 17 in Roman numerals (Granny's lucky number).",
+      "Include Granny's ex's name from her diary.",
+      "Add the current hour of the day (1-12 format).",
+      "Include exactly two exclamation marks (!!).",
+      "Add Granny's birth year from her quote.",
+      "The sum of all digits must equal 69.",
+      "Finish with \"DD\" (for Drama Queen)."
     ],
-    verifyFuntion: "checkWordlePassword"
+    verifyFuntion: "checkCombinedPassword"
   },
   {
     hints: [
-      "Start with Granny's age",
-      "Include exactly three \"7\" characters.",
-      "Write 12 in Roman numerals.",
-      "Make all digits sum to 60.",
-      "Include the Granny's birth year from ID",
-      "Use one and only one tilde \"~\".",
-      "Append today's day of the month (1-31).",
-      "Finish with \"!!\"."
+      "Begin with Granny's age from her ID.",
+      "Include exactly four 7s (Granny's favorite digit).",
+      "Write 12 in Roman numerals (months she's been single).",
+      "Add the ex-husband's name in lowercase.",
+      "Include today's day of the month (1-31).",
+      "Use exactly one tilde (~) for sass.",
+      "Add Granny's initials in reverse order.",
+      "All digits must sum to exactly 77.",
+      "End with \"GG\" (Grumpy Granny)."
     ],
-    verifyFuntion: "checkGrannyAgePassword"
+    verifyFuntion: "checkCombinedPassword"
   },
-]
+  {
+    hints: [
+      "Start with \"BG\" followed by Granny's age.",
+      "Include exactly two 9s (her grumpiness level).",
+      "Write 21 in Roman numerals (drinking age she misses).",
+      "Add \"MELVIN\" in all caps (she's still mad).",
+      "Include the current minute (00-59).",
+      "Use exactly three question marks (???).",
+      "Add the year she was born.",
+      "Sum of digits should equal 88.",
+      "Finish with \"XO\" (fake love)."
+    ],
+    verifyFuntion: "checkCombinedPassword"
+  },
+  {
+    hints: [
+      "Begin with the initials \"BG\" twice (BGBG).",
+      "Include exactly five 1s (lonely years).",
+      "Write 15 in Roman numerals (her patience level).",
+      "Add \"melvin\" in lowercase (whispered complaints).",
+      "Include current hour in 24-hour format (00-23).",
+      "Use exactly one ampersand (&) for drama.",
+      "Add her professional title number: 73.",
+      "All digits must sum to 55.",
+      "End with \"!!\" (double emphasis)."
+    ],
+    verifyFuntion: "checkCombinedPassword"
+  },
+  {
+    hints: [
+      "Start with Granny's birth year (1951).",
+      "Include exactly three 3s (trinity of grumpiness).",
+      "Write 8 in Roman numerals (infinity of complaints).",
+      "Add \"MELVIN\" followed by \"GONE\".",
+      "Include today's date (DD format).",
+      "Use exactly two tildes (~~) for extra sass.",
+      "Add her age backwards (37 instead of 73).",
+      "Sum of all digits equals 99.",
+      "Finish with \"ZZ\" (she's tired of everything)."
+    ],
+    verifyFuntion: "checkCombinedPassword"
+  }
+];
 
 function getRandomIndex(min: number, max: number): number {
   const range = max - min + 1;
@@ -54,7 +98,7 @@ function getRandomIndex(min: number, max: number): number {
 export default function getRandomPassword() {
   const totalPasswords = PASSWORDS.length;
 
-  // Always get a truly random index - no tracking needed for simple 2-option case
+  // Always get a truly random index
   const selectedIndex = getRandomIndex(0, totalPasswords - 1);
 
   console.log(`Selected password set ${selectedIndex + 1} of ${totalPasswords}`);
