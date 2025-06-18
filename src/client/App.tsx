@@ -149,7 +149,13 @@ export const App = () => {
                       />
                     )}
                     {gameStatus === 'playing' && (
-                      <PlayPage key="playing" setGameStatus={setGameStatus} onWin={handleWin} />
+                      <PlayPage 
+                        key="playing" 
+                        setGameStatus={setGameStatus} 
+                        onWin={handleWin}
+                        grannyStatus={grannyStatus}
+                        setGrannyStatus={setGrannyStatus}
+                      />
                     )}
                     {gameStatus === 'win' && (
                       <WinPage

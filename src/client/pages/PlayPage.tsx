@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GameStatus } from '../../shared/types';
+import { GameStatus, GrannyStatus } from '../../shared/types';
 import getRandomPassword from '../utils/passwordUtil';
 import { checkCombinedPassword, PasswordCheckResult } from '../utils/verifyPassword';
 
@@ -14,6 +14,8 @@ interface Hint {
 export interface PlayPageProps {
   setGameStatus: React.Dispatch<React.SetStateAction<GameStatus>>;
   onWin?: (completionTime: string) => void;
+  grannyStatus: GrannyStatus;
+  setGrannyStatus: React.Dispatch<React.SetStateAction<GrannyStatus>>;
 }
 
 export interface PasswordAPIResponse {
@@ -21,7 +23,37 @@ export interface PasswordAPIResponse {
   verifyFuntion: 'checkCombinedPassword';
 }
 
-const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
+// Define Granny body shots and their corresponding sounds
+const grannyBodyShots = [
+  {
+    image: '/granny-body-shots/granny-mild-frustrate.png',
+    sounds: [
+      '/sounds/granny-sounds/annoyed/granny-ugh.mp3',
+      '/sounds/granny-sounds/annoyed/granny-curse.mp3',
+    ],
+  },
+  {
+    image: '/granny-body-shots/granny-yell.png',
+    sounds: [
+      '/sounds/granny-sounds/annoyed/granny-you-dummy.mp3',
+      '/sounds/granny-sounds/granny-yell.mp3',
+    ],
+  },
+  {
+    image: '/granny-body-shots/granny-yell-up.png',
+    sounds: ['/sounds/granny-sounds/granny-yell.mp3'],
+  },
+  {
+    image: '/granny-body-shots/granny-smirk.png',
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
+  },
+  {
+    image: '/granny-body-shots/granny-laughing.png',
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
+  },
+];
+
+const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayPageProps) => {
   const [password, setPassword] = useState('');
   const [hints, setHints] = useState<Hint[]>([]);
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +64,102 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
   const [startTime, setStartTime] = useState<number>(Date.now());
+
+  // Granny reaction tracking refs
+  const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const soundRef = useRef<HTMLAudioElement | null>(null);
+  const lastHintCountRef = useRef<number>(0);
+  const isTypingRef = useRef<boolean>(false);
+  const hasStartedTypingRef = useRef<boolean>(false);
+  const isPlayingSoundRef = useRef<boolean>(false);
+
+  // Get random body shot and sound
+  const getRandomBodyShot = () => {
+    const randomIndex = Math.floor(Math.random() * grannyBodyShots.length);
+    const bodyShot = grannyBodyShots[randomIndex]!;
+    const randomSoundIndex = Math.floor(Math.random() * bodyShot.sounds.length);
+    return {
+      image: bodyShot.image,
+      sound: bodyShot.sounds[randomSoundIndex]!,
+    };
+  };
+
+  // Trigger granny reaction with body shot and sound
+  const triggerGrannyReaction = () => {
+    if (isPlayingSoundRef.current) return; // Don't interrupt current sound
+
+    const { image, sound } = getRandomBodyShot();
+    
+    // Update granny status to show the reaction
+    setGrannyStatus({
+      state: 'shouting',
+      words: image, // Store the image path in words field
+    });
+
+    isPlayingSoundRef.current = true;
+
+    // Stop any existing sound
+    if (soundRef.current) {
+      soundRef.current.pause();
+      soundRef.current.currentTime = 0;
+    }
+
+    // Play new sound
+    const audio = new Audio(sound);
+    audio.volume = 0.7;
+    soundRef.current = audio;
+
+    audio.play().catch(() => console.log('Failed to play granny sound'));
+
+    audio.onended = () => {
+      isPlayingSoundRef.current = false;
+      // Return to blinking state
+      setGrannyStatus({
+        state: 'blinking',
+        words: '',
+      });
+    };
+
+    audio.onerror = () => {
+      isPlayingSoundRef.current = false;
+      // Return to blinking state
+      setGrannyStatus({
+        state: 'blinking',
+        words: '',
+      });
+    };
+  };
+
+  // Reset inactivity timer
+  const resetInactivityTimer = () => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+    }
+
+    inactivityTimerRef.current = setTimeout(() => {
+      if (!isPlayingSoundRef.current) {
+        console.log('Triggering inactivity reaction');
+        triggerGrannyReaction();
+      }
+    }, 10000); // 10 seconds
+  };
+
+  // Reset typing timer
+  const resetTypingTimer = () => {
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+
+    if (hasStartedTypingRef.current) {
+      typingTimerRef.current = setTimeout(() => {
+        if (!isPlayingSoundRef.current && !isTypingRef.current) {
+          console.log('Triggering typing pause reaction');
+          triggerGrannyReaction();
+        }
+      }, 10000); // 10 seconds after stopping typing
+    }
+  };
 
   // Format time helper
   const formatTime = (milliseconds: number): string => {
@@ -78,8 +206,33 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
     setShowPassword(false);
     setShowIdCard(false);
     setShowDocument(false);
+    // Reset granny reaction tracking
+    lastHintCountRef.current = 0;
+    isTypingRef.current = false;
+    hasStartedTypingRef.current = false;
+    isPlayingSoundRef.current = false;
+    
     // Fetch new password set
     fetchPassword().catch(() => setGameStatus('start'));
+
+    // Start initial inactivity timer
+    const timer = setTimeout(() => {
+      resetInactivityTimer();
+    }, 100); // Small delay to ensure component is mounted
+
+    return () => {
+      clearTimeout(timer);
+      // Cleanup timers
+      if (inactivityTimerRef.current) {
+        clearTimeout(inactivityTimerRef.current);
+      }
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+      if (soundRef.current) {
+        soundRef.current.pause();
+      }
+    };
   }, []); // Empty dependency array ensures this runs fresh each time component mounts
 
   // Handle password input changes with real-time verification
@@ -87,10 +240,42 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
 
+    // Track typing state for granny reactions
+    const wasTyping = isTypingRef.current;
+    isTypingRef.current = newPassword.length > 0;
+    
+    if (newPassword.length > 0) {
+      hasStartedTypingRef.current = true;
+    }
+
+    // Reset timers on any input
+    resetInactivityTimer();
+    
+    // If user stopped typing, start typing timer
+    if (wasTyping && !isTypingRef.current) {
+      resetTypingTimer();
+    } else if (isTypingRef.current) {
+      // Clear typing timer if user is actively typing
+      if (typingTimerRef.current) {
+        clearTimeout(typingTimerRef.current);
+      }
+    }
+
     if (newPassword.length > 0) {
       try {
         // Use the combined verification function
         const result: PasswordCheckResult = await checkCombinedPassword(newPassword);
+
+        // Check for hint satisfaction/dissatisfaction
+        const currentHintCount = result.completedHints.filter(Boolean).length;
+
+        // If hints were satisfied and now dissatisfied (user broke a hint)
+        if (lastHintCountRef.current > 0 && lastHintCountRef.current > currentHintCount && !isPlayingSoundRef.current) {
+          console.log('Triggering hint dissatisfaction reaction');
+          triggerGrannyReaction();
+        }
+
+        lastHintCountRef.current = currentHintCount;
 
         // Update hints based on verification result
         setHints((prev) =>
@@ -125,6 +310,38 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
           previouslyCompleted: false,
         }))
       );
+      lastHintCountRef.current = 0;
+    }
+  };
+
+  // Handle key events for granny reactions
+  const handleKeyDown = () => {
+    isTypingRef.current = true;
+    resetInactivityTimer();
+    
+    // Clear typing timer while actively typing
+    if (typingTimerRef.current) {
+      clearTimeout(typingTimerRef.current);
+    }
+  };
+
+  const handleKeyUp = () => {
+    // Start typing timer when user stops typing
+    setTimeout(() => {
+      if (hasStartedTypingRef.current) {
+        resetTypingTimer();
+      }
+    }, 100); // Small delay to detect if user continues typing
+  };
+
+  const handleFocus = () => {
+    resetInactivityTimer();
+  };
+
+  const handleBlur = () => {
+    isTypingRef.current = false;
+    if (hasStartedTypingRef.current) {
+      resetTypingTimer();
     }
   };
 
@@ -222,6 +439,10 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
                 value={password}
                 onChange={handlePasswordChange}
                 onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyDown}
+                onKeyUp={handleKeyUp}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 className="w-full px-3 py-2 border-2 border-button-shadow border-t-gray-400 border-l-gray-400 bg-white font-windows text-sm focus:outline-none"
                 placeholder="Key in the hint answer..."
                 autoFocus
@@ -346,6 +567,8 @@ const PlayPage = ({ setGameStatus, onWin }: PlayPageProps) => {
                     previouslyCompleted: false,
                   }))
                 );
+                lastHintCountRef.current = 0;
+                resetInactivityTimer();
               }}
               style={{
                 boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
