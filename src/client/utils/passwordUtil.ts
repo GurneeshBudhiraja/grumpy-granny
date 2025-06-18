@@ -3,13 +3,13 @@ import { PasswordAPIResponse } from "../pages/PlayPage";
 const PASSWORDS: PasswordAPIResponse[] = [
   {
     hints: [
-      "Start with the two letters on Granny's ID card.",
-      "Include exactly three 5s (because Granny loves bingo!)",
+      "Start with the two letters on Granny's ID card (initials).",
+      "Include exactly three 5s (because Granny loves bingo!).",
       "Write 17 in Roman numerals (Granny's lucky number).",
       "Include Granny's ex's name from her diary.",
       "Add the current hour of the day (1-12 format).",
       "Include exactly two exclamation marks (!!).",
-      "Add Granny's birth year from her quote.",
+      "Add Granny's birth year from her ID card.",
       "The sum of all digits must equal 69.",
       "Finish with \"DD\" (for Drama Queen)."
     ],
@@ -17,13 +17,13 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
   {
     hints: [
-      "Begin with Granny's age from her ID.",
+      "Begin with Granny's age from her ID card.",
       "Include exactly four 7s (Granny's favorite digit).",
       "Write 12 in Roman numerals (months she's been single).",
-      "Add the ex-husband's name in lowercase.",
+      "Add the ex-husband's name from diary in lowercase.",
       "Include today's day of the month (1-31).",
       "Use exactly one tilde (~) for sass.",
-      "Add Granny's initials in reverse order.",
+      "Add Granny's initials from ID card in reverse order.",
       "All digits must sum to exactly 77.",
       "End with \"GG\" (Grumpy Granny)."
     ],
@@ -31,13 +31,13 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
   {
     hints: [
-      "Start with \"BG\" followed by Granny's age.",
+      "Start with \"BG\" followed by Granny's age from ID card.",
       "Include exactly two 9s (her grumpiness level).",
       "Write 21 in Roman numerals (drinking age she misses).",
-      "Add \"MELVIN\" in all caps (she's still mad).",
+      "Add \"MELVIN\" from diary in all caps (she's still mad).",
       "Include the current minute (00-59).",
       "Use exactly three question marks (???).",
-      "Add the year she was born.",
+      "Add the year she was born (check ID card).",
       "Sum of digits should equal 88.",
       "Finish with \"XO\" (fake love)."
     ],
@@ -45,13 +45,13 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
   {
     hints: [
-      "Begin with the initials \"BG\" twice (BGBG).",
+      "Begin with the initials from ID card twice (BGBG).",
       "Include exactly five 1s (lonely years).",
       "Write 15 in Roman numerals (her patience level).",
-      "Add \"melvin\" in lowercase (whispered complaints).",
+      "Add \"melvin\" from diary in lowercase (whispered complaints).",
       "Include current hour in 24-hour format (00-23).",
       "Use exactly one ampersand (&) for drama.",
-      "Add her professional title number: 73.",
+      "Add her professional title number from ID: 73.",
       "All digits must sum to 55.",
       "End with \"!!\" (double emphasis)."
     ],
@@ -59,13 +59,13 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
   {
     hints: [
-      "Start with Granny's birth year (1951).",
+      "Start with Granny's birth year from ID card (1951).",
       "Include exactly three 3s (trinity of grumpiness).",
       "Write 8 in Roman numerals (infinity of complaints).",
-      "Add \"MELVIN\" followed by \"GONE\".",
+      "Add \"MELVIN\" followed by \"GONE\" (from diary).",
       "Include today's date (DD format).",
       "Use exactly two tildes (~~) for extra sass.",
-      "Add her age backwards (37 instead of 73).",
+      "Add her age from ID card backwards (37 instead of 73).",
       "Sum of all digits equals 99.",
       "Finish with \"ZZ\" (she's tired of everything)."
     ],

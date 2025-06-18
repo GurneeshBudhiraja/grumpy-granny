@@ -8,7 +8,15 @@ const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herse
 
 <span class="font-windows text-yellow-300 font-extrabold">WARNING: Hit the back button if you dare, but be prepared for Granny's scream to echo through your soul!</span> 
 
-Look for clues in Granny's <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-id">ID card</span> and her personal <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">document</span> on the shelf to crack the password.
+<div class="mt-4 p-3 bg-cyan-900/30 border border-cyan-400 rounded">
+<div class="text-cyan-300 font-bold mb-2">🔍 DETECTIVE WORK REQUIRED:</div>
+<div class="text-cyan-200 text-sm">Check the <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-id">ID card on the shelf</span> for initials, age, birth year, and personal details.</div>
+<div class="text-cyan-200 text-sm mt-1">Read the <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">diary document on the shelf</span> for ex-husband's name and other secrets.</div>
+</div>
+
+<div class="mt-3 p-2 bg-orange-900/30 border border-orange-400 rounded">
+<div class="text-orange-300 font-bold text-sm">💡 HINT: Password clues will reference information from BOTH documents!</div>
+</div>
 
 Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
@@ -54,11 +62,11 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
     }
   };
 
-  // Much faster typing animation effect
+  // Much faster typing animation effect - reduced from 3ms to 1ms
   useEffect(() => {
     if (currentIndex < RULES_HTML.length && !isSkipped) {
       const timer = setTimeout(async () => {
-        // Play typing sound less frequently (every 5th character) and only for visible characters
+        // Play typing sound less frequently (every 8th character) and only for visible characters
         const currentChar = RULES_HTML[currentIndex];
         const isVisibleChar =
           currentChar &&
@@ -67,21 +75,21 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
           !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<');
 
         if (!isSkipped) {
-          if (isVisibleChar && currentIndex % 5 === 0) {
-            // Play sound every 5th visible character
+          if (isVisibleChar && currentIndex % 8 === 0) {
+            // Play sound every 8th visible character
             await soundManager.initializeSounds();
-            await soundManager.playKeyboardSound(0.03);
+            await soundManager.playKeyboardSound(0.02);
           }
         }
 
         setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 3); // Much faster - reduced from 10ms to 3ms
+      }, 1); // Reduced from 3ms to 1ms for much faster typing
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
       // Show captcha button after typing is complete
-      setTimeout(() => setShowCaptchaButton(true), 300);
+      setTimeout(() => setShowCaptchaButton(true), 200);
     }
   }, [currentIndex, isSkipped]);
 
