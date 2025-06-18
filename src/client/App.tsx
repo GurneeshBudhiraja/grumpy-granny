@@ -32,16 +32,6 @@ export const App = () => {
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
-      {/* TODO: remove in prod */}
-      <button
-        className="bg-red-500 absolute top-0 z-50 left-0"
-        onClick={() => {
-          console.log('Clearing the redis cache');
-          window.parent.postMessage({ type: 'clearScoreRedis' }, '*');
-        }}
-      >
-        Clear the redis score
-      </button>
       {/* Bolt badge on the start */}
       {gameStatus === 'start' && (
         <div
