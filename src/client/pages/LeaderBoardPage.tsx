@@ -15,9 +15,7 @@ interface LeaderboardStatsType {
 function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
   const [leaderboardStats, setLeaderboardStats] = useState<LeaderboardStatsType[]>([]);
   const [loading, setLoading] = useState(true);
-  // TODO: remove this in production
-  const [currentUser, setCurrentUser] = useState<string>('BetaPlayer');
-  // const [currentUser, setCurrentUser] = useState<string>('');
+  const [currentUser, setCurrentUser] = useState<string>('');
 
   function getLeaderboardData() {
     window.parent.postMessage({ type: 'getLeaderboard' }, '*');
@@ -107,7 +105,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
 
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-scroll"
+      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-y-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -189,7 +187,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                       return (
                         <motion.div
                           key={`${stat.userName}-${stat.score}`}
-                          className={`grid grid-cols-12 gap-2 sm:p-1 mb-2 border-2 rounded ${getPositionBg(position, isCurrentUser)}`}
+                          className={`grid grid-cols-12 gap-2 sm:p-1 mb-2 border-2 rounded relative ${getPositionBg(position, isCurrentUser)}`}
                           initial={{ x: -100, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -206,7 +204,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                             <div className="flex flex-col items-center">
                               {medal && <div className="text-2xl sm:text-3xl mb-1">{medal}</div>}
                               {index > 2 && (
-                                <span className="text-sm sm:text-base font-windows font-bold">
+                                <span className="text-sm sm:text-base font-windows font-bold p-1.5">
                                   #{position}
                                 </span>
                               )}
@@ -215,18 +213,12 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
 
                           {/* Player Name Column */}
                           <div className="col-span-6 sm:col-span-7 flex items-center">
-                            <div className="truncate">
-                              <span className={`text-sm sm:text-base font-windows font-bold`}>
+                            <div className="flex items-center space-x-1 w-full overflow-hidden">
+                              <span className="truncate flex-1 text-sm sm:text-lg font-windows font-bold">
                                 {stat.userName}
                               </span>
                               {isCurrentUser && (
-                                <span
-                                  className="ml-2 text-xs font-windows font-bold bg-gray-200 text-black border border-gray-500 px-2 py-0.5 rounded-sm"
-                                  style={{
-                                    boxShadow:
-                                      'inset -1px -1px 0 0 #fff, inset 1px 1px 0 0 #808080',
-                                  }}
-                                >
+                                <span className="flex-shrink-0 inline-block bg-blue-700 text-white border border-blue-900 rounded px-1 py-0.5 text-xs sm:text-sm font-windows">
                                   YOU
                                 </span>
                               )}
