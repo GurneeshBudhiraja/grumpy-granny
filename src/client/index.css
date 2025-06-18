@@ -43,6 +43,37 @@
   }
 }
 
+@theme {
+  --color-desktop-bg: var(--desktop-bg);
+  --color-window-bg: var(--window-bg);
+  --color-window-border: var(--window-border);
+  --color-titlebar-active-bg: var(--titlebar-active-bg);
+  --color-titlebar-active-text: var(--titlebar-active-text);
+  --color-titlebar-inactive-bg: var(--titlebar-inactive-bg);
+  --color-titlebar-inactive-text: var(--titlebar-inactive-text);
+  --color-button-face: var(--button-face);
+  --color-button-text: var(--button-text);
+  --color-button-highlight: var(--button-highlight);
+  --color-button-shadow: var(--button-shadow);
+  --color-highlight-bg: var(--highlight-bg);
+  --color-highlight-text: var(--highlight-text);
+  --color-text: var(--text-color);
+
+  --font-windows: 'windows98';
+  --font-pixel: 'pixel';
+
+  --animate-spin-reverse: spin-reverse 900ms linear infinite;
+}
+
+@keyframes spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
 .cursor-pointer {
   cursor: none;
 }
@@ -233,24 +264,4 @@
   100% {
     transform: translateX(0);
   }
-}
-
-@theme {
-  --color-desktop-bg: var(--desktop-bg);
-  --color-window-bg: var(--window-bg);
-  --color-window-border: var(--window-border);
-  --color-titlebar-active-bg: var(--titlebar-active-bg);
-  --color-titlebar-active-text: var(--titlebar-active-text);
-  --color-titlebar-inactive-bg: var(--titlebar-inactive-bg);
-  --color-titlebar-inactive-text: var(--titlebar-inactive-text);
-  --color-button-face: var(--button-face);
-  --color-button-text: var(--button-text);
-  --color-button-highlight: var(--button-highlight);
-  --color-button-shadow: var(--button-shadow);
-  --color-highlight-bg: var(--highlight-bg);
-  --color-highlight-text: var(--highlight-text);
-  --color-text: var(--text-color);
-
-  --font-windows: 'windows98';
-  --font-pixel: 'pixel';
 }
