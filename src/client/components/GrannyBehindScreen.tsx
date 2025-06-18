@@ -11,32 +11,40 @@ interface GrannyBehindScreenProps {
 const grannyBodyShots = [
   {
     image: '/granny-body-shots/granny-mild-frustrate.png',
-    sounds: ['/sounds/granny-sounds/annoyed/granny-ugh.mp3', '/sounds/granny-sounds/annoyed/granny-curse.mp3']
+    sounds: [
+      '/sounds/granny-sounds/annoyed/granny-ugh.mp3',
+      '/sounds/granny-sounds/annoyed/granny-curse.mp3',
+    ],
   },
   {
     image: '/granny-body-shots/granny-yell.png',
-    sounds: ['/sounds/granny-sounds/annoyed/granny-you-dummy.mp3', '/sounds/granny-sounds/granny-yell.mp3']
+    sounds: [
+      '/sounds/granny-sounds/annoyed/granny-you-dummy.mp3',
+      '/sounds/granny-sounds/granny-yell.mp3',
+    ],
   },
   {
     image: '/granny-body-shots/granny-yell-up.png',
-    sounds: ['/sounds/granny-sounds/granny-yell.mp3']
+    sounds: ['/sounds/granny-sounds/granny-yell.mp3'],
   },
   {
     image: '/granny-body-shots/granny-smirk.png',
-    sounds: ['/sounds/granny-sounds/granny-laugh.mp3']
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
   },
   {
     image: '/granny-body-shots/granny-laughing.png',
-    sounds: ['/sounds/granny-sounds/granny-laugh.mp3']
-  }
+    sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
+  },
 ];
 
 function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScreenProps) {
   const { state, words } = grannyStatus;
   const [isBlinking, setIsBlinking] = useState(false);
-  const [currentBodyShot, setCurrentBodyShot] = useState<string>('/granny-body-shots/granny-idle.png');
+  const [currentBodyShot, setCurrentBodyShot] = useState<string>(
+    '/granny-body-shots/granny-idle.png'
+  );
   const [isPlayingSound, setIsPlayingSound] = useState(false);
-  
+
   // Timers and refs
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -52,7 +60,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     const randomSoundIndex = Math.floor(Math.random() * bodyShot.sounds.length);
     return {
       image: bodyShot.image,
-      sound: bodyShot.sounds[randomSoundIndex]!
+      sound: bodyShot.sounds[randomSoundIndex]!,
     };
   };
 
@@ -92,7 +100,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current);
     }
-    
+
     inactivityTimerRef.current = setTimeout(() => {
       if (!isPlayingSound) {
         const { image, sound } = getRandomBodyShot();
@@ -106,7 +114,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     if (typingTimerRef.current) {
       clearTimeout(typingTimerRef.current);
     }
-    
+
     if (isTypingRef.current) {
       typingTimerRef.current = setTimeout(() => {
         if (!isPlayingSound && isTypingRef.current) {
@@ -119,14 +127,16 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
   // Monitor password input and hint completion
   useEffect(() => {
-    const passwordInput = document.querySelector('input[type="password"], input[type="text"]') as HTMLInputElement;
-    
+    const passwordInput = document.querySelector(
+      'input[type="password"], input[type="text"]'
+    ) as HTMLInputElement;
+
     if (!passwordInput) return;
 
     const handleInput = (e: Event) => {
       const target = e.target as HTMLInputElement;
       const currentPassword = target.value;
-      
+
       // Check if user started typing
       if (currentPassword.length > 0 && !isTypingRef.current) {
         isTypingRef.current = true;
@@ -140,7 +150,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
 
       // Check for hint satisfaction/dissatisfaction
       const currentHintCount = document.querySelectorAll('.text-green-700').length;
-      
+
       // If hints were satisfied and now dissatisfied
       if (lastHintCountRef.current > currentHintCount && !isPlayingSound) {
         const { image, sound } = getRandomBodyShot();
@@ -236,17 +246,17 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     if (isPlayingSound) {
       return currentBodyShot;
     }
-    
+
     if (state === 'shouting') {
       return '/granny-body-shots/granny-yell-up.png';
     }
-    
+
     if (state === 'blinking') {
-      return isBlinking 
-        ? '/granny-body-shots/granny-blink.png' 
+      return isBlinking
+        ? '/granny-body-shots/granny-blink.png'
         : '/granny-body-shots/granny-idle.png';
     }
-    
+
     return '/granny-body-shots/granny-idle.png';
   };
 
@@ -254,7 +264,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     <AnimatePresence>
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 1 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
         transition={{
@@ -289,7 +299,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
                 'xl:w-[460px] '
               }`}
               style={{ filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6))' }}
-              initial={{ scale: 0.95 }}
+              initial={{ scale: 1 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.3 }}
             />
