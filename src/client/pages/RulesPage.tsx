@@ -8,9 +8,7 @@ const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herse
 
 <span class="font-windows text-yellow-300 font-extrabold">WARNING: Hit the back button if you dare, but be prepared for Granny's scream to echo through your soul!</span> 
 
-<span class="font-windows text-cyan-300 font-bold">🔍 DETECTIVE WORK REQUIRED:</span> Look for clues in Granny's <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-id">ID card on the shelf</span> (for her initials, age, birth year, and personal details) and her personal <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">diary document on the shelf</span> (for her ex-husband's name and other secrets).
-
-<span class="font-windows text-orange-300 font-bold">💡 HINT:</span> The password hints will reference specific information from these documents - you'll need to check both the ID card AND the diary to find all the pieces!
+Look for clues in Granny's <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-id">ID card</span> and her personal <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">document</span> on the shelf to crack the password.
 
 Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
@@ -41,7 +39,7 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
     setShowCursor(false);
     setIsTypingComplete(true);
     // Show captcha button immediately after skipping
-    setTimeout(() => setShowCaptchaButton(true), 200);
+    setTimeout(() => setShowCaptchaButton(true), 100);
   };
 
   // Handle clicks on links in the rules text
