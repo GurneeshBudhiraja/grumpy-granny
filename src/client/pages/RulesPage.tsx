@@ -14,10 +14,6 @@ const RULES_HTML = `<p class="font-windows text-green-200">Granny's locked herse
 <div class="text-cyan-200 text-sm mt-1">Read the <span class="text-blue-400 underline cursor-pointer font-bold" data-action="show-document">diary document on the shelf</span> for ex-husband's name and other secrets.</div>
 </div>
 
-<div class="mt-3 p-2 bg-orange-900/30 border border-orange-400 rounded">
-<div class="text-orange-300 font-bold text-sm">💡 HINT: Password clues will reference information from BOTH documents!</div>
-</div>
-
 Can you outwit her sass and survive the ultimate patience test, or will you be roasted into oblivion?</p>`;
 
 interface RulesPageProps {
@@ -54,7 +50,7 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
   const handleRulesClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     const action = target.getAttribute('data-action');
-    
+
     if (action === 'show-id' && onShowId) {
       onShowId();
     } else if (action === 'show-document' && onShowDocument) {
@@ -84,7 +80,7 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
 
         setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 1); // Reduced from 3ms to 1ms for much faster typing
+      }, 2.2); // Reduced from 3ms to 1ms for much faster typing
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
