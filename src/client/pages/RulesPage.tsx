@@ -37,6 +37,9 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
     setDisplayedText(RULES_HTML);
     setCurrentIndex(RULES_HTML.length);
     setShowCursor(false);
+    setIsTypingComplete(true);
+    // Show captcha button immediately after skipping
+    setTimeout(() => setShowCaptchaButton(true), 200);
   };
 
   // Handle clicks on links in the rules text
@@ -51,11 +54,11 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
     }
   };
 
-  // Typing animation effect with reduced sound frequency
+  // Much faster typing animation effect
   useEffect(() => {
     if (currentIndex < RULES_HTML.length && !isSkipped) {
       const timer = setTimeout(async () => {
-        // Play typing sound less frequently (every 3rd character) and only for visible characters
+        // Play typing sound less frequently (every 5th character) and only for visible characters
         const currentChar = RULES_HTML[currentIndex];
         const isVisibleChar =
           currentChar &&
@@ -64,21 +67,21 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
           !RULES_HTML.slice(Math.max(0, currentIndex - 10), currentIndex + 1).includes('<');
 
         if (!isSkipped) {
-          if (isVisibleChar && currentIndex % 3 === 0) {
-            // Play sound every 3rd visible character
+          if (isVisibleChar && currentIndex % 5 === 0) {
+            // Play sound every 5th visible character
             await soundManager.initializeSounds();
-            await soundManager.playKeyboardSound(0.05);
+            await soundManager.playKeyboardSound(0.03);
           }
         }
 
         setDisplayedText(RULES_HTML.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
-      }, 10);
+      }, 3); // Much faster - reduced from 10ms to 3ms
       return () => clearTimeout(timer);
     } else {
       setIsTypingComplete(true);
       // Show captcha button after typing is complete
-      setTimeout(() => setShowCaptchaButton(true), 1000);
+      setTimeout(() => setShowCaptchaButton(true), 300);
     }
   }, [currentIndex, isSkipped]);
 
@@ -232,11 +235,11 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
           }}
         />
       </div>
-      {/* {  */}
+      {/* Skip button - only show if typing is not complete and not skipped */}
       {!isTypingComplete && !isSkipped && (
         <button
           onClick={handleSkip}
-          className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer  transition "
+          className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer transition hover:bg-gray-200"
         >
           Show full rules
         </button>

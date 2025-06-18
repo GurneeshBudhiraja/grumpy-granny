@@ -32,23 +32,28 @@ export interface PasswordCheckResult {
 }
 
 export async function checkCombinedPassword(pwd: string): Promise<PasswordCheckResult> {
-  // Determine which hint set we're checking based on password characteristics
-  const hintSetType = determineHintSet(pwd);
-  
-  switch (hintSetType) {
-    case 1:
-      return checkHintSet1(pwd);
-    case 2:
-      return checkHintSet2(pwd);
-    case 3:
-      return checkHintSet3(pwd);
-    case 4:
-      return checkHintSet4(pwd);
-    case 5:
-      return checkHintSet5(pwd);
-    default:
-      return checkHintSet1(pwd); // Default fallback
+  // Check all hint sets and return the one with the most completed hints
+  const results = [
+    await checkHintSet1(pwd),
+    await checkHintSet2(pwd),
+    await checkHintSet3(pwd),
+    await checkHintSet4(pwd),
+    await checkHintSet5(pwd)
+  ];
+
+  // Find the result with the most completed hints
+  let bestResult = results[0]!;
+  let maxCompleted = bestResult.completedHints.filter(Boolean).length;
+
+  for (const result of results) {
+    const completed = result.completedHints.filter(Boolean).length;
+    if (completed > maxCompleted) {
+      maxCompleted = completed;
+      bestResult = result;
+    }
   }
+
+  return bestResult;
 }
 
 function determineHintSet(pwd: string): number {
