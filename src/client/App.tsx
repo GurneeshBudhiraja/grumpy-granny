@@ -12,7 +12,7 @@ export const App = () => {
   // Add global keyboard sound effect
   useKeyboardSound();
 
-  const [gameStatus, setGameStatus] = useState<GameStatus>('win');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('start');
   const [grannyStatus, setGrannyStatus] = useState<GrannyStatus>({
     state: 'blinking',
     words: '',
@@ -32,6 +32,16 @@ export const App = () => {
 
   return (
     <div className="h-screen w-full relative overflow-hidden flex justify-center items-center bg-black">
+      {/* TODO: remove in prod */}
+      <button
+        className="bg-red-500 absolute top-0 z-50 left-0"
+        onClick={() => {
+          console.log('Clearing the redis cache');
+          window.parent.postMessage({ type: 'clearScoreRedis' });
+        }}
+      >
+        Clear the redis score
+      </button>
       {/* Bolt badge on the start */}
       {gameStatus === 'start' && (
         <div
@@ -61,7 +71,6 @@ export const App = () => {
           </a>
         </div>
       )}
-
       {/* Wall Background Container */}
       <div className="relative">
         {/* Wall Background - Full Viewport Coverage */}
@@ -165,7 +174,6 @@ export const App = () => {
                 </div>
               </div>
             </div>
-
             {/* Granny Half Portrait - Only visible on start page */}
             {gameStatus === 'start' && <GrannySprite gameStatus={gameStatus} />}
 
@@ -233,7 +241,7 @@ export const App = () => {
                 className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
                 style={{ lineHeight: '1' }}
               >
-                ×
+                x
               </button>
 
               {/* ID Card Header */}
@@ -333,7 +341,7 @@ export const App = () => {
                 className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center text-lg font-bold hover:bg-red-600 transition-colors z-10 cursor-pointer"
                 style={{ lineHeight: '1' }}
               >
-                ×
+                x
               </button>
 
               {/* Document Header */}
