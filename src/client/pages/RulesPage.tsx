@@ -243,7 +243,7 @@ function RulesPage({ setGameStatus, setGrannyStatus, onShowId, onShowDocument }:
       {!isTypingComplete && !isSkipped && (
         <button
           onClick={handleSkip}
-          className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer transition hover:bg-gray-200"
+          className="fixed bottom-4 right-7 font-windows text-xs px-3 py-1 rounded border border-button-shadow text-highlight-bg bg-window-bg cursor-pointer transition hover:bg-gray-200 z-20"
         >
           Show full rules
         </button>
