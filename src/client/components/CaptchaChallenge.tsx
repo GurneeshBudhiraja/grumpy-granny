@@ -3,23 +3,23 @@ import { motion, AnimatePresence } from 'motion/react';
 
 // Local captcha images (non-granny)
 const normalCaptchaImages = [
-  '/captcha/image0.png',
-  '/captcha/image1.png',
-  '/captcha/image2.png',
-  '/captcha/image3.png',
-  '/captcha/image4.png',
-  '/captcha/image5.png',
-  '/captcha/image6.png',
-  '/captcha/image7.png',
-  '/captcha/image8.png',
+  '/captcha/image0.webp',
+  '/captcha/image1.webp',
+  '/captcha/image2.webp',
+  '/captcha/image3.webp',
+  '/captcha/image4.webp',
+  '/captcha/image5.webp',
+  '/captcha/image6.webp',
+  '/captcha/image7.webp',
+  '/captcha/image8.webp',
 ];
 
 // Granny captcha images
 const grannyCaptchaImages = [
-  '/captcha/granny/image0.png',
-  '/captcha/granny/image1.png',
-  '/captcha/granny/image2.png',
-  '/captcha/granny/image3.png',
+  '/captcha/granny/image0.webp',
+  '/captcha/granny/image1.webp',
+  '/captcha/granny/image2.webp',
+  '/captcha/granny/image3.webp',
 ];
 
 interface CaptchaChallengeProps {
@@ -46,35 +46,35 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
   const generateCaptchaGrid = () => {
     // Randomly decide how many granny images to show (2-4)
     const grannyCount = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
-    
+
     // Select random granny images
     const shuffledGrannyImages = [...grannyCaptchaImages].sort(() => Math.random() - 0.5);
     const selectedGrannyImages = shuffledGrannyImages.slice(0, grannyCount);
-    
+
     // Calculate how many normal images we need (total 9 - granny count)
     const normalCount = 9 - grannyCount;
-    
+
     // Select random normal images
     const shuffledNormalImages = [...normalCaptchaImages].sort(() => Math.random() - 0.5);
     const selectedNormalImages = shuffledNormalImages.slice(0, normalCount);
-    
+
     // Create image objects
     const grannyImageObjects: CaptchaImage[] = selectedGrannyImages.map((src, index) => ({
       src,
       isGranny: true,
       id: `granny-${index}-${Date.now()}`,
     }));
-    
+
     const normalImageObjects: CaptchaImage[] = selectedNormalImages.map((src, index) => ({
       src,
       isGranny: false,
       id: `normal-${index}-${Date.now()}`,
     }));
-    
+
     // Combine and shuffle all images
     const allImages = [...grannyImageObjects, ...normalImageObjects];
     const shuffledImages = allImages.sort(() => Math.random() - 0.5);
-    
+
     // Track which indices contain granny images
     const newGrannyIndices: number[] = [];
     shuffledImages.forEach((image, index) => {
@@ -82,7 +82,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
         newGrannyIndices.push(index);
       }
     });
-    
+
     setCaptchaImages(shuffledImages);
     setGrannyIndices(newGrannyIndices);
   };
@@ -104,22 +104,25 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
     }
 
     // Check if user selected all granny images
-    const selectedGrannyIndices = selected.filter(index => grannyIndices.includes(index));
-    const missedGrannyIndices = grannyIndices.filter(index => !selected.includes(index));
-    
+    const selectedGrannyIndices = selected.filter((index) => grannyIndices.includes(index));
+    const missedGrannyIndices = grannyIndices.filter((index) => !selected.includes(index));
+
     if (missedGrannyIndices.length > 0) {
       return { isValid: false, message: 'Please select all images with Granny' };
     }
 
     // Check if user selected any non-granny images
-    const selectedNonGrannyIndices = selected.filter(index => !grannyIndices.includes(index));
-    
+    const selectedNonGrannyIndices = selected.filter((index) => !grannyIndices.includes(index));
+
     if (selectedNonGrannyIndices.length > 0) {
       return { isValid: false, message: 'Please only select images with Granny' };
     }
 
     // Check if user selected exactly all granny images and no others
-    if (selectedGrannyIndices.length === grannyIndices.length && selectedNonGrannyIndices.length === 0) {
+    if (
+      selectedGrannyIndices.length === grannyIndices.length &&
+      selectedNonGrannyIndices.length === 0
+    ) {
       return { isValid: true, message: 'Success!' };
     }
 
@@ -131,7 +134,7 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
     setSelected([]);
     setShowError(false);
     setErrorMessage('');
-    
+
     // Slide out animation, then regenerate
     setTimeout(() => {
       generateCaptchaGrid();
@@ -141,18 +144,18 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
 
   const handleVerify = () => {
     const validation = validateSelection();
-    
+
     if (!validation.isValid) {
       setShowError(true);
       setErrorMessage(validation.message);
       setIsVerifying(true);
-      
+
       // Show error for 1.5 seconds, then regenerate
       setTimeout(() => {
         setIsVerifying(false);
         regenerateCaptcha();
       }, 1500);
-      
+
       return;
     }
 
@@ -183,22 +186,22 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
           </div>
           {onClose && (
             <div onClick={onClose} className="cursor-pointer">
-              <img src="/windows98-icons/cross-icon.png" alt="Close" className="w-4 h-4" />
+              <img src="/windows98-icons/cross-icon.webp" alt="Close" className="w-4 h-4" />
             </div>
           )}
         </div>
 
         {/* Image Grid */}
         <div className="p-3">
-          <motion.div 
+          <motion.div
             className="grid grid-cols-3 mb-5"
-            animate={{ 
+            animate={{
               x: isRegenerating ? 300 : 0,
-              opacity: isRegenerating ? 0 : 1 
+              opacity: isRegenerating ? 0 : 1,
             }}
-            transition={{ 
+            transition={{
               duration: 0.3,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           >
             {captchaImages.map((image, i) => (
@@ -214,10 +217,10 @@ const CaptchaChallenge: React.FC<CaptchaChallengeProps> = ({ onVerified, onClose
                 whileTap={{ scale: 0.98 }}
                 initial={{ x: 300, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ 
+                transition={{
                   delay: i * 0.05,
                   duration: 0.3,
-                  ease: "easeOut"
+                  ease: 'easeOut',
                 }}
               >
                 {/* Image */}

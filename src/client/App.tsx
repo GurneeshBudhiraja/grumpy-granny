@@ -68,7 +68,7 @@ export const App = () => {
         {/* Wall Background - Full Viewport Coverage */}
         <div
           className="bg-conic bg-center bg-no-repeat aspect-[5/3] min-h-[90vh] max-w-6xl"
-          style={{ backgroundImage: 'url(/background/wall-background.png)' }}
+          style={{ backgroundImage: 'url(/background/wall-background.webp)' }}
         >
           {/* Wall Shelf - Only visible during playing state */}
           {gameStatus === 'playing' && (
@@ -149,9 +149,9 @@ export const App = () => {
                       />
                     )}
                     {gameStatus === 'playing' && (
-                      <PlayPage 
-                        key="playing" 
-                        setGameStatus={setGameStatus} 
+                      <PlayPage
+                        key="playing"
+                        setGameStatus={setGameStatus}
                         onWin={handleWin}
                         grannyStatus={grannyStatus}
                         setGrannyStatus={setGrannyStatus}
@@ -254,7 +254,7 @@ export const App = () => {
                   <div
                     className="w-20 h-20 bg-gray-200 rounded border-4 border-blue-600"
                     style={{
-                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
+                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.webp)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       filter: 'brightness(1.1) contrast(1.1)',

@@ -26,29 +26,29 @@ export interface PasswordAPIResponse {
 // Define Granny body shots and their corresponding sounds
 const grannyBodyShots = [
   {
-    image: '/granny-body-shots/granny-mild-frustrate.png',
+    image: '/granny-body-shots/granny-mild-frustrate.webp',
     sounds: [
       '/sounds/granny-sounds/annoyed/granny-ugh.mp3',
       '/sounds/granny-sounds/annoyed/granny-curse.mp3',
     ],
   },
   {
-    image: '/granny-body-shots/granny-yell.png',
+    image: '/granny-body-shots/granny-yell.webp',
     sounds: [
       '/sounds/granny-sounds/annoyed/granny-you-dummy.mp3',
       '/sounds/granny-sounds/granny-yell.mp3',
     ],
   },
   {
-    image: '/granny-body-shots/granny-yell-up.png',
+    image: '/granny-body-shots/granny-yell-up.webp',
     sounds: ['/sounds/granny-sounds/granny-yell.mp3'],
   },
   {
-    image: '/granny-body-shots/granny-smirk.png',
+    image: '/granny-body-shots/granny-smirk.webp',
     sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
   },
   {
-    image: '/granny-body-shots/granny-laughing.png',
+    image: '/granny-body-shots/granny-laughing.webp',
     sounds: ['/sounds/granny-sounds/granny-laugh.mp3'],
   },
 ];
@@ -90,7 +90,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
     if (isPlayingSoundRef.current) return; // Don't interrupt current sound
 
     const { image, sound } = getRandomBodyShot();
-    
+
     // Update granny status to show the reaction
     setGrannyStatus({
       state: 'shouting',
@@ -211,7 +211,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
     isTypingRef.current = false;
     hasStartedTypingRef.current = false;
     isPlayingSoundRef.current = false;
-    
+
     // Fetch new password set
     fetchPassword().catch(() => setGameStatus('start'));
 
@@ -243,14 +243,14 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
     // Track typing state for granny reactions
     const wasTyping = isTypingRef.current;
     isTypingRef.current = newPassword.length > 0;
-    
+
     if (newPassword.length > 0) {
       hasStartedTypingRef.current = true;
     }
 
     // Reset timers on any input
     resetInactivityTimer();
-    
+
     // If user stopped typing, start typing timer
     if (wasTyping && !isTypingRef.current) {
       resetTypingTimer();
@@ -270,7 +270,11 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
         const currentHintCount = result.completedHints.filter(Boolean).length;
 
         // If hints were satisfied and now dissatisfied (user broke a hint)
-        if (lastHintCountRef.current > 0 && lastHintCountRef.current > currentHintCount && !isPlayingSoundRef.current) {
+        if (
+          lastHintCountRef.current > 0 &&
+          lastHintCountRef.current > currentHintCount &&
+          !isPlayingSoundRef.current
+        ) {
           console.log('Triggering hint dissatisfaction reaction');
           triggerGrannyReaction();
         }
@@ -318,7 +322,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
   const handleKeyDown = () => {
     isTypingRef.current = true;
     resetInactivityTimer();
-    
+
     // Clear typing timer while actively typing
     if (typingTimerRef.current) {
       clearTimeout(typingTimerRef.current);
@@ -402,7 +406,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
             </div>
             <div className="relative self-center border cursor-pointer group">
               <img
-                src="/windows98-icons/question-icon.png"
+                src="/windows98-icons/question-icon.webp"
                 alt="question icon"
                 className="w-3 h-3 cursor-pointer"
               />
@@ -417,7 +421,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
             <div
               className="w-20 h-20 bg-gray-200 border-2 border-button-shadow border-t-button-highlight border-l-button-highlight"
               style={{
-                backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
+                backgroundImage: 'url(/granny-face-shots/granny-face-crown.webp)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
@@ -490,7 +494,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
                       transition={{ duration: 0.3 }}
                     >
                       <motion.img
-                        src="/windows98-icons/cross-icon.png"
+                        src="/windows98-icons/cross-icon.webp"
                         alt="Incomplete"
                         className="w-4 h-4"
                       />
@@ -528,7 +532,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
                         transition={{ duration: 0.3 }}
                       >
                         <motion.img
-                          src="/windows98-icons/check-icon.png"
+                          src="/windows98-icons/check-icon.webp"
                           alt="Completed"
                           className="w-4 h-4"
                           initial={hint.previouslyCompleted ? {} : { scale: 0, rotate: -180 }}
@@ -626,7 +630,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
                   <div
                     className="w-20 h-20 bg-gray-200 rounded border-4 border-blue-600"
                     style={{
-                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.png)',
+                      backgroundImage: 'url(/granny-face-shots/granny-face-crown.webp)',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       filter: 'brightness(1.1) contrast(1.1)',

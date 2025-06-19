@@ -170,7 +170,7 @@ class CursorManager {
     if (!this.cursorImage) return;
 
     if (this.state.cursorType === 'granny') {
-      this.cursorImage.src = '/granny-cursor/granny-face.png';
+      this.cursorImage.src = '/granny-cursor/granny-face.webp';
     }
   }
 

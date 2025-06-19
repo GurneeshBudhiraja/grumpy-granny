@@ -130,7 +130,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
           >
             <img
-              src="/granny-face-shots/granny-face.png"
+              src="/granny-face-shots/granny-face.webp"
               className="w-full h-full"
               alt="Loading..."
             />

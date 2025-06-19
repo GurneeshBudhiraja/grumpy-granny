@@ -21,7 +21,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     }
     if (state === 'shouting') {
       setIsBlinking(false);
-      
+
       // If words contains an image path, this is a reaction - don't play the default yell sound
       if (!words || !words.includes('/granny-body-shots/')) {
         const audio = new Audio('/sounds/granny-sounds/granny-yell.mp3');
@@ -49,16 +49,16 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
     }
 
     if (state === 'shouting') {
-      return '/granny-body-shots/granny-yell-up.png';
+      return '/granny-body-shots/granny-yell-up.webp';
     }
 
     if (state === 'blinking') {
       return isBlinking
-        ? '/granny-body-shots/granny-blink.png'
-        : '/granny-body-shots/granny-idle.png';
+        ? '/granny-body-shots/granny-blink.webp'
+        : '/granny-body-shots/granny-idle.webp';
     }
 
-    return '/granny-body-shots/granny-idle.png';
+    return '/granny-body-shots/granny-idle.webp';
   };
 
   return (

@@ -39,7 +39,7 @@ function GrannySprite({ gameStatus, className = '' }: GrannySpriteProps) {
           exit="exit"
         >
           <motion.img
-            src="/granny-face-shots/granny-half-potrait.png"
+            src="/granny-face-shots/granny-half-potrait.webp"
             alt="Grumpy Granny"
             className="w-[12rem] sm:w-[13rem] md:w-[14rem] lg:w-[15rem] h-auto object-contain"
             style={{
