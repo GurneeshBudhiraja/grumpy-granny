@@ -143,13 +143,17 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
         {/* Play Again Button - Smaller */}
         <button
           onClick={handlePlayAgain}
-          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer sm:drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          style={{ display: 'block' }}
         >
           <div
             className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
-            style={{ filter: 'brightness(1.2)' }}
+            style={{ filter: 'brightness(1.2)', display: 'block' }}
           >
-            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span
+              className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none"
+              style={{ display: 'block', fontFamily: 'pixel, monospace' }}
+            >
               PLAY AGAIN
             </span>
           </div>
@@ -158,13 +162,17 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
         {/* Home Button - Smaller */}
         <button
           onClick={handleHome}
-          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer sm:drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          style={{ display: 'block' }}
         >
           <div
             className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
-            style={{ filter: 'brightness(1.2)' }}
+            style={{ filter: 'brightness(1.2)', display: 'block' }}
           >
-            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span
+              className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none"
+              style={{ display: 'block', fontFamily: 'pixel, monospace' }}
+            >
               HOME
             </span>
           </div>
@@ -172,13 +180,17 @@ function WinPage({ setGameStatus, completionTime }: WinPageProps) {
         {/* Leaderboard Button - Smaller */}
         <button
           onClick={handleLeaderboard}
-          className="relative group cursor-pointer drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer sm:drop-shadow-[2px_3px_black] active:drop-shadow-none"
+          style={{ display: 'block' }}
         >
           <div
             className="border-2 border-button-shadow px-2 sm:px-3 py-1 sm:py-2 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
-            style={{ filter: 'brightness(1.2)' }}
+            style={{ filter: 'brightness(1.2)', display: 'block' }}
           >
-            <span className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span
+              className="text-xs sm:text-sm md:text-base text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none"
+              style={{ display: 'block', fontFamily: 'pixel, monospace' }}
+            >
               Leaderboard &#127942;
             </span>
           </div>
