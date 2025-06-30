@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useClickSound, useFakeCursor, useKeyboardSound, useThemeSong } from './hooks/hooks';
+import { useClickSound, useKeyboardSound, useThemeSong } from './hooks/hooks';
 import { StartPage, RulesPage, PlayPage, WinPage, LeaderBoardPage } from './pages/page';
-import { GrannySprite, CursorMenu, GrannyBehindScreen, WallShelf } from './components/components';
+import { GrannySprite, GrannyBehindScreen, WallShelf } from './components/components';
 import { GameStatus, GrannyStatus } from '../shared/types';
 import { AnimatePresence } from 'motion/react';
 
@@ -23,8 +23,6 @@ export const App = () => {
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
   const [completionTime, setCompletionTime] = useState<string>('');
-
-  const { setCursorType, CursorImg } = useFakeCursor();
 
   // Handle win condition
   const handleWin = (time: string) => {
@@ -109,7 +107,7 @@ export const App = () => {
             className={`bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl shadow-2xl border-4 border-amber-200/70 relative ${
               'w-[90vw] h-[280px] ' +
               'sm:w-[60vw] sm:h-[50vh] ' +
-              'md:w-[62vw] md:h-[50vh] ' +
+              'md:w-[52vw] ' +
               'lg:w-[50vw] lg:h-[52vh] ' +
               'xl:w-[37vw] xl:h-[345px] '
             }`}
@@ -405,10 +403,6 @@ export const App = () => {
           </div>
         </div>
       )}
-
-      {CursorImg}
-      {/* Cursor Selection Menu */}
-      <CursorMenu onCursorChange={setCursorType} />
     </div>
   );
 };
