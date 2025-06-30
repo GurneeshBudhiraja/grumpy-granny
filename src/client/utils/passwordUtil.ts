@@ -59,7 +59,7 @@ const PASSWORDS: PasswordAPIResponse[] = [
   },
   {
     hints: [
-      "Start with Granny's birth year from ID card (1951).",
+      "Start with Granny's birth year from ID card.",
       "Include exactly three 3s (trinity of grumpiness).",
       "Write 8 in Roman numerals (infinity of complaints).",
       "Add \"MELVIN\" followed by \"GONE\" (from diary).",
