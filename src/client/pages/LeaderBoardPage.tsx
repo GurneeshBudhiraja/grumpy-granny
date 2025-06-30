@@ -15,6 +15,7 @@ interface LeaderboardStatsType {
 function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
   const [leaderboardStats, setLeaderboardStats] = useState<LeaderboardStatsType[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [currentUser, setCurrentUser] = useState<string>('');
 
   function getLeaderboardData() {
@@ -105,7 +106,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
 
   return (
     <motion.div
-      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-y-auto"
+      className="w-full h-full bg-desktop-bg relative flex flex-col overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -137,20 +138,20 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
           </motion.div>
         </div>
       ) : (
-        <div className="flex flex-col h-full p-2">
+        <div className="flex flex-col h-full p-1 sm:p-2">
           {/* Header */}
           <motion.div
-            className="bg-gray-300 text-black border-2 border-gray-500 py-1 px-3 mb-px"
+            className="bg-gray-300 text-black border-2 border-gray-500 py-1 px-2 sm:px-3 mb-px flex-shrink-0"
             initial={{ y: 0, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
             {/* Title Bar */}
-            <div className="bg-highlight-bg text-highlight-text px-2 py-1 flex items-center gap-2">
+            <div className="bg-highlight-bg text-highlight-text px-1 sm:px-2 py-1 flex items-center gap-1 sm:gap-2">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setGameStatus('start')}
-                  className="w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center cursor-pointer"
+                  className="w-5 h-5 sm:w-6 sm:h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center cursor-pointer"
                   style={{
                     boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
                   }}
@@ -158,30 +159,32 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                   ←
                 </button>
               </div>
-              <div className="text-xs font-windows">Granny's Password Champions</div>
+              <div className="text-xs sm:text-sm font-windows truncate">
+                Granny's Password Champions
+              </div>
             </div>
           </motion.div>
 
           {/* Leaderboard Content */}
-          <div className="flex-1 relative">
+          <div className="flex-1 relative overflow-y-auto windows-scrollbar">
             {leaderboardStats.length ? (
               <motion.div
-                className="bg-gray-300 text-black border-2 border-gray-500 h-full"
+                className="bg-gray-300 text-black border-2 border-gray-500 "
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 {/* Leaderboard Header Row */}
-                <div className="sticky top-0 z-10 bg-gray-300 text-black border-b-2 border-gray-500 p-1">
-                  <div className="grid grid-cols-12 gap-2 text-xs sm:text-sm font-windows font-bold text-text-color">
+                <div className="sticky top-0 z-10 bg-gray-300 text-black border-b-2 border-gray-500 p-1 sm:p-2">
+                  <div className="grid grid-cols-12 gap-1 sm:gap-2 text-xs font-windows font-bold text-text-color">
                     <div className="col-span-2 text-center">RANK</div>
-                    <div className="col-span-6 sm:col-span-7">PLAYER</div>
-                    <div className="col-span-4 sm:col-span-3 text-center">TIME</div>
+                    <div className="col-span-7 sm:col-span-7">PLAYER</div>
+                    <div className="col-span-3 sm:col-span-3 text-center">TIME</div>
                   </div>
                 </div>
 
-                {/* Scrollable Leaderboard List */}
-                <div className="h-full overflow-y-auto windows-scrollbar p-1">
+                {/* Leaderboard List */}
+                <div className="p-1 sm:p-2 pb-4">
                   <AnimatePresence>
                     {leaderboardStats.map((stat, index) => {
                       const position = index + 1;
@@ -191,7 +194,7 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                       return (
                         <motion.div
                           key={`${stat.userName}-${stat.score}`}
-                          className={`grid grid-cols-12 gap-2 sm:p-1 mb-2 border-2 rounded relative ${getPositionBg(position, isCurrentUser)}`}
+                          className={`grid grid-cols-12 gap-1 sm:gap-2 p-1 mb-1 sm:mb-2 border-2 rounded relative ${getPositionBg(position, isCurrentUser)}`}
                           initial={{ x: -100, opacity: 0 }}
                           animate={{ x: 0, opacity: 1 }}
                           transition={{ duration: 0.4, delay: index * 0.1 }}
@@ -206,9 +209,11 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                           {/* Rank Column */}
                           <div className="col-span-2 flex items-center justify-center">
                             <div className="flex flex-col items-center">
-                              {medal && <div className="text-2xl sm:text-3xl mb-1">{medal}</div>}
+                              {medal && (
+                                <div className="text-lg sm:text-2xl md:text-3xl mb-1">{medal}</div>
+                              )}
                               {index > 2 && (
-                                <span className="text-sm sm:text-base font-windows font-bold p-1.5">
+                                <span className="text-xs sm:text-sm md:text-base font-windows font-bold p-1">
                                   #{position}
                                 </span>
                               )}
@@ -216,13 +221,13 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                           </div>
 
                           {/* Player Name Column */}
-                          <div className="col-span-6 sm:col-span-7 flex items-center">
+                          <div className="col-span-7 flex items-center">
                             <div className="flex items-center space-x-1 w-full overflow-hidden">
-                              <span className="truncate flex-1 text-sm sm:text-lg font-windows font-bold">
+                              <span className="truncate flex-1 text-xs sm:text-sm md:text-lg font-windows font-bold">
                                 {stat.userName}
                               </span>
                               {isCurrentUser && (
-                                <span className="flex-shrink-0 inline-block bg-blue-700 text-white border border-blue-900 rounded px-1 py-0.5 text-xs sm:text-sm font-windows">
+                                <span className="flex-shrink-0 inline-block bg-blue-700 text-white border border-blue-900 rounded px-1 py-0.5 text-xs font-windows">
                                   YOU
                                 </span>
                               )}
@@ -230,9 +235,9 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                           </div>
 
                           {/* Time Column */}
-                          <div className="col-span-4 sm:col-span-3 flex items-center justify-center">
+                          <div className="col-span-3 flex items-center justify-center">
                             <span
-                              className={`text-sm sm:text-base font-windows font-bold ${
+                              className={`text-xs sm:text-sm md:text-base font-windows font-bold ${
                                 position <= 3 && !isCurrentUser ? 'text-gray-800' : ''
                               }`}
                             >
@@ -257,17 +262,17 @@ function LeaderBoardPage({ setGameStatus }: LeaderBoardPageProps) {
                     'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff, inset -2px -2px 0px 0px #808080, inset 2px 2px 0px 0px #dfdfdf',
                 }}
               >
-                <div className="text-center p-8">
-                  <div className="text-4xl sm:text-6xl mb-4">🏆</div>
-                  <h2 className="text-lg sm:text-xl font-windows font-bold text-text-color mb-2">
+                <div className="text-center p-4 sm:p-8">
+                  <div className="text-3xl sm:text-4xl md:text-6xl mb-4">🏆</div>
+                  <h2 className="text-sm sm:text-lg md:text-xl font-windows font-bold text-text-color mb-2">
                     No Champions Yet!
                   </h2>
-                  <p className="text-sm font-windows text-text-color mb-4">
+                  <p className="text-xs sm:text-sm font-windows text-text-color mb-4">
                     Be the first to crack Granny's password and claim your spot!
                   </p>
                   <button
                     onClick={() => setGameStatus('start')}
-                    className="px-4 py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight cursor-pointer"
+                    className="px-3 sm:px-4 py-1 sm:py-2 bg-button-face border-2 border-button-highlight border-b-button-shadow border-r-button-shadow font-windows text-xs sm:text-sm hover:bg-gray-300 active:border-button-shadow active:border-b-button-highlight active:border-r-button-highlight cursor-pointer"
                     style={{
                       boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
                     }}
