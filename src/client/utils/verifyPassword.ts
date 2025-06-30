@@ -53,37 +53,56 @@ export async function checkCombinedPassword(pwd: string): Promise<PasswordCheckR
     }
   }
 
+  // If multiple hint sets have the same number of completed hints, prefer the one that matches the pattern better
+  if (maxCompleted > 0) {
+    const tiedResults = results.filter(result => 
+      result.completedHints.filter(Boolean).length === maxCompleted
+    );
+    
+    if (tiedResults.length > 1) {
+      // Use pattern matching to determine the most likely intended hint set
+      const hintSetIndex = determineHintSetByPattern(pwd);
+      if (hintSetIndex >= 0 && hintSetIndex < results.length) {
+        const patternResult = results[hintSetIndex]!;
+        if (patternResult.completedHints.filter(Boolean).length === maxCompleted) {
+          bestResult = patternResult;
+        }
+      }
+    }
+  }
+
   return bestResult;
 }
 
-function determineHintSet(pwd: string): number {
-  // Hint Set 1: Starts with BG, ends with DD, has !!
-  if (pwd.startsWith('BG') && pwd.endsWith('DD') && pwd.includes('!!')) {
-    return 1;
+function determineHintSetByPattern(pwd: string): number {
+  // More sophisticated pattern matching
+  const patterns = [
+    // Hint Set 1: BG + ends with DD + has !!
+    () => pwd.startsWith('BG') && pwd.endsWith('DD') && pwd.includes('!!'),
+    // Hint Set 2: starts with 73 + ends with GG + has ~
+    () => pwd.startsWith('73') && pwd.endsWith('GG') && pwd.includes('~'),
+    // Hint Set 3: starts with BG73 + ends with XO + has ???
+    () => pwd.startsWith('BG73') && pwd.endsWith('XO') && pwd.includes('???'),
+    // Hint Set 4: starts with BGBG + ends with !! + has &
+    () => pwd.startsWith('BGBG') && pwd.endsWith('!!') && pwd.includes('&'),
+    // Hint Set 5: starts with 1951 + ends with ZZ + has ~~
+    () => pwd.startsWith('1951') && pwd.endsWith('ZZ') && pwd.includes('~~')
+  ];
+
+  for (let i = 0; i < patterns.length; i++) {
+    if (patterns[i]!()) {
+      return i;
+    }
   }
-  
-  // Hint Set 2: Starts with 73, ends with GG, has ~
-  if (pwd.startsWith('73') && pwd.endsWith('GG') && pwd.includes('~')) {
-    return 2;
-  }
-  
-  // Hint Set 3: Starts with BG73, ends with XO, has ???
-  if (pwd.startsWith('BG73') && pwd.endsWith('XO') && pwd.includes('???')) {
-    return 3;
-  }
-  
-  // Hint Set 4: Starts with BGBG, ends with !!, has &
-  if (pwd.startsWith('BGBG') && pwd.endsWith('!!') && pwd.includes('&')) {
-    return 4;
-  }
-  
-  // Hint Set 5: Starts with 1951, ends with ZZ, has ~~
-  if (pwd.startsWith('1951') && pwd.endsWith('ZZ') && pwd.includes('~~')) {
-    return 5;
-  }
-  
-  // Default to hint set 1 for partial matches or unknown patterns
-  return 1;
+
+  // If no clear pattern match, check for partial patterns
+  if (pwd.startsWith('BG') && !pwd.startsWith('BGBG')) return 0; // Hint Set 1
+  if (pwd.startsWith('73')) return 1; // Hint Set 2
+  if (pwd.startsWith('BG73')) return 2; // Hint Set 3
+  if (pwd.startsWith('BGBG')) return 3; // Hint Set 4
+  if (pwd.startsWith('1951')) return 4; // Hint Set 5
+
+  return 0; // Default to hint set 1
 }
 
 // Hint Set 1: BG + 555 + XVII + Melvin + hour + !! + 1951 + sum=69 + DD
@@ -106,7 +125,7 @@ async function checkHintSet1(pwd: string): Promise<PasswordCheckResult> {
   // 3) Must include the exact Roman numeral XVII (17)
   completedHints[2] = pwd.includes(romanNumeral);
 
-  // 4) Must include Granny's ex's name "Melvin"
+  // 4) Must include Granny's ex's name "Melvin" (case insensitive)
   completedHints[3] = pwd.toLowerCase().includes(grannyExName.toLowerCase());
 
   // 5) Must include the current hour (1–12) as a substring
@@ -163,7 +182,8 @@ async function checkHintSet2(pwd: string): Promise<PasswordCheckResult> {
 
   // 5) Must include today's day of the month (1-31) as a substring
   const dayStr = currentDay.toString();
-  completedHints[4] = pwd.includes(dayStr);
+  const dayStrPadded = currentDay.toString().padStart(2, '0');
+  completedHints[4] = pwd.includes(dayStr) || pwd.includes(dayStrPadded);
 
   // 6) Exactly one tilde "~"
   const tildes = (pwd.match(/~/g) || []).length;
@@ -215,8 +235,9 @@ async function checkHintSet3(pwd: string): Promise<PasswordCheckResult> {
   completedHints[3] = pwd.includes(grannyExName);
 
   // 5) Must include current minute (00-59) as a substring
-  const minuteStr = currentMinute.toString().padStart(2, '0');
-  completedHints[4] = pwd.includes(minuteStr) || pwd.includes(currentMinute.toString());
+  const minuteStr = currentMinute.toString();
+  const minuteStrPadded = currentMinute.toString().padStart(2, '0');
+  completedHints[4] = pwd.includes(minuteStr) || pwd.includes(minuteStrPadded);
 
   // 6) Exactly three question marks
   const questions = (pwd.match(/\?/g) || []).length;
@@ -267,8 +288,9 @@ async function checkHintSet4(pwd: string): Promise<PasswordCheckResult> {
   completedHints[3] = pwd.includes(grannyExName);
 
   // 5) Must include current hour in 24-hour format (00-23)
-  const hour24Str = currentHour24.toString().padStart(2, '0');
-  completedHints[4] = pwd.includes(hour24Str) || pwd.includes(currentHour24.toString());
+  const hour24Str = currentHour24.toString();
+  const hour24StrPadded = currentHour24.toString().padStart(2, '0');
+  completedHints[4] = pwd.includes(hour24Str) || pwd.includes(hour24StrPadded);
 
   // 6) Exactly one ampersand "&"
   const ampersands = (pwd.match(/&/g) || []).length;
@@ -302,7 +324,7 @@ async function checkHintSet5(pwd: string): Promise<PasswordCheckResult> {
   
   const grannyBirthYear = "1951";
   const romanNumeral = "VIII"; // 8
-  const currentDate = new Date().getDate().toString().padStart(2, '0');
+  const currentDate = new Date().getDate();
 
   // 1) Must start with birth year "1951"
   completedHints[0] = pwd.startsWith(grannyBirthYear);
@@ -314,11 +336,15 @@ async function checkHintSet5(pwd: string): Promise<PasswordCheckResult> {
   // 3) Must include the exact Roman numeral VIII (8)
   completedHints[2] = pwd.includes(romanNumeral);
 
-  // 4) Must include "MELVIN" followed by "GONE"
-  completedHints[3] = pwd.includes("MELVINGONE") || (pwd.includes("MELVIN") && pwd.includes("GONE"));
+  // 4) Must include "MELVIN" followed by "GONE" (can be together or separate)
+  const hasMelvinGone = pwd.includes("MELVINGONE") || 
+                       (pwd.includes("MELVIN") && pwd.includes("GONE"));
+  completedHints[3] = hasMelvinGone;
 
   // 5) Must include today's date (DD format)
-  completedHints[4] = pwd.includes(currentDate) || pwd.includes(new Date().getDate().toString());
+  const dateStr = currentDate.toString();
+  const dateStrPadded = currentDate.toString().padStart(2, '0');
+  completedHints[4] = pwd.includes(dateStr) || pwd.includes(dateStrPadded);
 
   // 6) Exactly two tildes "~~"
   const tildes = (pwd.match(/~/g) || []).length;
