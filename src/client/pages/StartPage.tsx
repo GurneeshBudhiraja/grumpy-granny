@@ -55,7 +55,7 @@ function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
       <div className="relative flex flex-col items-center justify-center w-full max-w-md sm:max-w-xl lg:max-w-2xl px-4 mx-auto mt-3 md:mt-0">
         {/* "GRUMPY" - Coming from left, exits to left QUICKLY */}
         <motion.div
-          className="text-6xl sm:text-8xl md:text-9xl font-pixel drop-shadow-lg mb-2 sm:mb-4 text-highlight-bg"
+          className="text-6xl sm:text-8xl font-pixel drop-shadow-lg mb-2 md:mb-0 text-highlight-bg"
           style={{
             filter: 'brightness(1.2)',
             WebkitTextStroke: '2px var(--text-color)',
@@ -82,7 +82,7 @@ function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
             filter: 'brightness(1.2)',
             WebkitTextStroke: '2px var(--text-color)',
           }}
-          className="text-highlight-bg drop-shadow-lg text-6xl sm:text-8xl md:text-9xl font-pixel w-full text-center -mt-8 md:-mt-10 px-4"
+          className="text-highlight-bg drop-shadow-lg text-6xl sm:text-8xl font-pixel w-full text-center -mt-7 px-4"
           initial={{ x: 300, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 300, opacity: 0 }}
@@ -114,17 +114,22 @@ function StartPage({ gameStatus: _gameStatus, setGameStatus }: StartPageProps) {
       >
         <button
           onClick={handleButtonClick}
-          className="relative group cursor-pointer drop-shadow-[5px_6px_black] active:drop-shadow-none"
+          className="relative group cursor-pointer sm:drop-shadow-[5px_6px_black] active:drop-shadow-none"
+          style={{ display: 'block' }}
         >
           {/* Button Background with vintage styling */}
           <div
-            className="border-4 border-button-shadow px-4 sm:px-6 py-1 md:py-3 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
+            className="border-4 border-button-shadow px-4 sm:px-6 py-1 md:py-1 transform transition-all duration-150 bg-button-face group-active:translate-x-1 group-active:translate-y-1 group-active:drop-shadow-none"
             style={{
               filter: 'brightness(1.2)',
+              display: 'block',
             }}
           >
             {/* Button text */}
-            <span className="text-4xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none">
+            <span
+              className="text-4xl text-text-color font-pixel font-bold cursor-pointer tracking-wide group-active:drop-shadow-none"
+              style={{ display: 'block' }}
+            >
               START GAME
             </span>
           </div>
