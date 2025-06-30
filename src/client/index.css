@@ -37,9 +37,44 @@
 }
 @layer base {
   * {
-    @apply m-0 p-0 box-border font-windows select-none;
-    /* default: Windows pointer */
-    cursor: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'windows98';
+    user-select: none;
+    cursor: url('/cursor/granny-cursor/granny-face.ico'), auto;
+  }
+
+  /* Ensure fonts are loaded before rendering */
+  .font-pixel {
+    font-display: block;
+  }
+
+  .font-windows {
+    font-display: block;
+  }
+
+  /* Granny cursor for clickable elements */
+  button,
+  a,
+  [role='button'],
+  .cursor-pointer,
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'],
+  [onclick] {
+    cursor:
+      url('/cursor/granny-cursor/granny-pointer.ico') 12 12,
+      pointer !important;
+  }
+
+  /* Ensure text inputs use the normal granny cursor */
+  input[type='text'],
+  input[type='password'],
+  textarea {
+    cursor:
+      url('/cursor/granny-cursor/granny-face.cur'), url('/cursor/granny-cursor/granny-face.webp'),
+      text !important;
   }
 }
 
@@ -72,10 +107,6 @@
   to {
     transform: rotate(-360deg);
   }
-}
-
-.cursor-pointer {
-  cursor: none;
 }
 
 /* Terminal scrollbar styling - Custom sleek design */
