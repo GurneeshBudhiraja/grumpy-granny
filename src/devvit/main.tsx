@@ -5,7 +5,6 @@ type WebViewMessage =
   | { type: 'submitPost'; time: string }
   | { type: 'getLeaderboard' }
   | { type: 'setLeaderboard'; data: { score: number } }
-  // TODO: remove the type in prod
   | { type: 'clearScoreRedis' };
 
 export type DevvitToWebViewMessage = {
@@ -19,6 +18,34 @@ Devvit.configure({
   redis: true,
 });
 
+// Add a menu item to create the post
+Devvit.addMenuItem({
+  label: 'Create Grumpy Granny Post',
+  location: 'subreddit',
+  onPress: async (_event, context) => {
+    const subreddit = await context.reddit.getCurrentSubreddit();
+    const post = await context.reddit.submitPost({
+      title: '[Grumpy Granny] Post',
+      subredditName: subreddit.name,
+      preview: (
+        <zstack width="100%" height="100%">
+          <image
+          url="loading.gif"
+          height="100%"
+          width="100%"
+          imageHeight={600}
+          imageWidth={600}
+          resizeMode="cover"
+          description="Background"
+        />
+        </zstack>
+      ),
+    });
+    context.ui.showToast('Created Grumpy Granny post!');
+    context.ui.navigateTo(post);
+  },
+});
+
 Devvit.addCustomPostType({
   name: '[Grumpy Granny] Post',
   height: 'tall',
@@ -26,55 +53,30 @@ Devvit.addCustomPostType({
     const { mount } = useWebView<WebViewMessage, DevvitToWebViewMessage>({
       url: 'index.html',
       onMessage: async (message, webView) => {
-        console.log('Message received');
-        console.log(message);
         if (message.type === 'navigate' && message.data?.url) {
           context.ui.navigateTo(message.data.url);
-        }
-        // Handle leaderboard fetch
-        else if (message.type === 'getLeaderboard') {
+        } else if (message.type === 'getLeaderboard') {
           const currentPlayer = await context.reddit.getCurrentUsername();
-
-          if (!currentPlayer) {
-            console.log('`currentPlayer` is `undefined`');
-            return;
-          }
+          if (!currentPlayer) return;
           const score = (await context.redis.get('score')) ?? '';
-          console.log('score');
-          console.log(score);
-
           webView.postMessage({ type: 'leaderboardData', data: score, currentUser: currentPlayer });
-        }
-        // Handle leaderboard save
-        else if (message.type === 'setLeaderboard' && message.data) {
-          console.log(message.data);
-
+        } else if (message.type === 'setLeaderboard' && message.data) {
           const member = await context.reddit.getCurrentUsername();
-          if (!member) {
-            console.log('`member` is `undefined`');
-            return;
-          }
+          if (!member) return;
           const { score } = message.data;
           const currentScore = (await context.redis.get('score')) as string | undefined;
           if (!currentScore) {
             await context.redis.set('score', JSON.stringify([{ score, userName: member }]));
-            console.log('new entry has been updated in the empty leaderboard');
           } else {
-            const existingScore = JSON.parse(currentScore) as {
-              userName: string;
-              score: number;
-            }[];
-            // checks if the user entry already exists
+            const existingScore = JSON.parse(currentScore) as { userName: string; score: number }[];
             const userExists = existingScore.find((entry) => entry.userName === member);
             if (userExists) {
-              // updates the current user entry
               const updatedScore = existingScore.map((entry) =>
                 entry.userName === member ? { ...entry, score } : entry
               );
               await context.redis.set('score', JSON.stringify(updatedScore));
               return;
             }
-            // new entry for the user
             const newScore = [...existingScore, { score, userName: member }];
             await context.redis.set('score', JSON.stringify(newScore));
           }
