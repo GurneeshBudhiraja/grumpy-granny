@@ -30,14 +30,14 @@ Devvit.addMenuItem({
       preview: (
         <zstack width="100%" height="100%">
           <image
-          url="loading.gif"
-          height="100%"
-          width="100%"
-          imageHeight={600}
-          imageWidth={600}
-          resizeMode="cover"
-          description="Background"
-        />
+            url="loading.gif"
+            height="100%"
+            width="100%"
+            imageHeight={600}
+            imageWidth={600}
+            resizeMode="cover"
+            description="Background"
+          />
         </zstack>
       ),
     });
@@ -95,17 +95,6 @@ Devvit.addCustomPostType({
           resizeMode="cover"
           description="Background"
         />
-        <hstack width="100%" height="20%" alignment="top end" padding="small">
-          <image
-            onPress={() => {
-              context.ui.navigateTo('https://bolt.new/');
-            }}
-            url="bolt-badge/white-badge.png"
-            imageWidth={80}
-            imageHeight={80}
-            description="Built with Bolt.new badge"
-          />
-        </hstack>
         <hstack width="100%" height="100%" alignment="bottom center" padding="large">
           <hstack width={40} height={40} backgroundColor="transparent" onPress={mount} />
         </hstack>

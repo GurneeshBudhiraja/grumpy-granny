@@ -93,7 +93,7 @@ function GrannyBehindScreen({ grannyStatus, setGrannyStatus }: GrannyBehindScree
               alt="Granny"
               className={`object-contain ${
                 // Responsive Granny sizing - scales proportionally with monitor
-                'w-[390px] mb-11 ' +
+                'w-[300px] mb-20 ' +
                 'sm:w-[350px] sm:mb-0   ' +
                 'md:w-[390px] ' +
                 'lg:w-[450px] ' +
