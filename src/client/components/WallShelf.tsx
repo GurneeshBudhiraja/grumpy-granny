@@ -8,12 +8,12 @@ interface WallShelfProps {
 
 const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => {
   return (
-    <div className="absolute right-1/4 top-2 md:top-20 md:left-2/3 transform -translate-x-1/2 z-10">
+    <div className="absolute right-[29%] top-2 sm:right-52 sm:top-16 md:right-32 md:top-20 lg:right-12 lg:top-24 xl:right-16 xl:top-28 z-10">
       {/* Wooden Shelf */}
       <div className="relative">
         {/* Shelf Surface */}
         <div
-          className="w-20 md:w-48 h-4 bg-gradient-to-b from-amber-700 to-amber-900 rounded-lg shadow-lg"
+          className="w-28 sm:w-32 md:w-40 lg:w-48 xl:w-56 h-3 sm:h-4 bg-gradient-to-b from-amber-700 to-amber-900 rounded-lg shadow-lg"
           style={{
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
           }}
@@ -29,7 +29,7 @@ const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => 
         <div className="absolute -bottom-2 right-2 w-3 h-6 bg-amber-800 rounded-b transform -rotate-12"></div>
 
         {/* Items on Shelf */}
-        <div className="absolute -top-8 -left-5 md:left-4 flex space-x-8">
+        <div className="absolute -top-6 sm:-top-8 left-1 sm:left-2 md:left-4 flex space-x-6 lg:space-x-8">
           {/* ID Card on Shelf - Realistic Western ID */}
           <div className="relative">
             <motion.div
@@ -39,7 +39,7 @@ const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => 
               whileTap={{ scale: 0.95 }}
             >
               <div
-                className="w-10 h-9 md:w-16 md:h-10 bg-blue-500 rounded-sm shadow-md transform rotate-3"
+                className="ml-1 w-10 h-8 md:w-12 md:h-9 lg:w-14 lg:h-10 xl:w-16 xl:h-11 bg-blue-500 rounded-sm shadow-md transform rotate-2 sm:rotate-3"
                 style={{
                   background: 'linear-gradient(135deg, #3b82f6 0%, #1e40af 50%, #1e3a8a 100%)',
                   boxShadow: '0 3px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
@@ -69,11 +69,11 @@ const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => 
               </div>
 
               {/* Shadow */}
-              <div className="absolute top-10 left-1 w-14 h-2 bg-black opacity-20 rounded-full blur-sm transform rotate-3"></div>
+              <div className="absolute top-6 sm:top-8 md:top-10 left-1 w-8 sm:w-10 md:w-12 lg:w-14 h-1 sm:h-2 bg-black opacity-20 rounded-full blur-sm transform rotate-2 sm:rotate-3"></div>
             </motion.div>
 
             {/* Tooltip for ID */}
-            <div className="absolute top-12 left-1/2 transform -translate-x-1/2 mt-2">
+            <div className="absolute top-8 sm:top-10 md:top-12 left-1/2 transform -translate-x-1/2 mt-1 sm:mt-2">
               <div className="bg-gray-800 text-white text-[0.6rem] md:text-xs px-2 py-1 rounded whitespace-nowrap font-windows">
                 ID Card
               </div>
@@ -90,7 +90,7 @@ const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => 
               whileTap={{ scale: 0.95 }}
             >
               <div
-                className="w-10 md:w-10 md:h-12 bg-yellow-100 rounded-sm shadow-md transform -rotate-2"
+                className="w-8 h-10 sm:w-10 sm:h-12 md:w-10 md:h-14 lg:w-12 lg:h-16 xl:w-14 xl:h-18 bg-yellow-100 rounded-sm shadow-md transform -rotate-1 sm:-rotate-2"
                 style={{
                   background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3)',
@@ -116,11 +116,11 @@ const WallShelf: React.FC<WallShelfProps> = ({ onIdClick, onDocumentClick }) => 
               </div>
 
               {/* Shadow */}
-              <div className="absolute top-12 left-1 w-8 h-2 bg-black opacity-15 rounded-full blur-sm transform -rotate-2"></div>
+              <div className="absolute top-10 sm:top-12 md:top-14 left-1 w-8 sm:w-10 md:w-12 lg:w-14 h-1 sm:h-2 bg-black opacity-15 rounded-full blur-sm transform -rotate-1 sm:-rotate-2"></div>
             </motion.div>
 
             {/* Tooltip for Document */}
-            <div className="absolute top-14 left-1/3 md:left-1/2 transform -translate-x-1/2 mt-2">
+            <div className="absolute top-12 sm:top-14 md:top-16 left-1/2 transform -translate-x-1/2 mt-1 sm:mt-2">
               <div className="bg-gray-800 text-white px-2 py-1 rounded whitespace-nowrap font-windows text-[0.6rem] md:text-xs">
                 Document
               </div>

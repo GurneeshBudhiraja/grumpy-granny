@@ -18,7 +18,6 @@ export const App = () => {
     state: 'blinking',
     words: '',
   });
-
   const [showIdCard, setShowIdCard] = useState(false);
   const [showDocument, setShowDocument] = useState(false);
   const [completionTime, setCompletionTime] = useState<string>('');
@@ -284,10 +283,10 @@ export const App = () => {
 
       {showDocument && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50 "
           onClick={() => setShowDocument(false)}
         >
-          <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300">
+          <div className="relative bg-yellow-50 rounded-lg shadow-2xl max-w-md mx-4 border-2 border-yellow-300 h-[95%] overflow-y-auto">
             <div
               style={{
                 background: 'linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)',

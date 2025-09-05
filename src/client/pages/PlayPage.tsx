@@ -437,7 +437,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
           {/* Password Input Section */}
           <div className="px-6 pb-1 mt-4">
             <div className="text-button-text ml-1">Let the hints guide you:</div>
-            <div className="relative selection:bg-highlight-bg selection:text-highlight-text">
+            <div className="relative selection:bg-highlight-bg selection:text-highlight-text bg-white font-windows text-sm focus:outline-none border-2 border-button-shadow">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
@@ -447,7 +447,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
                 onKeyUp={handleKeyUp}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                className="w-full px-3 py-2 border-2 border-button-shadow border-t-gray-400 border-l-gray-400 bg-white font-windows text-sm focus:outline-none"
+                className="w-[90%] px-3 py-2 outline-none bg-white"
                 placeholder="Key in the hint answer..."
                 autoFocus
                 autoComplete="off"
@@ -459,7 +459,7 @@ const PlayPage = ({ setGameStatus, onWin, grannyStatus, setGrannyStatus }: PlayP
               {/* Show/Hide Password Toggle */}
               <button
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-button-face border border-button-shadow hover:bg-gray-300 text-xs font-windows flex items-center justify-center"
                 style={{
                   boxShadow: 'inset -1px -1px 0px 0px #808080, inset 1px 1px 0px 0px #ffffff',
                 }}

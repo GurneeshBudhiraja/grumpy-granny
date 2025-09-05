@@ -49,7 +49,7 @@ const IdCard: React.FC<IdCardProps> = ({ isOnShelf = false, isExpanded = false, 
           onClick={onClose}
         >
           <motion.div
-            className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm mx-4"
+            className="relative rounded-lg shadow-2xl w-full max-w-sm mx-4"
             initial={{ scale: 0.5, rotate: -10, y: -100 }}
             animate={{ scale: 1, rotate: 0, y: 0 }}
             exit={{ scale: 0.5, rotate: 10, y: 100 }}

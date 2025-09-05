@@ -98,6 +98,9 @@
   --font-pixel: 'pixel';
 
   --animate-spin-reverse: spin-reverse 900ms linear infinite;
+
+  /* Custom breakpoints */
+  --breakpoint-phone: 375px;
 }
 
 @keyframes spin-reverse {
